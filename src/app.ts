@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import compression from 'compression';
 import morgan from 'morgan';
 import cors from 'cors';
-import routes from './routes';
+import routes from '@/routes';
 
 // Create Express server
 const app = express();
