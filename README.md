@@ -43,4 +43,6 @@ TL: [José Campos](https://github.com/josecamposhz)
 
 ### Team Backend
 
+[Daniel Machado](https://github.com/Needforock2)
+
 - 
