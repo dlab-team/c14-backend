@@ -45,4 +45,4 @@ TL: [José Campos](https://github.com/josecamposhz)
 
 [Daniel Machado](https://github.com/Needforock2)
 
-- 
+- [Carlos Palomo](https://github.com/cepalomos)
