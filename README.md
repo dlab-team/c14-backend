@@ -43,8 +43,7 @@ TL: [José Campos](https://github.com/josecamposhz)
 
 ### Team Backend
 
-[Daniel Machado](https://github.com/Needforock2)
-[Leonardo Fernandez](https://github.com/Lion-Fernandez)
-
-
-- 
+- [Daniel Machado](https://github.com/Needforock2)  
+- [Nicolás Rivas](https://github.com/nicolasrivas2001)  
+- [Carlos Palomo](https://github.com/cepalomos) 
+- [Leonardo Fernandez](https://github.com/Lion-Fernandez)
