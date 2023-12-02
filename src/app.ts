@@ -4,7 +4,9 @@ import compression from 'compression';
 import morgan from 'morgan';
 import cors from 'cors';
 import routes from '@/routes';
-
+import swaggerOptions from '@/config/swagger';
+import swaggerJSDoc from "swagger-jsdoc";
+import { serve, setup } from 'swagger-ui-express';
 // Create Express server
 const app = express();
 
@@ -15,7 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 app.use(morgan('dev'));
 app.use(cors());
-
+//documentacion --->
+const specs = swaggerJSDoc(swaggerOptions);
+app.use("/api/docs", serve, setup(specs));
+//<---- documentacion
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {
   res.send({
