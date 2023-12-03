@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import routes from '@/routes';
 import swaggerOptions from '@/config/swagger';
-import swaggerJSDoc from "swagger-jsdoc";
+import swaggerJSDoc from 'swagger-jsdoc';
 import { serve, setup } from 'swagger-ui-express';
 // Create Express server
 const app = express();
@@ -19,7 +19,7 @@ app.use(morgan('dev'));
 app.use(cors());
 //documentacion --->
 const specs = swaggerJSDoc(swaggerOptions);
-app.use("/api/docs", serve, setup(specs));
+app.use('/api/docs', serve, setup(specs));
 //<---- documentacion
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {
