@@ -1,10 +1,25 @@
 version: '3.9'
 
 services:
+# Comment the 'server' section if you want to work local
+  server:
+    build:
+      context: .
+      target: dev
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3001:3001
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./src:/usr/src/app/src
 
   postgres:
     image: postgres
     restart: always
+    user: postgres
     environment:
       DATABASE_HOST: ${DATABASE_HOST}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -12,5 +27,23 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - ${POSTGRES_PORT}:5432
-    # volumes:
-    #   - pg_data:/var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
+
+volumes:
+  db-data:
