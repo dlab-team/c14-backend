@@ -10,6 +10,17 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const login = async (req: Request, res: Response, next: NextFunction) => {
+  const { email, password } = req.body;
+  try {
+    const data = await userService.loginBd(email, password);
+    res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getAllUsers,
+  login,
 };

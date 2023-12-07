@@ -1,9 +1,10 @@
 'use strict';
-import { QueryInterface, DataTypes } from "sequelize";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: async (queryInterface: QueryInterface, Sequelize: typeof DataTypes) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('polynomials', {
       id: {
         allowNull: false,
@@ -29,7 +30,9 @@ module.exports = {
       },
     });
   },
-  down: async (queryInterface: QueryInterface) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  down: async queryInterface => {
     await queryInterface.dropTable('polynomials');
   },
 };
