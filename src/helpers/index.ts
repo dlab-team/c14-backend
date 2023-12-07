@@ -1,3 +1,4 @@
 import { hashText, verifyText } from './argon';
+import { signToken, verifyToken } from './jsonToken';
 
-export { hashText, verifyText };
+export { hashText, verifyText, signToken, verifyToken };
