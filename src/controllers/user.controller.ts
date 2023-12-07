@@ -10,6 +10,19 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userData = req.body
+    const response = await userService.createUser(userData);
+    res.json({
+      response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getAllUsers,
+  createUser,
 };
