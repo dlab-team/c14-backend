@@ -2,13 +2,13 @@ import * as jwt from 'jsonwebtoken';
 import { jwt as secret } from '@/config/config';
 import { ClientError } from '@/errors';
 
-interface Payload {
+export interface Payload {
   id: string;
   email: string;
 }
 
 const signToken = (payload: Payload): string => {
-  const token = jwt.sign(payload, secret, { expiresIn: '1h' });
+  const token: string = jwt.sign(payload, secret, { expiresIn: '1h' });
   return token;
 };
 const verifyToken = (token: string): Payload => {

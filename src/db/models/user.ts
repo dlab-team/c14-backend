@@ -10,7 +10,7 @@ export interface UserAttributes {
   active: boolean;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+export interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 
 interface UserInstance extends Model<UserAttributes, UserCreationAttributes>, UserAttributes {
   createdAt?: Date;
@@ -25,7 +25,7 @@ export const User = sequelize.define<UserInstance>(
       autoIncrement: false,
       primaryKey: true,
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       unique: true,
     },
     firstName: {

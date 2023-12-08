@@ -10,12 +10,6 @@ module.exports = {
     host: process.env.DATABASE_HOST,
     port: process.env.POSTGRES_PORT,
     dialect: 'postgres',
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
   },
   production: {
     username: process.env.POSTGRES_USER,
