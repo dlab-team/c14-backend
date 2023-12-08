@@ -1,9 +1,9 @@
 // aqui nos comunicamos con la db => sequelize models
 import 'dotenv/config';
-import { User, UserAttributes, UserCreationAttributes } from '@/db/models/user';
+import { User, UserAttributes, UserCreationAttributes } from '../db/models/user';
 import { signToken } from '@/helpers';
-import { Payload } from '../helpers/jsonToken';
-import { createTransport } from '@/config/config';
+import { Payload } from '@/helpers/jsonToken';
+import { transport } from '@/config/config';
 
 interface Response {
   success: boolean;
@@ -32,7 +32,7 @@ const createUser = async (userAttributes: UserCreationAttributes): Promise<Respo
       };
       const tokenMasked = signToken(tokenPayload).replace(/\./g, '*'); //se enmascara el token para permitir que el navegador pueda leer la URL
       const message = `<h2>Sigue el siguiente enlace para crear tu contraseña<h2> </br> <a href='${process.env.FRONT_HOST}/pass_reset/${tokenMasked}'>Reestablecer contraseña</a>`;
-      await createTransport.sendMail({
+      await transport.sendMail({
         from: `${process.env.G_MAIL}`,
         to: `${userData.email}`,
         subject: 'Enlace para cambio de contraseña',

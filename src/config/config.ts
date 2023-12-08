@@ -1,15 +1,13 @@
 import 'dotenv/config';
 import { createTransport } from 'nodemailer';
 
-const port = process.env.PORT;
-createTransport({
+const transport = createTransport({
   service: 'gmail',
-  port,
   auth: {
-    user: process.env.G_MAIL,
-    pass: process.env.G_PASS,
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASSWORD,
   },
 });
 const jwt = process.env.JWT_SECRET ?? 'secreto';
 
-export { jwt, createTransport };
+export { jwt, transport };
