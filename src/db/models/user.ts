@@ -25,7 +25,7 @@ export const User = sequelize.define<UserInstance>(
       autoIncrement: false,
       primaryKey: true,
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       unique: true,
     },
     firstName: {
