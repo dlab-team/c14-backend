@@ -8,7 +8,10 @@
     "dev": "tsx watch --clear-screen=false src/server.ts",
     "build": "npx tsc && tsc-alias",
     "lint": "eslint . --ext ts --ignore-path .gitignore",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:seed": "sequelize db:seed:all",
+    "db:reset": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",
