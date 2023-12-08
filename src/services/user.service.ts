@@ -31,7 +31,7 @@ const createUser = async (userAttributes: UserCreationAttributes): Promise<Respo
         email: userData.email,
       };
       const tokenMasked = signToken(tokenPayload).replace(/\./g, '*'); //se enmascara el token para permitir que el navegador pueda leer la URL
-      const message = `<h2>Sigue el siguiente enlace para crear tu contraseña<h2> </br> <a href='${process.env.FRONT_HOST}/pass_reset/${tokenMasked}'>Reestablecer contraseña</a>`;
+      const message = `<h2>Sigue el siguiente enlace para crear tu contraseña<h2> </br> <a href='${process.env.FRONT_HOST}/auth/recovery/${tokenMasked}'>Reestablecer contraseña</a>`;
       await transport.sendMail({
         from: `${process.env.G_MAIL}`,
         to: `${userData.email}`,
@@ -53,6 +53,11 @@ const createUser = async (userAttributes: UserCreationAttributes): Promise<Respo
     throw error;
   }
 };
+
+const forgotPass = async (email: string) => {
+  
+}
+
 export default {
   getAllUsers,
   createUser,
