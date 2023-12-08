@@ -1,8 +1,7 @@
-// aqui nos comunicamos con la db => sequelize models
-
 import { User } from '@/db/models/user';
 import { ClientError } from '@/errors';
 import { signToken, verifyText } from '@/helpers';
+import { UserResLogin } from '../types';
 
 const getAllUsers = async () => {
   const response = await fetch('https://jsonplaceholder.typicode.com/users');
@@ -10,8 +9,11 @@ const getAllUsers = async () => {
   return users;
 };
 
-const loginBd = async (email: string, password: string) => {
-  const user = await User.findOne({ where: { email } });
+const loginBd = async (email: string, password: string): Promise<UserResLogin> => {
+  const user = await User.findOne({
+    where: { email },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  });
   if (user == null) {
     throw new ClientError('Credenciales inválidas', 401);
   }

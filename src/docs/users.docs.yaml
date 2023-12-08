@@ -74,14 +74,6 @@ components:
         active:
           type: boolean
           description: 'Estado activo del usuario'
-        createdAt:
-          type: string
-          format: date-time
-          description: 'Fecha de creación del usuario'
-        updatedAt:
-          type: string
-          format: date-time
-          description: 'Fecha de actualización del usuario'
         token:
           type: string
           description: 'Token de autenticación del usuario'
@@ -92,8 +84,6 @@ components:
           lastName: 'ONG'
           email: '3xi@g3xi.com'
           active: true
-          createdAt: '2023-12-07T17:44:36.657Z'
-          updatedAt: '2023-12-07T17:44:36.657Z'
           token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxMmI0YmE5LTIxNDgtNDE4Ni1iMTc3LWNlOTAwNjQ2Y2MxMCIsImVtYWlsIjoiM3hpQGczeGkuY29tIiwiaWF0IjoxNzAxOTgzNTcxLCJleHAiOjE3MDE5ODcxNzF9.oFt5eckNonVjeXd7hUHyAd5WSciyn_ZgbTqxVIwuQmc'
     signout:
       type: object
