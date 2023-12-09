@@ -23,22 +23,16 @@ const getAllUsers = async (): Promise<UserAttributes[]> => {
 };
 
 const getUserByEmail = async (email: string): Promise<UserAttributes | null> => {
-  try {
-    const user = await User.findOne({
-      where: {
-        email: email,
-      },
-    });
-
-    if (!user) {
-      throw new ClientError('User not found', 400);
-    }
-
-    const userData = user.get();
-    return userData;
-  } catch (error) {
-    throw new ServerError('Error fetching user', 500);
+  const user = await User.findOne({
+    where: {
+      email: email,
+    },
+  });
+  if (!user) {  
+    return null;
   }
+  const userData = user.get();
+  return userData;
 };
 
 const createUser = async (userAttributes: UserCreationAttributes): Promise<Response> => {
