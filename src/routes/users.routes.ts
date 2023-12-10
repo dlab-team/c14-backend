@@ -14,4 +14,7 @@ router.get('/', userController.getAllUsers);
 //! TODO requiere middleware para verificar si el correo ingresado existe en la base de datos
 router.post('/forgot', userController.forgotPass);
 
+//Change Password
+router.put('/recover', userController.changePass);
+
 export default router;
