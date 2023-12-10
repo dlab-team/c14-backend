@@ -22,17 +22,20 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const forgotPass = async (req: Request, res: Response, next: NextFunction)=>{
+const forgotPass = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const email = req.body.email;
-    
+    const email: string = req.body.email;
+    const response = await userService.forgotPass(email);
+    res.json({
+      response,
+    });
   } catch (error) {
-    next(error)    
+    next(error);
   }
-}
+};
 
 export default {
   getAllUsers,
   createUser,
-  forgotPass
+  forgotPass,
 };
