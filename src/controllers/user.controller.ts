@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import userService from '@/services/user.service';
+import { ClientError } from '@/errors';
 
 const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -34,8 +35,28 @@ const forgotPass = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const changePass = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const auth = req.headers.authorization;
+    const newPassword = req.body;
+    if (!auth) {
+      throw new ClientError('Invalid Credentials', 400);
+    } else {
+      const response = await userService.changePass(auth, newPassword);
+      if (response) {
+        res.json({
+          response,
+        });
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getAllUsers,
   createUser,
   forgotPass,
+  changePass,
 };
