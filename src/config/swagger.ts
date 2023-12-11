@@ -12,6 +12,5 @@ const swaggerOptions: swaggerJSDoc.Options = {
   },
   apis: [`${__dirname}/docs/*.yaml`],
 };
-console.log(__dirname);
 
 export default swaggerOptions;
