@@ -28,7 +28,7 @@ const getUserByEmail = async (email: string): Promise<UserAttributes | null> => 
       email: email,
     },
   });
-  if (!user) {
+  if (!user) {  
     return null;
   }
   const userData = user.get();
