@@ -1,3 +1,11 @@
+import { PolynomialAttributes } from './db/models/polynomial';
+
+//tipos de JWT
+export interface Payload {
+  id: string;
+  email: string;
+}
+
 // tipos de servicios y controlador de usuarios
 export type UserResLogin = {
   id: string;
@@ -7,3 +15,10 @@ export type UserResLogin = {
   active: boolean;
   token: string;
 };
+
+// tipos de servicios y controlador de polinomios
+export type PolynomialAttributesOptional = PolynomialAttributes & {
+  name?: string;
+  active?: boolean;
+};
+export type IdPolynomial = Pick<PolynomialAttributes, 'id'>;

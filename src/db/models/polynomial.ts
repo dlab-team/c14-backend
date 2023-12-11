@@ -1,15 +1,17 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '.';
 
-interface PolynomialAttributes {
+export interface PolynomialAttributes {
   id: string;
   name: string;
   active: boolean;
 }
 
-interface PolynomialCreationAttributes extends Optional<PolynomialAttributes, 'id'> {}
+export interface PolynomialCreationAttributes extends Optional<PolynomialAttributes, 'id'> {}
 
-interface PolynomialInstance extends Model<PolynomialAttributes, PolynomialCreationAttributes>, PolynomialAttributes {
+export interface PolynomialInstance
+  extends Model<PolynomialAttributes, PolynomialCreationAttributes>,
+    PolynomialAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }

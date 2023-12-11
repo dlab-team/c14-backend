@@ -6,7 +6,7 @@ import { Payload, verifyToken } from '@/helpers/jsonToken';
 import { transport } from '@/config/config';
 import { ClientError, ServerError } from '@/errors';
 
-interface Response {
+export interface Response {
   success: boolean;
   message: string;
 }
