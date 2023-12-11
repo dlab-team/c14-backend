@@ -1,10 +1,7 @@
-import { User } from '@/db/models/user';
-import { ClientError } from '@/errors';
-import { signToken, verifyText } from '@/helpers';
-import { UserResLogin } from '../types';
 import 'dotenv/config';
+import { UserResLogin } from '../types';
 import { User, UserAttributes, UserCreationAttributes } from '../db/models/user';
-import { signToken } from '@/helpers';
+import { signToken, verifyText } from '@/helpers';
 import { Payload, verifyToken } from '@/helpers/jsonToken';
 import { transport } from '@/config/config';
 import { ClientError, ServerError } from '@/errors';
