@@ -11,9 +11,9 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password } = req.body;
+  const { email, password }: { email: string; password: string } = req.body;
   try {
-    const data = await userService.loginBd(email, password);
+    const data = await userService.loginBd(email.toLowerCase(), password);
     res.status(200).json(data);
   } catch (error) {
     next(error);
