@@ -9,6 +9,7 @@ router.post('/', userController.createUser);
 
 //Read all users
 router.get('/', userController.getAllUsers);
+router.post('/login', userController.login);
 
 //Password reset request
 //! TODO requiere middleware para verificar si el correo ingresado existe en la base de datos

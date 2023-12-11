@@ -2,7 +2,7 @@
 'use strict';
 const { v4: uuidv4 } = require('uuid');
 
-// The same password is set for all of them. 
+// The same password is set for all of them.
 module.exports = {
   up: async queryInterface => {
     // If 'length' is changed, the number of created members changes
@@ -12,7 +12,8 @@ module.exports = {
         firstName: '3xi',
         lastName: 'ONG',
         email: '3xi@g3xi.com',
-        password: 'pass123',
+        password:
+          '$argon2id$v=19$m=65536,t=3,p=4$aUUh9Ip+JHt6qarynaYpGw$LbP1QDpr4jjsDGJArFgpzYYO79Z5asJhSn7M4bXN4XI',
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),

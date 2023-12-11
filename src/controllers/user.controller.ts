@@ -11,6 +11,16 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const login = async (req: Request, res: Response, next: NextFunction) => {
+  const { email, password }: { email: string; password: string } = req.body;
+  try {
+    const data = await userService.loginBd(email.toLowerCase(), password);
+    res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userData = req.body;
@@ -56,6 +66,7 @@ const changePass = async (req: Request, res: Response, next: NextFunction) => {
 
 export default {
   getAllUsers,
+  login,
   createUser,
   forgotPass,
   changePass,

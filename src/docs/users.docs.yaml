@@ -9,39 +9,34 @@ components:
         last_name:
           type: string
           description: Apellido del usuario
-        photo:
-          type: string
-          description: url de la foto de perfil
-        mail:
+        email:
           type: string
           description: Email registrado
-        age:
-          type: number
-          description: edad del usuario
         password:
           type: string
           description: Contraseña guardada en la base de datos
       example:
         first_name: Emiliano
         last_name: desafio
-        mail: emilio@desafio.com
-        password: desafio1234
+        email: 3xi@g3xi.com
+        password: pass123
     Login:
       type: object
       properties:
-        mail:
+        email:
           type: string
           description: Email registrado
         password:
           type: string
           description: Contraseña guardada en la base de datos
       example:
-        mail: igna@desafio.com
-        password: hola1234
+        email: 3xi@g3xi.com
+        password: pass123
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
   responses:
     register:
       type: object
@@ -62,23 +57,34 @@ components:
     login:
       type: object
       properties:
-        session:
-          type: object
-          description: Informacion de la sesion
-        message:
+        id:
           type: string
-          description: Descripcion de la operación realizada
-      example:
-        session: 
-          cookie:
-            originalMaxAge: null
-            expires: null
-            httpOnly: true
-            path: /
-          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRhbmllbG1hY2hhZG84NkB5YWhvby5jb20iLCJpYXQiOjE2OTk0NzAwMjksImV4cCI6MTY5OTU1NjQyOX0.hnxt9GHiHM3WKlsK1D78tzcFt1_r-lizNaD6IeO5r40
-          mail: correoregistrado@gmail.com
-          role: 2
-        message: usuario inició sesión
+          format: uuid
+          description: 'ID del usuario'
+        firstName:
+          type: string
+          description: 'Nombre del usuario'
+        lastName:
+          type: string
+          description: 'Apellido del usuario'
+        email:
+          type: string
+          format: email
+          description: 'Correo electrónico del usuario'
+        active:
+          type: boolean
+          description: 'Estado activo del usuario'
+        token:
+          type: string
+          description: 'Token de autenticación del usuario'
+      examples:
+        application/json:
+          id: 'd12b4ba9-2148-4186-b177-ce900646cc10'
+          firstName: '3xi'
+          lastName: 'ONG'
+          email: '3xi@g3xi.com'
+          active: true
+          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxMmI0YmE5LTIxNDgtNDE4Ni1iMTc3LWNlOTAwNjQ2Y2MxMCIsImVtYWlsIjoiM3hpQGczeGkuY29tIiwiaWF0IjoxNzAxOTgzNTcxLCJleHAiOjE3MDE5ODcxNzF9.oFt5eckNonVjeXd7hUHyAd5WSciyn_ZgbTqxVIwuQmc'
     signout:
       type: object
       properties:
@@ -118,18 +124,10 @@ components:
     auth:
       type: object
       properties:
-        method:
-          type: string
-          description: Metodo HTTP de la solicitud
-        path:
-          type: string
-          description: Descripción del endpoint del error
         message:
           type: string
           description: Descripción del error
       example:
-        method: POST
-        path: /api/auth
         message: invalid credentials
     incomplete:
       type: object
@@ -146,25 +144,17 @@ components:
     fatal:
       type: object
       properties:
-        method:
-          type: string
-          description: Metodo HTTP de la solicitud
-        path:
-          type: string
-          description: Descripción del endpoint del error
         message:
           type: string
           description: Descripción del error
       example:
-        method: POST
-        path: /api/auth
         message: Internal server error
 paths:
   /api/auth/register:
     post:
       summary: Registrar un usuario
       tags:
-        - Auth
+        - User
       requestBody:
         required: true
         description: objeto con las propiedades necesarias/mínimas para registrar un usuario
@@ -179,23 +169,23 @@ paths:
             application/json:
               schema:
                 $ref: '#components/responses/register'
-        "400":
+        '400':
           description: Campos faltantes y/o correo duplicado
           content:
             application/json:
               schema:
                 $ref: '#components/responses/incomplete'
-        "500":
+        '500':
           description: Servidor caído
           content:
             application/json:
               schema:
                 $ref: '#components/responses/fatal'
-  /api/auth/login:
+  /api/users/login:
     post:
       summary: Iniciar sesión
       tags:
-        - Auth
+        - User
       requestBody:
         required: true
         description: objeto con las propiedades necesarias/mínimas para iniciar sesión
@@ -206,28 +196,28 @@ paths:
       responses:
         '200':
           description: El éxito retorna una cookie "token" para enviar en las peticiones que requieran autenticación
-          headers: 
+          headers:
             Set-Cookie:
-              schema: 
+              schema:
                 type: string
                 example: token=yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaWduYSBjb2RlciIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJpZ25hQGNvZGVyLmNvbSIsImlhdCI6MTY5ODg0MjkzNSwiZXhwIjoxNjk4ODQ2NTM1fQ.FfpFL2XuKTp0MW6F_M8dy5qbKqHtYsw4mDET2611ddI
           content:
             application/json:
               schema:
                 $ref: '#components/responses/login'
-        "400":
+        '400':
           description: Campos faltantes
           content:
             application/json:
               schema:
                 $ref: '#components/responses/incomplete'
-        "401":
+        '401':
           description: Credenciales invalidas
           content:
             application/json:
               schema:
                 $ref: '#components/responses/auth'
-        "500":
+        '500':
           description: Servidor caído
           content:
             application/json:
@@ -237,23 +227,23 @@ paths:
     post:
       summary: Cerrar sesión
       tags:
-        - Auth
+        - User
       security:
         - cookieAuth: []
       responses:
-        "200":
+        '200':
           description: Éxito en el cierre de sesion
           content:
             application/json:
               schema:
                 $ref: '#components/responses/signout'
-        "401":
+        '401':
           description: Usuario no autenticado
           content:
             application/json:
               schema:
                 $ref: '#components/responses/auth'
-        "500":
+        '500':
           description: Servidor caído
           content:
             application/json:

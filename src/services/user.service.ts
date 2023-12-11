@@ -1,7 +1,7 @@
-// aqui nos comunicamos con la db => sequelize models
 import 'dotenv/config';
+import { UserResLogin } from '../types';
 import { User, UserAttributes, UserCreationAttributes } from '../db/models/user';
-import { signToken } from '@/helpers';
+import { signToken, verifyText } from '@/helpers';
 import { Payload, verifyToken } from '@/helpers/jsonToken';
 import { transport } from '@/config/config';
 import { ClientError, ServerError } from '@/errors';
@@ -28,7 +28,7 @@ const getUserByEmail = async (email: string): Promise<UserAttributes | null> => 
       email: email,
     },
   });
-  if (!user) {  
+  if (!user) {
     return null;
   }
   const userData = user.get();
@@ -113,10 +113,31 @@ const changePass = async (auth: string, newPassword: string): Promise<Response |
   }
 };
 
+const loginBd = async (email: string, password: string): Promise<UserResLogin> => {
+  const user = await User.findOne({
+    where: { email },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  });
+  if (user == null) {
+    throw new ClientError('Credenciales inválidas', 401);
+  }
+  const verifyPassword = await verifyText(password, user.password);
+  if (!verifyPassword) {
+    throw new ClientError('Credenciales inválidas', 401);
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...restUser } = user.dataValues;
+    const payload = { id: restUser.id, email: restUser.email };
+    const token = signToken(payload);
+    return { ...restUser, token };
+  }
+};
+
 export default {
   getAllUsers,
   createUser,
   getUserByEmail,
   forgotPass,
   changePass,
+  loginBd,
 };
