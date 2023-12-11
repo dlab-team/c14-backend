@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import { UserResLogin } from '../types';
+import { Payload, UserResLogin } from '../types';
 import { User, UserAttributes, UserCreationAttributes } from '../db/models/user';
 import { signToken, verifyText } from '@/helpers';
-import { Payload, verifyToken } from '@/helpers/jsonToken';
+import { verifyToken } from '@/helpers/jsonToken';
 import { transport } from '@/config/config';
 import { ClientError, ServerError } from '@/errors';
 

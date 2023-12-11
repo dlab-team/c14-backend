@@ -1,7 +1,7 @@
 import {
   Polynomial,
+  PolynomialAttributes,
   PolynomialCreationAttributes,
-  PolynomialInstance,
 } from '@/db/models/polynomial';
 import { ClientError } from '@/errors';
 import { Response } from './user.service';
@@ -9,15 +9,21 @@ import { IdPolynomial, PolynomialAttributesOptional } from '@/types';
 
 const createPolynomialDB = (
   polynomial: PolynomialCreationAttributes,
-): Promise<PolynomialInstance> => {
-  return Polynomial.create(polynomial);
+): Promise<PolynomialAttributes> => {
+  return Polynomial.create(polynomial, { raw: true }).then(({ id, name, active }) => ({
+    id,
+    name,
+    active,
+  }));
 };
 
 const updatePolynomialDB = async (polynomialUpdate: PolynomialAttributesOptional) => {
   const polinomial = await getPolynomialsId(polynomialUpdate);
   if (polinomial) {
     polinomial.update(polynomialUpdate);
-    return polinomial;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { updatedAt, ...restPolynomial } = polinomial.dataValues;
+    return restPolynomial;
   } else {
     throw new ClientError('El polinomio a actualizar no existe', 404);
   }
