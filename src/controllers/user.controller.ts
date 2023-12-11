@@ -12,8 +12,20 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userData = req.body
+    const userData = req.body;
     const response = await userService.createUser(userData);
+    res.json({
+      response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const forgotPass = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const email: string = req.body.email;
+    const response = await userService.forgotPass(email);
     res.json({
       response,
     });
@@ -25,4 +37,5 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 export default {
   getAllUsers,
   createUser,
+  forgotPass,
 };
