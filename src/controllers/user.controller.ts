@@ -48,7 +48,7 @@ const forgotPass = async (req: Request, res: Response, next: NextFunction) => {
 const changePass = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const auth = req.headers.authorization;
-    const newPassword = req.body;
+    const { newPassword } = req.body;
     if (!auth) {
       throw new ClientError('Invalid Credentials', 400);
     } else {
