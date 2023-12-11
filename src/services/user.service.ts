@@ -4,6 +4,7 @@ import { User, UserAttributes, UserCreationAttributes } from '../db/models/user'
 import { signToken } from '@/helpers';
 import { Payload } from '@/helpers/jsonToken';
 import { transport } from '@/config/config';
+import { ClientError, ServerError } from '@/errors';
 
 interface Response {
   success: boolean;
@@ -19,6 +20,19 @@ const getAllUsers = async (): Promise<UserAttributes[]> => {
     console.error('Error fetching users:', error);
     throw error;
   }
+};
+
+const getUserByEmail = async (email: string): Promise<UserAttributes | null> => {
+  const user = await User.findOne({
+    where: {
+      email: email,
+    },
+  });
+  if (!user) {  
+    return null;
+  }
+  const userData = user.get();
+  return userData;
 };
 
 const createUser = async (userAttributes: UserCreationAttributes): Promise<Response> => {
@@ -56,4 +70,5 @@ const createUser = async (userAttributes: UserCreationAttributes): Promise<Respo
 export default {
   getAllUsers,
   createUser,
+  getUserByEmail,
 };
