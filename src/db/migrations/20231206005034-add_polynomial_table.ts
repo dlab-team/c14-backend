@@ -1,10 +1,10 @@
 'use strict';
 
+import { DataTypes, QueryInterface } from 'sequelize';
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  up: async (queryInterface, Sequelize) => {
+  up: async (queryInterface: QueryInterface, Sequelize: typeof DataTypes) => {
     await queryInterface.createTable('polynomials', {
       id: {
         allowNull: false,

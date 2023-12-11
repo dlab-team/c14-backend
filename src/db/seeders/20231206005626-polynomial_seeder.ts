@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
-const { faker } = require('@faker-js/faker');
+import { QueryInterface } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
+import { faker } from '@faker-js/faker';
 
 module.exports = {
-  up: async queryInterface => {
-
+  up: async (queryInterface: QueryInterface) => {
     // If 'length' is changed, the number of created polynomials changes
     const polynomials = Array.from({ length: 10 }, () => ({
       id: uuidv4(),
@@ -19,7 +18,7 @@ module.exports = {
     await queryInterface.bulkInsert('polynomials', polynomials, {});
   },
 
-  down: async queryInterface => {
-    await queryInterface.bulkDelete('polynomials', null, {});
+  down: async (queryInterface: QueryInterface) => {
+    await queryInterface.bulkDelete('polynomials', {});
   },
 };

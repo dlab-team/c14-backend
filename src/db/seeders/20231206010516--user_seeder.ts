@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 'use strict';
-const { v4: uuidv4 } = require('uuid');
+
+import { QueryInterface } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
 
 // The same password is set for all of them.
 module.exports = {
-  up: async queryInterface => {
+  up: async (queryInterface: QueryInterface) => {
     // If 'length' is changed, the number of created members changes
     const users = [
       {
@@ -64,7 +65,7 @@ module.exports = {
     await queryInterface.bulkInsert('user', users, {});
   },
 
-  down: async queryInterface => {
-    await queryInterface.bulkDelete('user', null, {});
+  down: async (queryInterface: QueryInterface) => {
+    await queryInterface.bulkDelete('user', {});
   },
 };

@@ -1,10 +1,11 @@
 'use strict';
 
 /** @type {import('sequelize').Sequelize} */
-const Sequelize = require('sequelize');
+import { DataTypes, QueryInterface } from 'sequelize';
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  up: async (queryInterface: QueryInterface, Sequelize: typeof DataTypes) => {
     await queryInterface.createTable('user', {
       id: {
         allowNull: false,
@@ -29,7 +30,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT,
       },
-      active:{
+      active: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: false,
@@ -44,7 +45,7 @@ module.exports = {
       },
     });
   },
-  down: async queryInterface => {
+  down: async (queryInterface: QueryInterface) => {
     await queryInterface.dropTable('user');
   },
 };
