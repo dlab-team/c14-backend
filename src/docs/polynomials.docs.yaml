@@ -1,0 +1,207 @@
+components:
+  schemas:
+    create:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre del polinomio nuevo
+        active:
+          type: boolean
+          description: Si estara activa o no
+      example:
+        name: Ejemplo 1
+        active: true
+    update:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the item
+          required: true
+        name:
+          type: string
+          description: The name of the item
+          nullable: true
+        active:
+          type: boolean
+          description: Whether the item is active or not
+          nullable: true
+      example:
+        id: 'd12b4ba9-2148-4186-b177-ce900646cc10'
+        name: ejemplo
+        active: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    polynomial:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identificador unico de polinomio
+        name:
+          type: string
+          description: nombre del polinomio
+        active:
+          type: boolean
+          description: Informa si esta activo o no
+    allPolynomials:
+      type: array
+      items:
+        $ref: '#/components/responses/polynomial'
+    generalError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Descripción del error
+    eliminacion:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        message:
+          type: string
+          description: Descripcion de la operación realizada
+      example:
+        status: success
+        message: Recurso eliminado
+
+paths:
+  /api/polynomials:
+    get:
+      summary: Nos entrega todos los polinomios guardados
+      tags:
+        - Polynomial
+      responses:
+        '200':
+          description: Retorna todo los polinomios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/allPolynomials'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    post:
+      summary: Crear un polinomio nuevo(Requiere Auth)
+      tags:
+        - Polynomial
+      requestBody:
+        required: true
+        description: Datos requeridos para crear un polinomio
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create'
+      responses:
+        '201':
+          description: Se creo exitosamente el recursos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/polynomial'
+        '400':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    put:
+      summary: Modifica un polinomio existente(Requiere Auth)
+      tags:
+        - Polynomial
+      requestBody:
+        required: true
+        description: Datos requeridos para actualizar un polinomio obligatorio el id
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update'
+      responses:
+        '201':
+          description: Se actualizo exitosamente el recursos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/polynomial'
+        '400':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+
+  /api/polynomials/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+        description: El Id del polinomio a buscar
+    get:
+      summary: Busca un polinomio por su Id
+      tags:
+        - Polynomial
+      responses:
+        '200':
+          description: Retorna el polinomio que corresponde con ese id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/polynomial'
+        '404':
+          description: Cuando no se encuentra el recurso con id proporcionado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    delete:
+      summary: Busca un polinomio por su Id y lo elimina
+      tags:
+        - Polynomial
+      responses:
+        '200':
+          description: Retorna el polinomio que corresponde con ese id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/eliminacion'
+        '404':
+          description: Cuando no se encuentra el recurso con id proporcionado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'

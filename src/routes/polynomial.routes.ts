@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import Middlewares from '@/middlewares';
+import * as Middlewares from '@/middleware';
 import polynomialController from '@/controllers/polynomial.controller';
 const router = Router();
 

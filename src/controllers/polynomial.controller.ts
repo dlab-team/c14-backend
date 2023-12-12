@@ -7,7 +7,7 @@ import { ClientError } from '@/errors';
 const createPolynomial = async (req: Request, res: Response, next: NextFunction) => {
   const polynomial: PolynomialCreationAttributes = req.body;
   try {
-    const polynomialCreate = (await polynomialService.createPolynomialDB(polynomial)).dataValues;
+    const polynomialCreate = await polynomialService.createPolynomialDB(polynomial);
     res.status(201).json(polynomialCreate);
   } catch (error) {
     next(error);
