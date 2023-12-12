@@ -1,11 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { jwt as secret } from '@/config/config';
 import { ClientError } from '@/errors';
-
-export interface Payload {
-  id: string;
-  email: string;
-}
+import { Payload } from '@/types';
 
 const signToken = (payload: Payload): string => {
   const token: string = jwt.sign(payload, secret, { expiresIn: '1h' });
