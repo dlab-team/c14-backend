@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { UserResLogin } from '../types';
 import { User, UserAttributes, UserCreationAttributes } from '../db/models/user';
 import { signToken, verifyText } from '@/helpers';
-import { Payload, verifyToken } from '@/helpers/jsonToken';
+import { Payload } from '@/helpers/jsonToken';
 import { transport } from '@/config/config';
 import { ClientError, ServerError } from '@/errors';
 
@@ -92,22 +92,17 @@ const forgotPass = async (email: string): Promise<Response | void> => {
   }
 };
 
-const changePass = async (auth: string, newPassword: string): Promise<Response | void> => {
+const changePass = async (email: string, newPassword: string): Promise<Response | void> => {
   try {
-    const maskedToken = auth.split(' ')[1];
-    const token = maskedToken.replace(/\*/g, '.');
-    const decoded: Payload = verifyToken(token);
-    if (decoded) {
-      const user = await getUserByEmail(decoded.email);
-      if (!user) {
-        throw new ClientError('User not found', 400);
-      }
-      await User.update({ password: newPassword }, { where: { id: user.id } });
-      return {
-        success: true,
-        message: 'Password changed',
-      };
+    const user = await getUserByEmail(email);
+    if (!user) {
+      throw new ClientError('User not found', 400);
     }
+    await User.update({ password: newPassword }, { where: { id: user.id } });
+    return {
+      success: true,
+      message: 'Password changed',
+    };
   } catch (error) {
     throw new ServerError('Server error', 500);
   }
