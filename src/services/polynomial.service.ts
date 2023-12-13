@@ -22,7 +22,8 @@ const updatePolynomialDB = async (polynomialUpdate: PolynomialAttributesOptional
   if (polinomial) {
     polinomial.update(polynomialUpdate);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { updatedAt, ...restPolynomial } = polinomial.dataValues;
+    const { id, name, active } = polinomial.dataValues;
+    const restPolynomial = { id, name, active };
     return restPolynomial;
   } else {
     throw new ClientError('El polinomio a actualizar no existe', 404);

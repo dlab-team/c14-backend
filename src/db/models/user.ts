@@ -10,7 +10,7 @@ export interface UserAttributes {
   active: boolean;
 }
 
-export interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'password'> {}
 
 interface UserInstance extends Model<UserAttributes, UserCreationAttributes>, UserAttributes {
   createdAt?: Date;
