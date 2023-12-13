@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import userService from '@/services/user.service';
 import { ClientError } from '@/errors';
+import { hashText } from '../helpers/argon';
 import { UserCreationAttributes } from '@/db/models/user';
 
 const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -48,10 +49,11 @@ const changePass = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const auth = req.headers.authorization;
     const { newPassword } = req.body;
+    const hashedPassword = await hashText(newPassword);
     if (!auth) {
       throw new ClientError('Invalid Credentials', 400);
     } else {
-      const response = await userService.changePass(auth, newPassword);
+      const response = await userService.changePass(auth, hashedPassword);
       if (response) {
         res.json({
           response,
