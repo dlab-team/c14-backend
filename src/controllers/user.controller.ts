@@ -37,9 +37,7 @@ const forgotPass = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const email: string = req.body.email;
     const response = await userService.forgotPass(email);
-    res.json({
-      response,
-    });
+    res.json(response);
   } catch (error) {
     next(error);
   }
