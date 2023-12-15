@@ -15,15 +15,15 @@ components:
         # password:
         #   type: string
         #   description: Contraseña guardada en la base de datos
-        active:
-          type: boolean
-          description: Si esta activo o no el usuario
+        # active:
+        #   type: boolean
+        #   description: Si esta activo o no el usuario
       example:
         firstName: Emiliano
         lastName: desafio
         email: 3xi@g3xi.com
         # password: pass123
-        active: true
+        # active: true
     Login:
       type: object
       properties:
