@@ -36,6 +36,14 @@ components:
       example:
         email: 3xi@g3xi.com
         password: pass123
+    Restore:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email registrado en la plataforma
+      example:
+        email: 3xi@g3xi.com
   securitySchemes:
     bearerAuth:
       type: http
@@ -239,6 +247,43 @@ paths:
                 $ref: '#components/responses/signout'
         '401':
           description: Usuario no autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/auth'
+        '500':
+          description: Servidor caído
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/fatal'
+  /api/users/forgot:
+    post:
+      summary: Recuperar password perdido
+      tags:
+        - User
+      requestBody:
+        required: true
+        description: Se requiere correo registrado en el sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Restore'
+      responses:
+        '200':
+          description: Retorna que se ha enviado con exito el email de recuperacion
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/register'
+        '400':
+          description: Campos faltantes
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/incomplete'
+        '401':
+          description: Credenciales invalidas
           content:
             application/json:
               schema:
