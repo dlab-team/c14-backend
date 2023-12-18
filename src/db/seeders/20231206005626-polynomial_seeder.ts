@@ -15,10 +15,10 @@ module.exports = {
       updatedAt: new Date(),
     }));
 
-    await queryInterface.bulkInsert('polynomials', polynomials, {});
+    await queryInterface.bulkInsert('polynomial', polynomials, {});
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkDelete('polynomials', {});
+    await queryInterface.bulkDelete('polynomial', {});
   },
 };

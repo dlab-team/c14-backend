@@ -37,6 +37,6 @@ export const Polynomial = sequelize.define<PolynomialInstance>(
     },
   },
   {
-    tableName: 'polynomials',
+    tableName: 'polynomial',
   },
 );

@@ -1,11 +1,12 @@
 'use strict';
 
 import { DataTypes, QueryInterface } from 'sequelize';
+import { groups } from '@/db/models/polynomial_option';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface: QueryInterface, Sequelize: typeof DataTypes) => {
-    await queryInterface.createTable('polynomial', {
+    await queryInterface.createTable('polynomial_option', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -16,9 +17,19 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT,
       },
-      active: {
+      group: {
         allowNull: false,
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.ENUM({ values: Object.keys(groups) }),
+      },
+      polynomialId: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'polynomial',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,
@@ -30,9 +41,7 @@ module.exports = {
       },
     });
   },
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  down: async queryInterface => {
-    await queryInterface.dropTable('polynomial');
+  down: async (queryInterface: QueryInterface) => {
+    await queryInterface.dropTable('polynomial_option');
   },
 };
