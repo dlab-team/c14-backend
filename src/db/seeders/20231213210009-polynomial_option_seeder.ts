@@ -6,30 +6,20 @@ import { faker } from '@faker-js/faker';
 
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
-    const polynomialIdTable = await queryInterface.sequelize.query('SELECT id from polynomials;');
+    const polynomialIdTable = await queryInterface.sequelize.query('SELECT id from polynomial;');
 
-    /*     for (let i = 0; i < polynomialIdTable[0].length; i++) {
-      const polynomialOptions = {
-        id: uuidv4(),
-        name: faker.lorem.sentence(),
-        group: faker.helpers.arrayElement(['Extremo1', 'Extremo2', 'Neutro']),
-        polynomialId: polynomialIdTable[i],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }; */
-
-    const polynomialOption = Array.from({ length: polynomialIdTable[0].length }, (v, i) => ({
+    const polynomialOptions = polynomialIdTable[0].map((polynomial: any) => ({
       id: uuidv4(),
       name: faker.lorem.sentence(),
       group: faker.helpers.arrayElement(['Extremo1', 'Extremo2', 'Neutro']),
-      polynomialId: polynomialIdTable[i],
+      polynomialId: polynomial.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
-
-    await queryInterface.bulkInsert('polynomial_options', polynomialOption);
+    await queryInterface.bulkInsert('polynomial_option', polynomialOptions, {});
   },
+
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkDelete('polynomial_options', {});
+    await queryInterface.bulkDelete('polynomial_option', {});
   },
 };
