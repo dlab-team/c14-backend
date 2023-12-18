@@ -1,6 +1,7 @@
 'use strict';
 
 import { DataTypes, QueryInterface } from 'sequelize';
+import { groups } from '@/db/models/polynomial_option';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -18,7 +19,7 @@ module.exports = {
       },
       group: {
         allowNull: false,
-        type: Sequelize.ARRAY(DataTypes.ENUM('Extremo1', 'Extremo2', 'Neutro')),
+        type: Sequelize.ENUM({ values: Object.keys(groups) }),
       },
       polynomialId: {
         type: Sequelize.UUID,
