@@ -16,6 +16,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT,
       },
+      political: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+      },
       active: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
