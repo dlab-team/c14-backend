@@ -4,7 +4,6 @@ import { sequelize } from '.';
 export interface PolynomialAttributes {
   id: string;
   name: string;
-  political: boolean;
   active: boolean;
 }
 
@@ -31,10 +30,6 @@ export const Polynomial = sequelize.define<PolynomialInstance>(
     name: {
       allowNull: false,
       type: DataTypes.TEXT,
-    },
-    political: {
-      allowNull: false,
-      type: DataTypes.BOOLEAN,
     },
     active: {
       allowNull: false,
