@@ -10,10 +10,11 @@ import { IdPolynomial, PolynomialUpdateService } from '@/types';
 const createPolynomialDB = (
   polynomial: PolynomialCreationAttributes,
 ): Promise<PolynomialAttributes> => {
-  return Polynomial.create(polynomial, { raw: true }).then(({ id, name, active }) => ({
+  return Polynomial.create(polynomial, { raw: true }).then(({ id, name, active, political }) => ({
     id,
     name,
     active,
+    political,
   }));
 };
 
@@ -23,8 +24,8 @@ const updatePolynomialDB = async (
   const polinomial = await getPolynomialsId(polynomialUpdate);
   if (polinomial) {
     polinomial.update(polynomialUpdate);
-    const { id, name, active } = polinomial.dataValues;
-    const restPolynomial = { id, name, active };
+    const { id, name, active, political } = polinomial.dataValues;
+    const restPolynomial = { id, name, active, political };
     return restPolynomial;
   } else {
     throw new ClientError('El polinomio a actualizar no existe', 404);

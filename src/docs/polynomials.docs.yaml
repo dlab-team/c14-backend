@@ -6,25 +6,34 @@ components:
         name:
           type: string
           description: Nombre del polinomio nuevo
+        political:
+          type: boolean
+          description: Si el polinomio en cuestion es politico
         active:
           type: boolean
           description: Si estara activa o no
       example:
         name: Ejemplo 1
+        political: false
         active: true
     update:
       type: object
       properties:
         name:
           type: string
-          description: The name of the item
+          description: Nombre del polinomio a actualizar
+          nullable: true
+        political:
+          type: boolean
+          description: Si el polinomio es politico
           nullable: true
         active:
           type: boolean
-          description: Whether the item is active or not
+          description: Si este estara activo o no
           nullable: true
       example:
         name: ejemplo
+        political: false
         active: true
   securitySchemes:
     bearerAuth:
@@ -41,6 +50,9 @@ components:
         name:
           type: string
           description: nombre del polinomio
+        political:
+          type: boolean
+          description: Si el polinomio en cuestion es politico
         active:
           type: boolean
           description: Informa si esta activo o no
