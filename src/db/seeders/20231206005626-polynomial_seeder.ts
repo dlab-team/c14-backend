@@ -10,7 +10,6 @@ module.exports = {
     const polynomials = Array.from({ length: 10 }, () => ({
       id: uuidv4(),
       name: faker.lorem.sentence(),
-      political: faker.helpers.arrayElement([true, false]),
       active: true,
       createdAt: new Date(),
       updatedAt: new Date(),
