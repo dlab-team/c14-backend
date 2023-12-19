@@ -5,7 +5,7 @@ import {
 } from '@/db/models/polynomial';
 import { ClientError } from '@/errors';
 import { Response } from './user.service';
-import { IdPolynomial, PolynomialAttributesOptional } from '@/types';
+import { IdPolynomial, PolynomialUpdateService } from '@/types';
 
 const createPolynomialDB = (
   polynomial: PolynomialCreationAttributes,
@@ -17,11 +17,12 @@ const createPolynomialDB = (
   }));
 };
 
-const updatePolynomialDB = async (polynomialUpdate: PolynomialAttributesOptional) => {
+const updatePolynomialDB = async (
+  polynomialUpdate: PolynomialUpdateService,
+): Promise<PolynomialAttributes> => {
   const polinomial = await getPolynomialsId(polynomialUpdate);
   if (polinomial) {
     polinomial.update(polynomialUpdate);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, name, active } = polinomial.dataValues;
     const restPolynomial = { id, name, active };
     return restPolynomial;

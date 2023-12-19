@@ -15,10 +15,6 @@ components:
     update:
       type: object
       properties:
-        id:
-          type: string
-          description: The unique identifier of the item
-          required: true
         name:
           type: string
           description: The name of the item
@@ -28,7 +24,6 @@ components:
           description: Whether the item is active or not
           nullable: true
       example:
-        id: 'd12b4ba9-2148-4186-b177-ce900646cc10'
         name: ejemplo
         active: true
   securitySchemes:
@@ -121,36 +116,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/generalError'
-    put:
-      summary: Modifica un polinomio existente(Requiere Auth)
-      tags:
-        - Polynomial
-      requestBody:
-        required: true
-        description: Datos requeridos para actualizar un polinomio obligatorio el id
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/update'
-      responses:
-        '201':
-          description: Se actualizo exitosamente el recursos
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/polynomial'
-        '400':
-          description: No autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/generalError'
-        '500':
-          description: Error general del servidor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/generalError'
 
   /api/polynomials/{id}:
     parameters:
@@ -195,6 +160,36 @@ paths:
                 $ref: '#/components/responses/eliminacion'
         '404':
           description: Cuando no se encuentra el recurso con id proporcionado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    put:
+      summary: Modifica un polinomio existente(Requiere Auth)
+      tags:
+        - Polynomial
+      requestBody:
+        required: true
+        description: Datos requeridos para actualizar un polinomio obligatorio el id
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update'
+      responses:
+        '201':
+          description: Se actualizo exitosamente el recursos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/polynomial'
+        '400':
+          description: No autorizado
           content:
             application/json:
               schema:

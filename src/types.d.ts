@@ -17,8 +17,13 @@ export type UserResLogin = {
 };
 
 // tipos de servicios y controlador de polinomios
-export type PolynomialAttributesOptional = PolynomialAttributes & {
+export type PolynomialAttributesOptional = Omit<PolynomialAttributes, 'id'> & {
   name?: string;
   active?: boolean;
 };
 export type IdPolynomial = Pick<PolynomialAttributes, 'id'>;
+
+export interface PolynomialUpdateService extends Pick<PolynomialAttributes, 'id'> {
+  name?: string;
+  active?: boolean;
+}
