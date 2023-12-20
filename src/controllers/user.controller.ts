@@ -17,7 +17,16 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password }: { email: string; password: string } = req.body;
   try {
     const data = await userService.loginBd(email.toLowerCase(), password);
-    res.status(200).json(data);
+    const { token, ...userData } = data;
+    res
+      .status(200)
+      .cookie('token', token, {
+        maxAge: 60 * 60 * 25 * 7 * 1000,
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      })
+      .json(userData);
   } catch (error) {
     next(error);
   }
