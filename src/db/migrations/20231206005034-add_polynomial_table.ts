@@ -35,9 +35,7 @@ module.exports = {
       },
     });
   },
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  down: async queryInterface => {
+  down: async (queryInterface: QueryInterface) => {
     await queryInterface.dropTable('polynomial');
   },
 };
