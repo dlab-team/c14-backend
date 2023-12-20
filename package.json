@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./dist/server.js",
     "dev": "tsx watch --clear-screen=false src/server.ts",
-    "build": "npx tsc && tsc-alias",
+    "build": "rimraf ./dist && npx tsc && tsc-alias",
     "lint": "eslint . --ext ts --ignore-path .gitignore",
     "lint:fix": "npm run lint -- --fix",
     "db:migrate": "sequelize-cli db:migrate",
@@ -51,6 +51,7 @@
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-prettier": "5.0.1",
     "prettier": "3.1.0",
+    "rimraf": "^5.0.5",
     "sequelize-cli": "^6.6.2",
     "tsc-alias": "^1.8.8",
     "tsx": "^4.6.2",
