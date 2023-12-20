@@ -7,6 +7,7 @@ export interface UserAttributes {
   lastName: string;
   email: string;
   password: string;
+  superAdmin: boolean;
   active: boolean;
 }
 
@@ -45,6 +46,11 @@ export const User = sequelize.define<UserInstance>(
     password: {
       allowNull: true,
       type: DataTypes.TEXT,
+    },
+    superAdmin: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     active: {
       allowNull: false,
