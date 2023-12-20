@@ -8,7 +8,8 @@ export interface PolynomialAttributes {
   active: boolean;
 }
 
-export interface PolynomialCreationAttributes extends Optional<PolynomialAttributes, 'id'> {}
+export interface PolynomialCreationAttributes
+  extends Optional<PolynomialAttributes, 'id' | 'political'> {}
 
 export interface PolynomialInstance
   extends Model<PolynomialAttributes, PolynomialCreationAttributes>,
