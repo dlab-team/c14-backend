@@ -15,9 +15,10 @@ const createPolynomial = async (req: Request, res: Response, next: NextFunction)
 };
 
 const putPolynomial = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
   const polynomial: PolynomialAttributesOptional = req.body;
   try {
-    const polynomialUpdate = await polynomialService.updatePolynomialDB(polynomial);
+    const polynomialUpdate = await polynomialService.updatePolynomialDB({ ...polynomial, id });
     res.status(200).json(polynomialUpdate);
   } catch (error) {
     next(error);
