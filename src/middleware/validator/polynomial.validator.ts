@@ -19,12 +19,14 @@ export const validatePolynomialUpdate = [
   body(['active', 'political'])
     .optional()
     .isBoolean({ strict: true })
-    .withMessage('Este campo es booleano'),
+    .withMessage('Este campo es booleano')
+    .toBoolean(),
   body('name')
     .optional()
     .isString()
     .withMessage('Tiene que se un string')
     .notEmpty()
-    .withMessage('No puede estar vacio'),
+    .withMessage('No puede estar vacio')
+    .escape(),
   validateResult,
 ];
