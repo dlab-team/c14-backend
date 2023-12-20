@@ -5,9 +5,9 @@ const router = Router();
 
 router.delete('/:id', polynomialController.deletePolynomial);
 router.get('/:id', polynomialController.getPolynomialsId);
+router.put('/:id', validate.validatePolynomialUpdate, polynomialController.putPolynomial);
 
 router.post('/', validate.validatePolynomialCreate, polynomialController.createPolynomial);
-router.put('/', validate.validatePolynomialUpdate, polynomialController.putPolynomial);
 router.get('/', polynomialController.getAllPolynomials);
 
 export default router;
