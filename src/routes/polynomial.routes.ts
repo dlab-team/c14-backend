@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import * as Middlewares from '@/middleware';
+import validate from '@/middleware/validator';
 import polynomialController from '@/controllers/polynomial.controller';
 const router = Router();
 
-router.delete('/:id', Middlewares.validateResult, polynomialController.deletePolynomial);
-router.get('/:id', Middlewares.validateResult, polynomialController.getPolynomialsId);
-router.put('/:id', Middlewares.validateResult, polynomialController.putPolynomial);
+router.delete('/:id', polynomialController.deletePolynomial);
+router.get('/:id', polynomialController.getPolynomialsId);
+router.put('/:id', validate.validatePolynomialUpdate, polynomialController.putPolynomial);
 
-router.post('/', Middlewares.validateResult, polynomialController.createPolynomial);
+router.post('/', validate.validatePolynomialCreate, polynomialController.createPolynomial);
 router.get('/', polynomialController.getAllPolynomials);
 
 export default router;
