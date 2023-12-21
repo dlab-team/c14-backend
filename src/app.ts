@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 //documentacion --->
 const specs = swaggerJSDoc(swaggerOptions);
 app.use('/api/docs', serve, setup(specs));
