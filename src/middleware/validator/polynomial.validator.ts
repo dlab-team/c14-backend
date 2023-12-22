@@ -8,7 +8,7 @@ export const validatePolynomialCreate = [
     .notEmpty()
     .withMessage('No puede esta vacio el campo')
     .escape(),
-  body(['active', 'political'])
+  body('active')
     .isBoolean({ strict: true })
     .withMessage('Debe ser un booleano este campo')
     .toBoolean(),
@@ -16,7 +16,7 @@ export const validatePolynomialCreate = [
 ];
 
 export const validatePolynomialUpdate = [
-  body(['active', 'political'])
+  body('active')
     .optional()
     .isBoolean({ strict: true })
     .withMessage('Este campo es booleano')
