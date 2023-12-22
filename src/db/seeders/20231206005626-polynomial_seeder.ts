@@ -22,10 +22,10 @@ module.exports = {
       'Ingresos',
       'Pueblos indígenas',
       'Credo',
-      ' Inmigración',
+      'Inmigración',
       'Directivo',
       'Etario',
-      'Orientación Sexual',
+      'Orientación sexual',
     ];
     const polynomials = data.map(polynomialName => {
       const newPolynomial = {
