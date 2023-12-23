@@ -1,5 +1,6 @@
 import { PolynomialAttributes } from './db/models/polynomial';
 import { PolynomialOptionAttributes } from './db/models/polynomial_option';
+import { PhrasesAttributes } from './db/models/phrases';
 
 //tipos de JWT
 export interface Payload {
@@ -28,4 +29,18 @@ export type IdPolynomialOption = Pick<PolynomialOptionAttributes, 'id'>;
 export interface PolynomialUpdateService extends Pick<PolynomialAttributes, 'id'> {
   name?: string;
   active?: boolean;
+}
+
+// tipos de servicios y controlador de phrases
+export type PhrasesAttributesOptional = Omit<PhrasesAttributes, 'id'> & {
+  text?: string;
+  group?: "Extremo 1" | "Extremo 2" | "Neutro" | undefined;
+  polynomial_id?: string;
+};
+export type IdPhrases = Pick<PhrasesAttributes, 'id'>;
+
+export interface PhrasesUpdateService extends Pick<PhrasesAttributes, 'id'> {
+  text?: string;
+  group?: "Extremo 1" | "Extremo 2" | "Neutro" | undefined;
+  polynomial_id?: string;
 }
