@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { signToken, verifyToken } from '../helpers/jsonToken.js';
 
 export interface AuthenticatedRequest extends Request {
-  decoded?: { id: string };
+  decoded?: { id: string; email: string };
 }
 
 export const isAuthenticated = async (
@@ -24,7 +24,7 @@ export const isAuthenticated = async (
     if (accessToken) {
       const decoded = verifyToken(accessToken);
       if (decoded) {
-        (req as AuthenticatedRequest).decoded = decoded as { id: string };
+        (req as AuthenticatedRequest).decoded = decoded as { email: string; id: string };
         return next();
       }
     }
