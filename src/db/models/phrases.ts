@@ -2,16 +2,18 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '.';
 import { Polynomial } from './polynomial';
 
-interface PhrasesAttributes {
+export interface PhrasesAttributes {
   id: string;
   text: string;
   group: 'Extremo 1' | 'Extremo 2' | 'Neutro';
   polynomial_id: string;
 }
 
-interface PhrasesCreationAttributes extends Optional<PhrasesAttributes, 'id'> {}
+export interface PhrasesCreationAttributes extends Optional<PhrasesAttributes, 'id'> {}
 
-interface PhrasesInstance extends Model<PhrasesAttributes, PhrasesCreationAttributes>, PhrasesAttributes {
+interface PhrasesInstance
+  extends Model<PhrasesAttributes, PhrasesCreationAttributes>,
+    PhrasesAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
