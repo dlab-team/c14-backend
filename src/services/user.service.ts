@@ -51,11 +51,27 @@ const createUser = async (userAttributes: UserCreationAttributes): Promise<Respo
       subject: 'Enlace para cambio de contraseña',
       html: message,
     });
-    console.log('llegue aqui');
     return {
       success: true,
       message: 'User created and email sent',
     };
+  } else {
+    throw new ClientError('User not found', 400);
+  }
+};
+
+//delete user
+
+const deleteUser = async (mail: string): Promise<Response | void> => {
+  const userToDelete = await getUserByEmail(mail);
+  if (userToDelete) {
+    const resp = await User.destroy({ where: { email: mail } });
+    if (resp) {
+      return {
+        success: true,
+        message: 'User deleted',
+      };
+    }
   } else {
     throw new ClientError('User not found', 400);
   }
@@ -129,6 +145,7 @@ const loginBd = async (email: string, password: string): Promise<UserResLogin> =
 export default {
   getAllUsers,
   createUser,
+  deleteUser,
   getUserByEmail,
   forgotPass,
   changePass,
