@@ -3,6 +3,7 @@ import phrasesController from '@/controllers/phrases.controller';
 const router = Router();
 
 router.get('/', phrasesController.getAllPhrases);
+router.get('/polynomial', phrasesController.getPolynomialPhrases);
 router.get('/:id', phrasesController.getPhrasesId);
 router.put('/:id', phrasesController.putPhrases);
 router.post('/', phrasesController.createPhrases);
