@@ -2,6 +2,7 @@ import { Phrases, PhrasesAttributes, PhrasesCreationAttributes } from '@/db/mode
 import { ClientError } from '@/errors';
 import { Response } from './user.service';
 import { IdPhrases, PhrasesUpdateService } from '@/types';
+import { Polynomial } from '@/db/models/polynomial';
 
 const createPhrasesDB = (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   return Phrases.create(phrases, { raw: true }).then(({ id, text, group, polynomial_id }) => ({
@@ -44,10 +45,32 @@ const getPhrasesId = (idPhrases: IdPhrases) => {
   });
 };
 
+const getPolynomialPhrases = async (polynomialName: string) => {
+  let phraseId: string;
+  const polynomial = await Polynomial.findAll({
+    attributes: ['id', 'name'],
+  });
+
+  const dataArray = polynomial.map(result => ({
+    id: result.getDataValue('id'),
+    name: result.getDataValue('name'),
+  }));
+
+  for (let i = 0; i < dataArray.length; i++) {
+    if (dataArray[i].name === polynomialName) {
+      phraseId = dataArray[i].id;
+      return await Phrases.findAll({
+        where: { polynomial_id: phraseId },
+      });
+    }
+  }
+};
+
 export default {
   createPhrasesDB,
   updatePhrasesDB,
   deletePhrasesDB,
   getPhrases,
   getPhrasesId,
+  getPolynomialPhrases,
 };
