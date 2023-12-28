@@ -22,6 +22,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.ENUM('Extremo1', 'Extremo2', 'Neutro'),
       },
+      
       polynomial_id: {
         allowNull: false,
         primaryKey: true,

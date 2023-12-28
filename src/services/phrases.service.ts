@@ -48,6 +48,7 @@ const getPhrasesId = (idPhrases: IdPhrases) => {
 const getExtrmPoliticalPhrases = async (extreme: string): Promise<PhrasesAttributes[] | void> => {
   const politicalPolyId = await polynomialService.getPoliticalPolyId();
   if (politicalPolyId) {
+    
     const phrases = await Phrases.findAll({
       where: {
         group: extreme,

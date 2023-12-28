@@ -52,6 +52,7 @@ const getPolynomialsId = (idPolynomial: IdPolynomial) => {
   });
 };
 
+
 const getPoliticalPolyId = async () => {
   const res = await Polynomial.findOne({
     attributes: ['id'],
