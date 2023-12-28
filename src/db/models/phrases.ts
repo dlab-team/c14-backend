@@ -5,7 +5,7 @@ import { Polynomial } from './polynomial';
 export interface PhrasesAttributes {
   id: string;
   text: string;
-  group: 'Extremo 1' | 'Extremo 2' | 'Neutro';
+  group: 'Extremo1' | 'Extremo2' | 'Neutro';
   polynomial_id: string;
 }
 
@@ -35,7 +35,7 @@ export const Phrases = sequelize.define<PhrasesInstance>(
     },
     group: {
       allowNull: false,
-      type: DataTypes.ENUM('Extremo 1', 'Extremo 2', 'Neutro'),
+      type: DataTypes.ENUM('Extremo1', 'Extremo2', 'Neutro'),
     },
     polynomial_id: {
       allowNull: false,
