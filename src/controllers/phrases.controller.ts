@@ -57,10 +57,20 @@ const getAllPhrases = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
+const getCombinationPhrases = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const combinationPhrasess = await phrasesService.getCombinationPhrases();
+    res.status(200).json(combinationPhrasess);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createPhrases,
   putPhrases,
   deletePhrases,
   getPhrasesId,
   getAllPhrases,
+  getCombinationPhrases,
 };
