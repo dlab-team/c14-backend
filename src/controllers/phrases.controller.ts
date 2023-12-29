@@ -72,12 +72,10 @@ const getPoliticalPhrases = async (
   }
 };
 
-
 export default {
   createPhrases,
   putPhrases,
   deletePhrases,
   getPhrasesId,
   getAllPhrases,
-  getPoliticalPhrases,
 };
