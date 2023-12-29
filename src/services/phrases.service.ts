@@ -44,6 +44,24 @@ const getPhrasesId = (idPhrases: IdPhrases) => {
   });
 };
 
+
+const getExtrmPoliticalPhrases = async (group: string): Promise<PhrasesAttributes[] | void> => {
+  const politicalPolyId = await polynomialService.getPoliticalPolyId();
+  if (politicalPolyId) {
+    
+    const phrases = await Phrases.findAll({
+      where: {
+        group: group,
+        polynomial_id: politicalPolyId.id, //ID del polinomio politico
+      },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      limit: 9,
+    });
+    return phrases;
+  }
+  return;
+};
+
 export default {
   createPhrasesDB,
   updatePhrasesDB,

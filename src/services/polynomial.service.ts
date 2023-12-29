@@ -52,6 +52,16 @@ const getPolynomialsId = (idPolynomial: IdPolynomial) => {
   });
 };
 
+const getPoliticalPolyId = async () => {
+  const res = await Polynomial.findOne({
+    attributes: ['id'],
+    where: {
+      name: 'Político',
+    },
+  });
+  return res;
+};
+
 export default {
   createPolynomialDB,
   updatePolynomialDB,
