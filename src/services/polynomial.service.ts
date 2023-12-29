@@ -68,4 +68,5 @@ export default {
   deletePolynomialDB,
   getPolynomials,
   getPolynomialsId,
+  getPoliticalPolyId,
 };
