@@ -2,6 +2,7 @@ import { Phrases, PhrasesAttributes, PhrasesCreationAttributes } from '@/db/mode
 import { ClientError } from '@/errors';
 import { Response } from './user.service';
 import { IdPhrases, PhrasesUpdateService } from '@/types';
+import polynomialService from '../services/polynomial.service';
 
 const createPhrasesDB = (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   return Phrases.create(phrases, { raw: true }).then(({ id, text, group, polynomial_id }) => ({
@@ -68,4 +69,5 @@ export default {
   deletePhrasesDB,
   getPhrases,
   getPhrasesId,
+  getExtrmPoliticalPhrases,
 };

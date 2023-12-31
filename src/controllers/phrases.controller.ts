@@ -78,4 +78,5 @@ export default {
   deletePhrases,
   getPhrasesId,
   getAllPhrases,
+  getPoliticalPhrases,
 };
