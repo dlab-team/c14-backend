@@ -31,6 +31,7 @@ export interface PolynomialUpdateService extends Pick<PolynomialAttributes, 'id'
   active?: boolean;
 }
 
+
 // tipos de servicios y controlador de phrases
 export type PhrasesAttributesOptional = Omit<PhrasesAttributes, 'id'> & {
   text?: string;

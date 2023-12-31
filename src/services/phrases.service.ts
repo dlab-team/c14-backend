@@ -3,6 +3,7 @@ import { ClientError } from '@/errors';
 import { Response } from './user.service';
 import { IdPhrases, PhrasesUpdateService } from '@/types';
 import { Polynomial } from '@/db/models/polynomial';
+import polynomialService from '../services/polynomial.service';
 
 const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   const { id, text, group, polynomial_id } = await Phrases.create(phrases, { raw: true });
@@ -75,6 +76,23 @@ const getCombinationPhrases = async () => {
   return { randomExtreme1, randomExtreme2 };
 };
 
+const getExtrmPoliticalPhrases = async (group: string): Promise<PhrasesAttributes[] | void> => {
+  const politicalPolyId = await polynomialService.getPoliticalPolyId();
+  if (politicalPolyId) {
+    
+    const phrases = await Phrases.findAll({
+      where: {
+        group: group,
+        polynomial_id: politicalPolyId.id, //ID del polinomio politico
+      },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      limit: 9,
+    });
+    return phrases;
+  }
+  return;
+};
+
 export default {
   createPhrasesDB,
   updatePhrasesDB,
@@ -82,4 +100,5 @@ export default {
   getPhrases,
   getPhrasesId,
   getCombinationPhrases,
+  getExtrmPoliticalPhrases,
 };

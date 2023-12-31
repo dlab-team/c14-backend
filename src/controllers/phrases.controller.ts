@@ -57,10 +57,26 @@ const getAllPhrases = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
+
 const getCombinationPhrases = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const combinationPhrasess = await phrasesService.getCombinationPhrases();
     res.status(200).json(combinationPhrasess);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getPoliticalPhrases = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const { group } = req.params;
+  const extreme = group === 'izquierda' ? 'Extremo2' : 'Extremo1';
+  try {
+    const phrases = await phrasesService.getExtrmPoliticalPhrases(extreme);
+    res.status(200).json(phrases);
   } catch (error) {
     next(error);
   }
@@ -73,4 +89,5 @@ export default {
   getPhrasesId,
   getAllPhrases,
   getCombinationPhrases,
+  getPoliticalPhrases,
 };
