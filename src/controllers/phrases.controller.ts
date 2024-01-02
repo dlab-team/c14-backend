@@ -58,16 +58,15 @@ const getAllPhrases = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 const getPolynomialPhrases = async (req: Request, res: Response, next: NextFunction) => {
-  const { name } = req.query as { name?: string };
-  if (name) {
-    try {
-      const phrases = await phrasesService.getPolynomialPhrases(name);
-      res.status(200).json(phrases);
-    } catch (error) {
-      next(error);
+  const { polynomialId } = req.params;
+  try {
+    const phrases = await phrasesService.getPolynomialPhrases(polynomialId);
+    if (!phrases) {
+      throw new ClientError('No existe el id del polinomio', 404);
     }
-  } else {
-    res.status(400).json({ error: 'El nombre del polinomio es incorrecto' });
+    res.status(200).json(phrases);
+  } catch (error) {
+    next(error);
   }
 };
 
