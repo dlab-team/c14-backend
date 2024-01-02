@@ -70,6 +70,21 @@ const getPolynomialPhrases = async (req: Request, res: Response, next: NextFunct
   }
 };
 
+const getPoliticalPhrases = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const { group } = req.params;
+  const extreme = group === 'izquierda' ? 'Extremo2' : 'Extremo1';
+  try {
+    const phrases = await phrasesService.getExtrmPoliticalPhrases(extreme);
+    res.status(200).json(phrases);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createPhrases,
   putPhrases,
@@ -77,4 +92,5 @@ export default {
   getPhrasesId,
   getAllPhrases,
   getPolynomialPhrases,
+  getPoliticalPhrases,
 };

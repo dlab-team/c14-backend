@@ -1,4 +1,4 @@
-import * as isAuthenticated from './isAuthenticated';
-import * as isSuperAdmin from './isSuperAdmin';
+import { isAuthenticated } from './isAuthenticated';
+import { isSuperAdmin } from './isSuperAdmin';
 
 export { isAuthenticated, isSuperAdmin };

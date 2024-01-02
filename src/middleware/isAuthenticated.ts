@@ -10,10 +10,8 @@ export const isAuthenticated = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const accessTokenInCookie = req.cookies?.accessToken;
-  const refreshTokenInCookie = req.cookies?.refreshToken;
-  const accessToken = accessTokenInCookie && accessTokenInCookie.split(' ')[1];
-  const refreshToken = refreshTokenInCookie && refreshTokenInCookie.split(' ')[1];
+  const accessToken = req.cookies?.accessToken;
+  const refreshToken = req.cookies?.refreshToken;
 
   try {
     if (!accessToken && !refreshToken) {
@@ -33,7 +31,7 @@ export const isAuthenticated = async (
       if (decoded) {
         const tokenPayload = { email: decoded.email, id: decoded.id };
         const accessToken = signToken(tokenPayload);
-        res.cookie('accessToken', 'Bearer ' + accessToken, {
+        res.cookie('accessToken', accessToken, {
           maxAge: 60_000 * 60 * 24 * 7, // 7 days
           httpOnly: true,
           sameSite: 'none',

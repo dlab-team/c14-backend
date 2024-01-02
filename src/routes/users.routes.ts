@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import userController from '@/controllers/user.controller';
 import { isSuperAdmin } from '@/middleware/isSuperAdmin';
+import { isAuthenticated } from '@/middleware';
 
 const router = Router();
 
@@ -9,7 +10,7 @@ const router = Router();
 router.post('/', userController.createUser);
 
 //Read all users
-router.get('/', userController.getAllUsers);
+router.get('/', isAuthenticated, userController.getAllUsers);
 
 // Delete one user
 router.delete('/delete', isSuperAdmin, userController.deleteUser);

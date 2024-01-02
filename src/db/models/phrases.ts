@@ -37,6 +37,7 @@ export const Phrases = sequelize.define<PhrasesInstance>(
       allowNull: false,
       type: DataTypes.ENUM('Extremo 1', 'Extremo 2', 'Neutro'),
     },
+    
     polynomial_id: {
       allowNull: false,
       primaryKey: true,

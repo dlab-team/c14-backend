@@ -20,8 +20,9 @@ module.exports = {
       },
       group: {
         allowNull: false,
-        type: Sequelize.ENUM('Extremo 1', 'Extremo 2', 'Neutro'),
+        type: Sequelize.ENUM('Extremo1', 'Extremo2', 'Neutro'),
       },
+      
       polynomial_id: {
         allowNull: false,
         primaryKey: true,

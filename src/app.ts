@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import compression from 'compression';
 import morgan from 'morgan';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import routes from '@/routes';
 import swaggerOptions from '@/config/swagger';
 import swaggerJSDoc from 'swagger-jsdoc';
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 app.use(morgan('dev'));
 app.use(cors({ origin: true, credentials: true }));
+app.use(cookieParser());
 //documentacion --->
 const specs = swaggerJSDoc(swaggerOptions);
 app.use('/api/docs', serve, setup(specs));
