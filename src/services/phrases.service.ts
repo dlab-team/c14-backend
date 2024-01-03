@@ -45,11 +45,16 @@ const getPhrasesId = (idPhrases: IdPhrases) => {
   });
 };
 
+const getPolynomialPhrases = async (polynomialId: string): Promise<object[]> => {
+  return Phrases.findAll({
+    where: { polynomial_id: polynomialId },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  });
+};
 
 const getExtrmPoliticalPhrases = async (group: string): Promise<PhrasesAttributes[] | void> => {
   const politicalPolyId = await polynomialService.getPoliticalPolyId();
   if (politicalPolyId) {
-    
     const phrases = await Phrases.findAll({
       where: {
         group: group,
@@ -69,5 +74,6 @@ export default {
   deletePhrasesDB,
   getPhrases,
   getPhrasesId,
+  getPolynomialPhrases,
   getExtrmPoliticalPhrases,
 };

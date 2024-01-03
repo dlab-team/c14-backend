@@ -50,8 +50,21 @@ const getPhrasesId = async (req: Request, res: Response, next: NextFunction) => 
 
 const getAllPhrases = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const allPhrasess = await phrasesService.getPhrases();
-    res.status(200).json(allPhrasess);
+    const allPhrases = await phrasesService.getPhrases();
+    res.status(200).json(allPhrases);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getPolynomialPhrases = async (req: Request, res: Response, next: NextFunction) => {
+  const { polynomialId } = req.params;
+  try {
+    const phrases = await phrasesService.getPolynomialPhrases(polynomialId);
+    if (!phrases) {
+      throw new ClientError('No existe el id del polinomio', 404);
+    }
+    res.status(200).json(phrases);
   } catch (error) {
     next(error);
   }
@@ -78,5 +91,6 @@ export default {
   deletePhrases,
   getPhrasesId,
   getAllPhrases,
+  getPolynomialPhrases,
   getPoliticalPhrases,
 };

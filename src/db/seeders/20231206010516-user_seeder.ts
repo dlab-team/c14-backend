@@ -1,12 +1,12 @@
 'use strict';
 
+import { hashText } from '@/helpers';
 import { QueryInterface } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 
-// The same password is set for all of them.
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
-    // If 'length' is changed, the number of created members changes
+    const password = await hashText('pass123');
     const users = [
       {
         id: uuidv4(),
@@ -25,7 +25,7 @@ module.exports = {
         firstName: 'Leonardo',
         lastName: 'Davinci',
         email: 'leonardo@yopmail.com',
-        password: 'pass123',
+        password,
         active: true,
         superAdmin: false,
         createdAt: new Date(),
@@ -36,7 +36,7 @@ module.exports = {
         firstName: 'Michelangelo',
         lastName: 'Buonarroti',
         email: 'mbuonarroti@yopmail.com',
-        password: 'pass123',
+        password,
         active: true,
         superAdmin: false,
         createdAt: new Date(),
@@ -47,7 +47,7 @@ module.exports = {
         firstName: 'Rafael',
         lastName: 'Sanzio',
         email: 'sanzio.e@yopmail.com',
-        password: 'pass123',
+        password,
         active: true,
         superAdmin: false,
         createdAt: new Date(),
@@ -58,7 +58,7 @@ module.exports = {
         firstName: 'Giancarlo',
         lastName: 'Noseda',
         email: 'g.noseda.soto@gmail.com',
-        password: 'pass123',
+        password,
         active: true,
         superAdmin: false,
         createdAt: new Date(),
