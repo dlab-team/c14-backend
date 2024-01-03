@@ -50,11 +50,11 @@ const getPolynomialPhrases = async (polynomialId: string): Promise<object[]> => 
     where: { polynomial_id: polynomialId },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
   });
+};
 
 const getExtrmPoliticalPhrases = async (group: string): Promise<PhrasesAttributes[] | void> => {
   const politicalPolyId = await polynomialService.getPoliticalPolyId();
   if (politicalPolyId) {
-    
     const phrases = await Phrases.findAll({
       where: {
         group: group,
