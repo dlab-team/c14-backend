@@ -3,6 +3,7 @@ import phrasesService from '../services/phrases.service';
 import { PhrasesCreationAttributes } from '@/db/models/phrases';
 import { PhrasesAttributesOptional } from '@/types';
 import { ClientError } from '@/errors';
+import { groups } from '@/enums';
 
 const createPhrases = async (req: Request, res: Response, next: NextFunction) => {
   const Phrases: PhrasesCreationAttributes = req.body;
@@ -16,9 +17,9 @@ const createPhrases = async (req: Request, res: Response, next: NextFunction) =>
 
 const putPhrases = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
-  const Phrases: PhrasesAttributesOptional = req.body;
+  const phrase: PhrasesAttributesOptional = req.body;
   try {
-    const phrasesUpdate = await phrasesService.updatePhrasesDB({ ...Phrases, id });
+    const phrasesUpdate = await phrasesService.updatePhrasesDB({ ...phrase, id });
     res.status(200).json(phrasesUpdate);
   } catch (error) {
     next(error);
@@ -76,9 +77,11 @@ const getPoliticalPhrases = async (
   next: NextFunction,
 ): Promise<void> => {
   const { group } = req.params;
-  const extreme = group === 'izquierda' ? 'Extremo2' : 'Extremo1';
   try {
-    const phrases = await phrasesService.getExtrmPoliticalPhrases(extreme);
+    if (!groups.includes(group)) {
+      throw new ClientError('Grupo no encontrado');
+    }
+    const phrases = await phrasesService.getExtrmPoliticalPhrases(group);
     res.status(200).json(phrases);
   } catch (error) {
     next(error);

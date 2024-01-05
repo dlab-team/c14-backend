@@ -1,11 +1,12 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '.';
 import { Polynomial } from './polynomial';
+import { group } from '@/enums';
 
 export interface PolynomialOptionAttributes {
   id: string;
   name: string;
-  group: Array<string>;
+  group: group | null;
   polynomialId: string;
 }
 
@@ -17,12 +18,6 @@ export interface PolynomialOptionInstance
     PolynomialOptionAttributes {
   createdAt?: Date;
   updatedAt?: Date;
-}
-
-export enum groups {
-  'Extremo1',
-  'Extremo2',
-  'Neutro',
 }
 
 export const PolynomialOption = sequelize.define<PolynomialOptionInstance>(
@@ -41,9 +36,8 @@ export const PolynomialOption = sequelize.define<PolynomialOptionInstance>(
       type: DataTypes.TEXT,
     },
     group: {
-      allowNull: false,
-      type: DataTypes.ENUM({ values: Object.keys(groups) }),
-      defaultValue: groups.Extremo1,
+      allowNull: true,
+      type: DataTypes.ENUM('Extremo 1', 'Extremo 2'),
     },
     polynomialId: {
       allowNull: false,

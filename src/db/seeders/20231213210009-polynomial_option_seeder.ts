@@ -7,6 +7,10 @@ import { Polynomial } from '../models/polynomial';
 
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
+    const groups = {
+      Extremo1: 'Extremo 1',
+      Extremo2: 'Extremo 2',
+    };
     const results = await Polynomial.findAll({
       attributes: ['id', 'name'],
     });
@@ -33,7 +37,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Derecha',
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -41,7 +45,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Izquierda',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -49,7 +53,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Centro',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -57,7 +60,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Independiente',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -69,7 +71,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Masculino',
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -77,7 +79,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Femenino',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -85,7 +87,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Otro',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -115,7 +116,7 @@ module.exports = {
           regionOption.push({
             id: uuidv4(),
             name: regions[j],
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -125,7 +126,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Metropolitana',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -138,7 +139,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Ingresos altos',
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -146,7 +147,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Ingresos medio altos',
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -154,7 +155,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Ingresos medios',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -162,7 +162,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Ingresos medio bajos',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -170,7 +170,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Ingresos bajos',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -197,7 +197,7 @@ module.exports = {
           indigenousOption.push({
             id: uuidv4(),
             name: indigenous[j],
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -207,7 +207,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'No me considero perteneciente a ningún pueblo originario o indígena',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -220,7 +220,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Creyente',
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -228,7 +228,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Ateo',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -236,7 +236,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Agnóstico',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -244,7 +244,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Sin Religión',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -256,7 +256,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Inmigrante',
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -264,7 +264,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Chileno',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -276,7 +276,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Ocupo un cargo directivo en la empresa u organización donde trabajo',
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -284,7 +284,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'No tengo un rol directivo en la empresa u organización donde trabajo',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -292,7 +292,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Soy independiente y trabajo solo. No trabajo en ninguna empresa u organización',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -300,7 +299,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'En este momento no tengo trabajo remunerado (soy estudiante, jubilado, desempleado, labores del hogar, etc.)',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -312,7 +310,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: '29 años o menos',
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -320,7 +318,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Entre 30 y 59 años',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -328,7 +325,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: '60 años o más',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -340,7 +337,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Heterosexual',
-            group: 'Extremo1',
+            group: groups.Extremo1,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -348,7 +345,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Gay',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -356,7 +353,7 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Lesbiana',
-            group: 'Extremo2',
+            group: groups.Extremo2,
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -364,7 +361,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Bisexual',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -372,7 +368,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Pansexual',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -380,7 +375,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Asexual',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -388,7 +382,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Queer',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -396,7 +389,6 @@ module.exports = {
           {
             id: uuidv4(),
             name: 'Otra',
-            group: 'Neutro',
             polynomialId: dataArray[i].id,
             createdAt: new Date(),
             updatedAt: new Date(),
