@@ -31,17 +31,14 @@ export interface PolynomialUpdateService extends Pick<PolynomialAttributes, 'id'
   active?: boolean;
 }
 
-
 // tipos de servicios y controlador de phrases
 export type PhrasesAttributesOptional = Omit<PhrasesAttributes, 'id'> & {
   text?: string;
-  group?: "Extremo 1" | "Extremo 2" | "Neutro" | undefined;
-  polynomial_id?: string;
+  polynomialId?: string;
 };
 export type IdPhrases = Pick<PhrasesAttributes, 'id'>;
 
 export interface PhrasesUpdateService extends Pick<PhrasesAttributes, 'id'> {
   text?: string;
-  group?: "Extremo 1" | "Extremo 2" | "Neutro" | undefined;
-  polynomial_id?: string;
+  polynomialId?: string;
 }
