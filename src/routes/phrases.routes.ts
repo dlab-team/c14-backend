@@ -10,5 +10,6 @@ router.post('/', phrasesController.createPhrases);
 router.delete('/:id', phrasesController.deletePhrases);
 
 router.get('/political/:group', phrasesController.getPoliticalPhrases);
+router.get('/neutral/political', phrasesController.getCombinedPoliticalPhrases);
 
 export default router;

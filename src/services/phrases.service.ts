@@ -3,6 +3,8 @@ import { ClientError } from '@/errors';
 import { Response } from './user.service';
 import { IdPhrases, PhrasesUpdateService } from '@/types';
 import polynomialService from '../services/polynomial.service';
+import { Polynomial } from '@/db/models/polynomial';
+import { sequelize } from '../db/models';
 
 const createPhrasesDB = (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   return Phrases.create(phrases, { raw: true }).then(({ id, text, group, polynomialId }) => ({
@@ -68,6 +70,41 @@ const getExtrmPoliticalPhrases = async (group: string): Promise<PhrasesAttribute
   return;
 };
 
+const getCombinedPoliticalPhrases = async () => {
+  const politicalPolynomial = await Polynomial.findAll({
+    where: {
+      political: true,
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  });
+
+  const phrasesExtreme1 = await Phrases.findAll({
+    where: {
+      polynomialId: politicalPolynomial[0].dataValues.id,
+      group: 'Extremo 1',
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    limit: 5,
+    order: sequelize.random(),
+  });
+
+  const phrasesExtreme2 = await Phrases.findAll({
+    where: {
+      polynomialId: politicalPolynomial[0].dataValues.id,
+      group: 'Extremo 2',
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    limit: 5,
+    order: sequelize.random(),
+  });
+
+  if (!phrasesExtreme1 || !phrasesExtreme2) {
+    throw new Error('No se encontraron frases politicas.');
+  }
+  const phrases = phrasesExtreme1.concat(phrasesExtreme2);
+  return { phrases };
+};
+
 export default {
   createPhrasesDB,
   updatePhrasesDB,
@@ -76,4 +113,5 @@ export default {
   getPhrasesId,
   getPolynomialPhrases,
   getExtrmPoliticalPhrases,
+  getCombinedPoliticalPhrases,
 };

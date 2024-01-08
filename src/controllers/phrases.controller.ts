@@ -88,6 +88,15 @@ const getPoliticalPhrases = async (
   }
 };
 
+const getCombinedPoliticalPhrases = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const combinatedPhrases = await phrasesService.getCombinedPoliticalPhrases();
+    res.status(200).json(combinatedPhrases);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createPhrases,
   putPhrases,
@@ -96,4 +105,5 @@ export default {
   getAllPhrases,
   getPolynomialPhrases,
   getPoliticalPhrases,
+  getCombinedPoliticalPhrases,
 };
