@@ -6,6 +6,7 @@ import {
 import { ClientError } from '@/errors';
 import { Response } from './user.service';
 import { IdPolynomial, PolynomialUpdateService } from '@/types';
+import { PolynomialOption } from '@/db/models/polynomial_option';
 
 const createPolynomialDB = (
   polynomial: PolynomialCreationAttributes,
@@ -62,6 +63,21 @@ const getPoliticalPolyId = async () => {
   return res;
 };
 
+const polynomialsNotPolitical = () => {
+  return Polynomial.findAll({
+    where: {
+      political: false,
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: [
+      {
+        model: PolynomialOption,
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+      },
+    ],
+  });
+};
+
 export default {
   createPolynomialDB,
   updatePolynomialDB,
@@ -69,4 +85,5 @@ export default {
   getPolynomials,
   getPolynomialsId,
   getPoliticalPolyId,
+  polynomialsNotPolitical,
 };

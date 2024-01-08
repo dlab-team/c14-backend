@@ -3,6 +3,7 @@ import validate from '@/middleware/validator';
 import polynomialController from '@/controllers/polynomial.controller';
 const router = Router();
 
+router.get('/notpolitical', polynomialController.getAllPolynomialsNotPolitical);
 router.delete('/:id', polynomialController.deletePolynomial);
 router.get('/:id', polynomialController.getPolynomialsId);
 router.put('/:id', validate.validatePolynomialUpdate, polynomialController.putPolynomial);
