@@ -3,6 +3,7 @@ import polynomialOptionController from '@/controllers/polynomial_option.controll
 const router = Router();
 
 router.get('/', polynomialOptionController.getAllPolynomialsOption);
+router.get('/political', polynomialOptionController.getPoliticalPolyOption);
 router.get('/:id', polynomialOptionController.getPolynomialsOptionId);
 router.put('/:id', polynomialOptionController.putPolynomialOption);
 router.post('/', polynomialOptionController.createPolynomialOption);
