@@ -5,11 +5,11 @@ import { IdPhrases, PhrasesUpdateService } from '@/types';
 import polynomialService from '../services/polynomial.service';
 
 const createPhrasesDB = (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
-  return Phrases.create(phrases, { raw: true }).then(({ id, text, group, polynomial_id }) => ({
+  return Phrases.create(phrases, { raw: true }).then(({ id, text, group, polynomialId }) => ({
     id,
     text,
     group,
-    polynomial_id,
+    polynomialId,
   }));
 };
 
@@ -17,8 +17,8 @@ const updatePhrasesDB = async (phrasesUpdate: PhrasesUpdateService): Promise<Phr
   const phrase = await getPhrasesId(phrasesUpdate);
   if (phrase) {
     phrase.update(phrasesUpdate);
-    const { id, text, group, polynomial_id } = phrase.dataValues;
-    const restPhrases = { id, text, group, polynomial_id };
+    const { id, text, group, polynomialId } = phrase.dataValues;
+    const restPhrases = { id, text, group, polynomialId };
     return restPhrases;
   } else {
     throw new ClientError('La frase a actualizar no existe', 404);
@@ -47,7 +47,7 @@ const getPhrasesId = (idPhrases: IdPhrases) => {
 
 const getPolynomialPhrases = async (polynomialId: string): Promise<object[]> => {
   return Phrases.findAll({
-    where: { polynomial_id: polynomialId },
+    where: { polynomialId: polynomialId },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
   });
 };
@@ -58,10 +58,24 @@ const getExtrmPoliticalPhrases = async (group: string): Promise<PhrasesAttribute
     const phrases = await Phrases.findAll({
       where: {
         group: group,
-        polynomial_id: politicalPolyId.id, //ID del polinomio politico
+        polynomialId: politicalPolyId.id, //ID del polinomio politico
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       limit: 9,
+    });
+    return phrases;
+  }
+  return;
+};
+
+const getAllPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => {
+  const politicalPolyId = await polynomialService.getPoliticalPolyId();
+  if (politicalPolyId) {
+    const phrases = await Phrases.findAll({
+      where: {
+        polynomialId: politicalPolyId.id, //ID del polinomio politico
+      },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     });
     return phrases;
   }
@@ -76,4 +90,5 @@ export default {
   getPhrasesId,
   getPolynomialPhrases,
   getExtrmPoliticalPhrases,
+  getAllPoliticalPhrases,
 };

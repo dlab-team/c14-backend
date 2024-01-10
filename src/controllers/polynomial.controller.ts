@@ -57,10 +57,20 @@ const getAllPolynomials = async (req: Request, res: Response, next: NextFunction
   }
 };
 
+const getAllPolynomialsNotPolitical = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const polynomialsNotPolitical = await polynomialService.polynomialsNotPolitical();
+    res.status(200).json(polynomialsNotPolitical);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createPolynomial,
   putPolynomial,
   deletePolynomial,
   getPolynomialsId,
   getAllPolynomials,
+  getAllPolynomialsNotPolitical,
 };
