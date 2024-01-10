@@ -4,6 +4,7 @@ import { isAuthenticated } from '@/middleware';
 const router = Router();
 
 router.get('/', polynomialOptionController.getAllPolynomialsOption);
+router.get('/political', polynomialOptionController.getPoliticalPolyOption);
 router.get('/:id', polynomialOptionController.getPolynomialsOptionId);
 router.put('/:id', isAuthenticated, polynomialOptionController.putPolynomialOption);
 router.post('/', isAuthenticated, polynomialOptionController.createPolynomialOption);

@@ -4,6 +4,7 @@ import {
   PolynomialOptionCreationAttributes,
 } from '@/db/models/polynomial_option';
 import { ClientError } from '@/errors';
+import polynomialService from './polynomial.service';
 
 const createPolynomialOption = (
   polynomialOption: PolynomialOptionCreationAttributes,
@@ -45,10 +46,25 @@ const getPolynomialOptionId = (idPolynomialOption: string) => {
   });
 };
 
+const getPoliticalPolyOption = async () => {
+  const politicalPolyId = await polynomialService.getPoliticalPolyId();
+  if (politicalPolyId) {
+    const politicalPolyOption = await PolynomialOption.findAll({
+      where: {
+        polynomialId: politicalPolyId.id, //ID del polinomio politico
+      },
+      attributes: ['name'],
+    });
+    return politicalPolyOption;
+  }
+  return;
+};
+
 export default {
   createPolynomialOption,
   getPolynomialOptionId,
   updatePolynomialOption,
   deletePolynomialOption,
   getPolynomialOptions,
+  getPoliticalPolyOption,
 };
