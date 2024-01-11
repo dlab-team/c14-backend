@@ -61,10 +61,20 @@ const getAllPolynomialsOption = async (req: Request, res: Response, next: NextFu
   }
 };
 
+const getPoliticalPolyOption = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const politicalPolyOption = await polynomialOptionService.getPoliticalPolyOption();
+    res.status(200).json(politicalPolyOption);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createPolynomialOption,
   putPolynomialOption,
   deletePolynomialOption,
   getAllPolynomialsOption,
   getPolynomialsOptionId,
+  getPoliticalPolyOption,
 };

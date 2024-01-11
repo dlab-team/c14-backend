@@ -6,8 +6,8 @@ import { isAuthenticated } from '@/middleware';
 const router = Router();
 
 //CREATE USER
-//! TODO se requiere middleware de autenticacion para este endpoint
-router.post('/', userController.createUser);
+
+router.post('/', isAuthenticated, userController.createUser);
 
 //Read all users
 router.get('/', isAuthenticated, userController.getAllUsers);
