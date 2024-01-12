@@ -5,6 +5,7 @@ import { IdPhrases, PhrasesUpdateService } from '@/types';
 import polynomialService from '../services/polynomial.service';
 import { Polynomial } from '@/db/models/polynomial';
 import { sequelize } from '../db/models';
+import polynomialOptionService from './polynomial_option.service';
 
 const createPhrasesDB = (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   return Phrases.create(phrases, { raw: true }).then(({ id, text, group, polynomialId }) => ({
@@ -64,13 +65,41 @@ const getExtrmPoliticalPhrases = async (group: string): Promise<PhrasesAttribute
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       limit: 9,
+      order: sequelize.random(),
     });
     return phrases;
   }
   return;
 };
 
-const getCombinedPoliticalPhrases = async () => {
+const getPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | void> => {
+  const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
+  if (polynomialOption) {
+    if (polynomialOption.dataValues.group === null) {
+      return getCombinedPoliticalPhrases();
+    } else {
+      const politicalPolyId = await polynomialService.getPoliticalPolyId();
+      if (politicalPolyId) {
+        const phrases = await Phrases.findAll({
+          where: {
+            group: polynomialOption.dataValues.group,
+            polynomialId: politicalPolyId.id,
+          },
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          limit: 9,
+          order: sequelize.random(),
+        });
+        return phrases;
+      } else {
+        throw new Error('No se encontro el id del polinomio politico.');
+      }
+    }
+  } else {
+    throw new Error('No se encontro el id de la opcion del polinomio.');
+  }
+};
+
+const getCombinedPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => {
   const politicalPolynomial = await Polynomial.findAll({
     where: {
       political: true,
@@ -102,7 +131,7 @@ const getCombinedPoliticalPhrases = async () => {
     throw new Error('No se encontraron frases politicas.');
   }
   const phrases = phrasesExtreme1.concat(phrasesExtreme2);
-  return { phrases };
+  return phrases;
 };
 
 const getAllPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => {
@@ -129,4 +158,5 @@ export default {
   getExtrmPoliticalPhrases,
   getCombinedPoliticalPhrases,
   getAllPoliticalPhrases,
+  getPoliticalPhrases,
 };
