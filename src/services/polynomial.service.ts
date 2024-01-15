@@ -67,6 +67,7 @@ const polynomialsNotPolitical = () => {
   return Polynomial.findAll({
     where: {
       political: false,
+      active: true,
     },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: [
