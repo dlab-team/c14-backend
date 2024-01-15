@@ -130,7 +130,7 @@ const getCombinedPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void
   if (!phrasesExtreme1 || !phrasesExtreme2) {
     throw new Error('No se encontraron frases politicas.');
   }
-  const phrases = phrasesExtreme1.concat(phrasesExtreme2);
+  const phrases = phrasesExtreme1.concat(phrasesExtreme2).sort(() => Math.random() - 0.5);
   return phrases;
 };
 
