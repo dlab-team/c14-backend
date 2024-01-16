@@ -99,6 +99,40 @@ const getPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | vo
   }
 };
 
+const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | void> => {
+  const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
+
+  if (!polynomialOption) {
+    throw new Error('No se encontró el id de la opción del polinomio.');
+  }
+
+  const { group } = polynomialOption.dataValues;
+
+  if (group === null) {
+    return getCombinedPoliticalPhrases();
+  }
+
+  const politicalPolyId = await polynomialService.getPoliticalPolyId();
+
+  if (!politicalPolyId) {
+    throw new Error('No se encontró el id del polinomio político.');
+  }
+
+  const targetGroup = group?.toString() === 'Extremo 1' ? 'Extremo 2' : 'Extremo 1';
+
+  const phrases = await Phrases.findAll({
+    where: {
+      group: targetGroup,
+      polynomialId: politicalPolyId.id,
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    limit: 9,
+    order: sequelize.random(),
+  });
+
+  return phrases;
+};
+
 const getCombinedPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => {
   const politicalPolynomial = await Polynomial.findAll({
     where: {
@@ -159,4 +193,5 @@ export default {
   getCombinedPoliticalPhrases,
   getAllPoliticalPhrases,
   getPoliticalPhrases,
+  getInversePoliticalPhrases,
 };
