@@ -6,14 +6,27 @@ import polynomialService from '../services/polynomial.service';
 import { Polynomial } from '@/db/models/polynomial';
 import { sequelize } from '../db/models';
 import polynomialOptionService from './polynomial_option.service';
+import surveyResultService from './survey_result.service';
 
-const createPhrasesDB = (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
-  return Phrases.create(phrases, { raw: true }).then(({ id, text, group, polynomialId }) => ({
-    id,
-    text,
-    group,
-    polynomialId,
-  }));
+const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
+  const phrase = await Phrases.create(phrases, { raw: true });
+  const polynomialOptions = await polynomialOptionService.getPolyOptionsFromPolyId(
+    phrase.polynomialId,
+  );
+  polynomialOptions.forEach(option => {
+    surveyResultService.createPhraseResults({
+      polynomialOptionId: option.id,
+      phraseId: phrase.id,
+      percentage: 0,
+    });
+  });
+  const phraseAtt = {
+    id: phrase.id,
+    text: phrase.text,
+    group: phrase.group,
+    polynomialId: phrase.polynomialId,
+  };
+  return phraseAtt;
 };
 
 const updatePhrasesDB = async (phrasesUpdate: PhrasesUpdateService): Promise<PhrasesAttributes> => {

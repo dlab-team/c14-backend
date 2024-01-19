@@ -60,6 +60,18 @@ const getPoliticalPolyOption = async () => {
   return;
 };
 
+const getPolyOptionsFromPolyId = async (
+  polynomialId: string,
+): Promise<PolynomialOptionAttributes[]> => {
+  const polyOptions = await PolynomialOption.findAll({
+    where: {
+      polynomialId,
+    },
+    attributes: ['id', 'name'],
+  });
+  return polyOptions;
+};
+
 export default {
   createPolynomialOption,
   getPolynomialOptionId,
@@ -67,4 +79,5 @@ export default {
   deletePolynomialOption,
   getPolynomialOptions,
   getPoliticalPolyOption,
+  getPolyOptionsFromPolyId,
 };
