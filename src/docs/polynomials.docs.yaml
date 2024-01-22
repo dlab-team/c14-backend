@@ -27,10 +27,14 @@ components:
         name: ejemplo
         active: true
   securitySchemes:
-    bearerAuth:
+    BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
   responses:
     polynomial:
       type: object
@@ -51,6 +55,45 @@ components:
       type: array
       items:
         $ref: '#/components/responses/polynomial'
+    optionsPolynomials:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: '4bfc441e-c0a8-4ed7-bd02-0b6353f17d02'
+        name:
+          type: 'string'
+          example: 'Género'
+        political:
+          type: 'boolean'
+          example: false
+        active:
+          type: 'boolean'
+          example: true
+        polynomial_options:
+          type: 'array'
+          items:
+            type: 'object'
+            properties:
+              id:
+                type: 'string'
+                format: 'uuid'
+                example: '473bafd8-d04d-419c-a1dd-d4d3c995c313'
+              name:
+                type: 'string'
+                example: 'Masculino'
+              group:
+                type: ['string', 'null']
+                example: 'Extremo 1'
+              polynomialId:
+                type: 'string'
+                format: 'uuid'
+                example: '4bfc441e-c0a8-4ed7-bd02-0b6353f17d02'
+    allNotPolitical:
+      type: array
+      items:
+        $ref: '#/components/responses/optionsPolynomials'
     generalError:
       type: object
       properties:
@@ -93,6 +136,8 @@ paths:
       summary: Crear un polinomio nuevo(Requiere Auth)
       tags:
         - Polynomial
+      security:
+        - cookieAuth: []
       requestBody:
         required: true
         description: Datos requeridos para crear un polinomio
@@ -154,6 +199,8 @@ paths:
       summary: Busca un polinomio por su Id y lo elimina
       tags:
         - Polynomial
+      security:
+        - cookieAuth: []
       responses:
         '200':
           description: Retorna el polinomio que corresponde con ese id
@@ -177,6 +224,8 @@ paths:
       summary: Modifica un polinomio existente(Requiere Auth)
       tags:
         - Polynomial
+      security:
+        - cookieAuth: []
       requestBody:
         required: true
         description: Datos requeridos para actualizar un polinomio obligatorio el id
@@ -197,6 +246,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/generalError'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+
+  /api/polynomials/notpolitical:
+    get:
+      summary: Nos entrega todos los polinomios guardados que no son politicos
+      tags:
+        - Polynomial
+      responses:
+        '200':
+          description: Retorna todo los polinomios no politicos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/allNotPolitical'
         '500':
           description: Error general del servidor
           content:

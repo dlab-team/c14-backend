@@ -12,18 +12,10 @@ components:
         email:
           type: string
           description: Email registrado
-        # password:
-        #   type: string
-        #   description: Contraseña guardada en la base de datos
-        # active:
-        #   type: boolean
-        #   description: Si esta activo o no el usuario
       example:
         firstName: Emiliano
         lastName: desafio
         email: 3xi@g3xi.com
-        # password: pass123
-        # active: true
     Login:
       type: object
       properties:
@@ -45,10 +37,14 @@ components:
       example:
         email: 3xi@g3xi.com
   securitySchemes:
-    bearerAuth:
+    BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
   responses:
     register:
       type: object
@@ -62,6 +58,37 @@ components:
       example:
         success: true
         message: Usuario registrado
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 'ID del usuario'
+        firstName:
+          type: string
+          description: 'Nombre del usuario'
+        lastName:
+          type: string
+          description: 'Apellido del usuario'
+        email:
+          type: string
+          format: email
+          description: 'Correo electrónico del usuario'
+        superAdmin:
+          type: boolean
+          description: 'Si el usuario es superAdministrador'
+        active:
+          type: boolean
+          description: 'Estado activo del usuario'
+      examples:
+        application/json:
+          id: 'd12b4ba9-2148-4186-b177-ce900646cc10'
+          firstName: '3xi'
+          lastName: 'ONG'
+          email: '3xi@g3xi.com'
+          superAdmin: true
+          active: true
     login:
       type: object
       properties:
@@ -79,6 +106,9 @@ components:
           type: string
           format: email
           description: 'Correo electrónico del usuario'
+        superAdmin:
+          type: boolean
+          description: 'Si el usuario es superAdministrador'
         active:
           type: boolean
           description: 'Estado activo del usuario'
@@ -90,6 +120,7 @@ components:
           id: 'd12b4ba9-2148-4186-b177-ce900646cc10'
           firstName: '3xi'
           lastName: 'ONG'
+          superAdmin: true
           email: '3xi@g3xi.com'
           active: true
           token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxMmI0YmE5LTIxNDgtNDE4Ni1iMTc3LWNlOTAwNjQ2Y2MxMCIsImVtYWlsIjoiM3hpQGczeGkuY29tIiwiaWF0IjoxNzAxOTgzNTcxLCJleHAiOjE3MDE5ODcxNzF9.oFt5eckNonVjeXd7hUHyAd5WSciyn_ZgbTqxVIwuQmc'
@@ -159,10 +190,33 @@ components:
         message: Internal server error
 paths:
   /api/users/:
-    post:
-      summary: Registrar un usuario
+    get:
+      summary: Traer todos los usuarios(Requiere Auth)
       tags:
         - User
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Retorna un array de todos los usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/responses/user'
+        '500':
+          description: Servidor caído
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/fatal'
+    post:
+      summary: Registrar un usuario(Requiere Auth)
+      tags:
+        - User
+      security:
+        - cookieAuth: []
       requestBody:
         required: true
         description: objeto con las propiedades necesarias/mínimas para registrar un usuario
@@ -231,53 +285,64 @@ paths:
             application/json:
               schema:
                 $ref: '#components/responses/fatal'
-  /api/auth/logout:
-    post:
-      summary: Cerrar sesión
+
+  /api/users/delete:
+    delete:
+      summary: Eliminar un usuario por medio del correo (requiere superAdmin).
       tags:
         - User
       security:
         - cookieAuth: []
+      requestBody:
+        required: true
+        description: Email del usuario a eliminar
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: 3xi@3xi.com
       responses:
         '200':
-          description: Éxito en el cierre de sesion
+          description: Retorna si el usuario se elimino correctamente
           content:
             application/json:
               schema:
-                $ref: '#components/responses/signout'
-        '401':
-          description: Usuario no autenticado
+                $ref: '#components/responses/incomplete'
+        '400':
+          description: Correo invalido
           content:
             application/json:
               schema:
-                $ref: '#components/responses/auth'
+                $ref: '#components/responses/fatal'
         '500':
           description: Servidor caído
           content:
             application/json:
               schema:
                 $ref: '#components/responses/fatal'
+
   /api/users/forgot:
     post:
-      summary: Recuperar password perdido
+      summary: Recuperar la contraseña de usuario con el correo
       tags:
         - User
       requestBody:
         required: true
-        description: Se requiere correo registrado en el sistema
+        description: Email del usuario a recuperar
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Restore'
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: 3xi@3xi.com
       responses:
         '200':
-          description: Retorna que se ha enviado con exito el email de recuperacion
-          content:
-            application/json:
-              schema:
-                $ref: '#components/responses/register'
-        '400':
-          description: Campos faltantes
+          description: Retorna si el correo se envia correctamente
           content:
             application/json:
               schema:
