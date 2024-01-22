@@ -20,7 +20,6 @@ const createPolynomialOption = async (req: Request, res: Response, next: NextFun
 const putPolynomialOption = async (req: Request, res: Response, next: NextFunction) => {
   const polynomial: PolynomialOptionAttributes = req.body;
   const { id } = req.params;
-  console.log(typeof id);
   try {
     const polynomialUpdate = await polynomialOptionService.updatePolynomialOption(id, polynomial);
     res.status(200).json(polynomialUpdate);
