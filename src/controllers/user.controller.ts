@@ -33,10 +33,9 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   if (superAdmin?.email != email) {
     try {
       const response = await userService.deleteUser(email);
+      console.log(response);
       if (response) {
-        res.status(200).json({
-          response,
-        });
+        res.status(200).json(response);
       }
     } catch (error) {
       next(error);

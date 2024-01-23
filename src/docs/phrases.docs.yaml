@@ -1,0 +1,344 @@
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+  schemas:
+    newPhrases:
+      type: object
+      properties:
+        text:
+          type: string
+          example: 'esta es una prueba'
+        group:
+          type: string
+          example: 'Extremo 1'
+        polynomialId:
+          type: string
+          format: 'uuid'
+          example: '5444db52-6a11-406e-9329-a9ff35ddf872'
+    idOption:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'bf24ac15-3ba9-4372-af55-287cee388f0e'
+  responses:
+    phrasesBasic:
+      type: object
+      properties:
+        id:
+          type: string
+          format: 'uuid'
+          example: 'a68f0276-13cb-4407-8097-6cf5260b2f7c'
+        text:
+          type: string
+          example: 'El aborto debe volver a ser prohibido, es decir, no debe permitirse bajo ninguna causal'
+        group:
+          type: string
+          example: 'Extremo 1'
+        polynomialId:
+          type: string
+          format: 'uuid'
+          example: '4c0ed4d4-028f-4583-bf53-bcd2e43c4ef1'
+    generalError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Descripción del error
+    generalResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        message:
+          type: string
+          description: Descripcion de la operación realizada
+      example:
+        status: success
+        message: Recurso eliminado
+
+paths:
+  /api/phrases:
+    get:
+      summary: Trae todas las frases
+      tags:
+        - Phrases
+      responses:
+        '200':
+          description: Retorna todas las frases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/responses/phrasesBasic'
+        '500':
+          description: Error general
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    post:
+      summary: Crear una frase de polinomio(Requiere Autn).
+      tags:
+        - Phrases
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        description: Datos requeridos para crear la frase de un polinomio
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newPhrases'
+      responses:
+        '201':
+          description: Se crea exitosamente el recurso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/phrasesBasic'
+        '400':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+        description: El Id de la frase polinomio a buscar
+    get:
+      summary: Trae la frase por su id
+      tags:
+        - Phrases
+      responses:
+        '200':
+          description: Te da el recurso por el id solicitado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    put:
+      summary: Actualiza una frase de polinomio(Requiere Autn).
+      tags:
+        - Phrases
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        description: Datos requeridos para actualizar la frase de un polinomio
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newPhrases'
+      responses:
+        '201':
+          description: Se actualizacion exitosamente el recurso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/phrasesBasic'
+        '400':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    delete:
+      summary: Borra una frase de polinomio por su id
+      tags:
+        - Phrases
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Informa que el recurso se elimino correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalResponse'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/polynomial/{idPolinomial}:
+    parameters:
+      - name: idPolinomial
+        in: path
+        required: true
+        type: string
+        description: El Id polinomio para buscar sus frases
+    get:
+      summary: Trae las frases de un polinomio por el id de este polinomio
+      tags:
+        - Phrases
+      responses:
+        '200':
+          description: Frases de ese polinomio Id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases//political:
+    get:
+      summary: Trae las frases de un polinomio politico
+      tags:
+        - Phrases
+      responses:
+        '200':
+          description: Frases del ese polinomio politico
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases//political/{group}:
+    parameters:
+      - name: group
+        in: path
+        required: true
+        type: string
+        enum:
+          - 'Extremo 1'
+          - 'Extremo 2'
+        description: El grupo para buscar sus frases
+    get:
+      summary: Trae las frases de un grupo pasado por parametro
+      tags:
+        - Phrases
+      responses:
+        '200':
+          description: Frases de ese grupo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/neutral/political:
+    get:
+      summary: Trae las frases combinadas para neutral
+      tags:
+        - Phrases
+      responses:
+        '200':
+          description: Frases de polinomio combinada
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/bygroup/political:
+    post:
+      summary: Trae frases politicas de su mismo extremo pasando id de opcion de polinomio
+      tags:
+        - Phrases
+      requestBody:
+        required: true
+        description: Id de opcion de polinomio
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idOption'
+      responses:
+        '200':
+          description: Frases de polinomio
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/inverse/political:
+    post:
+      summary: Trae frases politicas de extremo contrario pasando id de opcion de polinomio
+      tags:
+        - Phrases
+      requestBody:
+        required: true
+        description: Id de opcion de polinomio
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idOption'
+      responses:
+        '200':
+          description: Frases de polinomio
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
