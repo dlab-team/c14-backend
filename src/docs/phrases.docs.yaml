@@ -22,6 +22,12 @@ components:
           type: string
           format: 'uuid'
           example: '5444db52-6a11-406e-9329-a9ff35ddf872'
+    idOption:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'bf24ac15-3ba9-4372-af55-287cee388f0e'
   responses:
     phrasesBasic:
       type: object
@@ -270,6 +276,60 @@ paths:
       responses:
         '200':
           description: Frases de polinomio combinada
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/bygroup/political:
+    post:
+      summary: Trae frases politicas de su mismo extremo pasando id de opcion de polinomio
+      tags:
+        - Phrases
+      requestBody:
+        required: true
+        description: Id de opcion de polinomio
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idOption'
+      responses:
+        '200':
+          description: Frases de polinomio
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/inverse/political:
+    post:
+      summary: Trae frases politicas de extremo contrario pasando id de opcion de polinomio
+      tags:
+        - Phrases
+      requestBody:
+        required: true
+        description: Id de opcion de polinomio
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idOption'
+      responses:
+        '200':
+          description: Frases de polinomio
           content:
             application/json:
               schema:
