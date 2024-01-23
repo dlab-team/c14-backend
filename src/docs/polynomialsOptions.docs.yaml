@@ -1,0 +1,281 @@
+components:
+  schemas:
+    new:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Ejemplo 1'
+        group:
+          type: ['string', 'null']
+          example: null
+        polynomialId:
+          type: string
+          format: 'uuid'
+          example: '5444db52-6a11-406e-9329-a9ff35ddf872'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+  responses:
+    options:
+      type: object
+      properties:
+        id:
+          type: string
+          format: 'uuid'
+          example: '6925ff15-0d00-4f1b-9a0f-afc16f721588'
+        name:
+          type: string
+          example: 'Derecha'
+        group:
+          type: string
+          example: 'Extremo 1'
+        polynomialId:
+          type: string
+          format: 'uuid'
+          example: '4c0ed4d4-028f-4583-bf53-bcd2e43c4ef1'
+    allOptions:
+      type: array
+      items:
+        $ref: '#/components/responses/options'
+    generalError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Descripción del error
+    create:
+      type: object
+      properties:
+        id:
+          type: string
+          format: 'uuid'
+          example: 'ee0a4ecf-1941-444e-94b6-4d3867724e71'
+        name:
+          type: string
+          example: 'Ejemplo 1'
+        group:
+          type: ['string', 'null']
+          example: null
+        polynomialId:
+          type: string
+          format: 'uuid'
+          example: '5444db52-6a11-406e-9329-a9ff35ddf872'
+        updatedAt:
+          type: string
+          format: 'date-time'
+          example: '2024-01-22T16:38:17.552Z'
+        createdAt:
+          type: string
+          format: 'date-time'
+          example: '2024-01-22T16:38:17.552Z'
+    optionsP:
+      type: object
+      properties:
+        id:
+          type: string
+          format: 'uuid'
+          example: '6925ff15-0d00-4f1b-9a0f-afc16f721588'
+        name:
+          type: string
+          example: 'Derecha'
+    optionsPolitical:
+      type: array
+      items:
+        $ref: '#/components/responses/optionsP'
+    option:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: '6925ff15-0d00-4f1b-9a0f-afc16f721588'
+        name:
+          type: 'string'
+          example: 'Derecha'
+        group:
+          type: 'string'
+          example: 'Extremo 1'
+        polynomialId:
+          type: 'string'
+          format: 'uuid'
+          example: '4c0ed4d4-028f-4583-bf53-bcd2e43c4ef1'
+    generalResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de la solicitud
+        message:
+          type: string
+          description: Descripcion de la operación realizada
+      example:
+        status: success
+        message: Recurso eliminado
+    UpdatedOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: 'uuid'
+          example: 'd3336970-1df3-4ec1-8271-64b11d0b83cc'
+        name:
+          type: string
+          example: 'Esta es una actualizacion'
+        group:
+          type: ['string', 'null']
+          example: null
+        polynomialId:
+          type: string
+          format: 'uuid'
+          example: '5444db52-6a11-406e-9329-a9ff35ddf872'
+        updatedAt:
+          type: string
+          format: 'date-time'
+          example: '2024-01-22T18:36:56.537Z'
+paths:
+  /api/polynomialsoptions:
+    get:
+      summary: Nos entrega todas las opciones de polinomios
+      tags:
+        - OptionsPolynomial
+      responses:
+        '200':
+          description: Retorna todas las opciones de polinomios
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/allOptions'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    post:
+      summary: Crear una opcion de polinomio(Requiere Autn).
+      tags:
+        - OptionsPolynomial
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        description: Datos requeridos para crear la opcion de un polinomio
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/new'
+      responses:
+        '201':
+          description: Se crea exitosamente el recurso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/create'
+        '400':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+
+  /api/polynomialsoptions/political:
+    get:
+      summary: Trae todos las opciones del polinomio politico
+      tags:
+        - OptionsPolynomial
+      responses:
+        '200':
+          description: Se trae todos las opciones politicas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/optionsPolitical'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+
+  /api/polynomialsoptions/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+        description: El Id de la opcion polinomio a buscar
+    get:
+      summary: Trae por la id la opcion
+      tags:
+        - OptionsPolynomial
+      responses:
+        '200':
+          description: Se trae la opcion por su id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/option'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    delete:
+      summary: Borra una opcion de polinomio por su id
+      tags:
+        - OptionsPolynomial
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Informa que el recurso se elimino correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalResponse'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    put:
+      summary: Actualiza el recurso de la opcion de polinomios
+      tags:
+        - OptionsPolynomial
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        description: Datos requeridos para actualizar la opcion de un polinomio
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/new'
+      responses:
+        '200':
+          description: Informa que el recurso se elimino correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/UpdatedOption'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
