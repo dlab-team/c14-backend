@@ -5,10 +5,17 @@ import {
 } from '@/db/models/polynomial_option';
 import { ClientError } from '@/errors';
 import polynomialService from './polynomial.service';
+import { group } from '@/enums';
 
 const createPolynomialOption = (
   polynomialOption: PolynomialOptionCreationAttributes,
 ): Promise<PolynomialOptionAttributes> => {
+  if (
+    polynomialOption.group !== group['Extremo 1'] &&
+    polynomialOption.group !== group['Extremo 2']
+  ) {
+    polynomialOption.group = null;
+  }
   return PolynomialOption.create(polynomialOption);
 };
 
