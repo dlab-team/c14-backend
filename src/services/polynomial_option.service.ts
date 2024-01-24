@@ -5,11 +5,25 @@ import {
 } from '@/db/models/polynomial_option';
 import { ClientError } from '@/errors';
 import polynomialService from './polynomial.service';
+import phrasesService from './phrases.service';
+import surveyResultService from './survey_result.service';
+import { SurveyResultAttributes } from '../db/models/survey_result';
 
-const createPolynomialOption = (
+const createPolynomialOption = async (
   polynomialOption: PolynomialOptionCreationAttributes,
 ): Promise<PolynomialOptionAttributes> => {
-  return PolynomialOption.create(polynomialOption);
+  const option = await PolynomialOption.create(polynomialOption);
+  const polyPhrases = await phrasesService.getPolynomialPhrases(option.polynomialId);
+  const data: SurveyResultAttributes[] = [];
+  polyPhrases.forEach(phrase => {
+    data.push({
+      polynomialOptionId: option.id,
+      phraseId: phrase.id,
+      percentage: 0,
+    });
+  });
+  surveyResultService.createResults(data);
+  return option;
 };
 
 const updatePolynomialOption = async (

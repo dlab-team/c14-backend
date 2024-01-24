@@ -7,19 +7,22 @@ import { Polynomial } from '@/db/models/polynomial';
 import { sequelize } from '../db/models';
 import polynomialOptionService from './polynomial_option.service';
 import surveyResultService from './survey_result.service';
+import { SurveyResultAttributes } from '../db/models/survey_result';
 
 const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   const phrase = await Phrases.create(phrases, { raw: true });
   const polynomialOptions = await polynomialOptionService.getPolyOptionsFromPolyId(
     phrase.polynomialId,
   );
+  const data: SurveyResultAttributes[] = [];
   polynomialOptions.forEach(option => {
-    surveyResultService.createPhraseResults({
+    data.push({
       polynomialOptionId: option.id,
       phraseId: phrase.id,
       percentage: 0,
     });
   });
+  surveyResultService.createResults(data);
   const phraseAtt = {
     id: phrase.id,
     text: phrase.text,
@@ -61,7 +64,7 @@ const getPhrasesId = (idPhrases: IdPhrases) => {
   });
 };
 
-const getPolynomialPhrases = async (polynomialId: string): Promise<object[]> => {
+const getPolynomialPhrases = async (polynomialId: string): Promise<PhrasesAttributes[]> => {
   return Phrases.findAll({
     where: { polynomialId: polynomialId },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
