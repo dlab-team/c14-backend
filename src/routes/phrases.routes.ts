@@ -13,7 +13,7 @@ router.post('/', isAuthenticated, phrasesController.createPhrases);
 router.delete('/:id', isAuthenticated, phrasesController.deletePhrases);
 
 router.get('/neutral/political', phrasesController.getCombinedPoliticalPhrases);
-router.get('/bygroup/political', phrasesController.getPoliticalPhrasesByGroup);
-router.get('/inverse/political', phrasesController.getInversePoliticalPhrasesByGroup);
+router.post('/bygroup/political', phrasesController.getPoliticalPhrasesByGroup);
+router.post('/inverse/political', phrasesController.getInversePoliticalPhrasesByGroup);
 
 export default router;

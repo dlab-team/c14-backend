@@ -8,6 +8,7 @@ import polynomialService from './polynomial.service';
 import phrasesService from './phrases.service';
 import surveyResultService from './survey_result.service';
 import { SurveyResultAttributes } from '../db/models/survey_result';
+import { group } from '@/enums';
 
 const createPolynomialOption = async (
   polynomialOption: PolynomialOptionCreationAttributes,
