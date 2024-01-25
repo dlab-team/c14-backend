@@ -14,7 +14,7 @@ router.delete('/:id', isAuthenticated, phrasesController.deletePhrases);
 
 router.get('/neutral/political', phrasesController.getCombinedPoliticalPhrases);
 router.post('/bygroup/political', phrasesController.getPoliticalPhrasesByGroup);
-router.get('/bygroup/social', phrasesController.getSocialPhrasesByGroup);
+router.post('/bygroup/social', phrasesController.getSocialPhrasesByGroup);
 router.post('/inverse/political', phrasesController.getInversePoliticalPhrasesByGroup);
 
 export default router;
