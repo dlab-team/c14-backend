@@ -115,6 +115,41 @@ const getPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | vo
   }
 };
 
+const getSocialPhrases = async (ids: Array<string>): Promise<string[] | void> => {
+  const allPhrases: Array<string> = [];
+  for (const option of ids) {
+    const polynomialOption = await polynomialOptionService.getPolynomialOptionId(option);
+    if (polynomialOption) {
+      if (polynomialOption.dataValues.group === null) {
+        const phrases = await Phrases.findAll({
+          where: {
+            polynomialId: polynomialOption.dataValues.polynomialId,
+          },
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+        });
+        phrases.map(p => {
+          allPhrases.push(p.dataValues.text);
+        });
+      } else {
+        const phrases = await Phrases.findAll({
+          where: {
+            group: polynomialOption.dataValues.group,
+            polynomialId: polynomialOption.dataValues.polynomialId,
+          },
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+        });
+        phrases.map(p => {
+          allPhrases.push(p.dataValues.text);
+        });
+      }
+    } else {
+      throw new Error('No se encontro el id de una de las opciones de un polinomio.');
+    }
+  }
+  const socialPhrases = allPhrases.sort(() => Math.random() - 0.5);
+  return socialPhrases;
+};
+
 const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | void> => {
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
 
@@ -210,4 +245,5 @@ export default {
   getAllPoliticalPhrases,
   getPoliticalPhrases,
   getInversePoliticalPhrases,
+  getSocialPhrases,
 };

@@ -105,6 +105,23 @@ const getPoliticalPhrasesByGroup = async (
   }
 };
 
+const getSocialPhrasesByGroup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const { ids } = req.body;
+  try {
+    if (!ids) {
+      throw new ClientError('Debe ingresar los id de las opciones de polinomios por body');
+    }
+    const phrases = await phrasesService.getSocialPhrases(ids);
+    res.status(200).json({ phrases });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getInversePoliticalPhrasesByGroup = async (
   req: Request,
   res: Response,
@@ -155,4 +172,5 @@ export default {
   getAllPoliticalPhrases,
   getPoliticalPhrasesByGroup,
   getInversePoliticalPhrasesByGroup,
+  getSocialPhrasesByGroup,
 };
