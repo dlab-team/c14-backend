@@ -115,8 +115,8 @@ const getPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | vo
   }
 };
 
-const getSocialPhrases = async (ids: Array<string>): Promise<string[] | void> => {
-  const allPhrases: Array<string> = [];
+const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> => {
+  const allPhrases: Array<object> = [];
   for (const option of ids) {
     const polynomialOption = await polynomialOptionService.getPolynomialOptionId(option);
     if (polynomialOption) {
@@ -128,7 +128,7 @@ const getSocialPhrases = async (ids: Array<string>): Promise<string[] | void> =>
           attributes: { exclude: ['createdAt', 'updatedAt'] },
         });
         phrases.map(p => {
-          allPhrases.push(p.dataValues.text);
+          allPhrases.push(p.dataValues);
         });
       } else {
         const phrases = await Phrases.findAll({
@@ -139,7 +139,7 @@ const getSocialPhrases = async (ids: Array<string>): Promise<string[] | void> =>
           attributes: { exclude: ['createdAt', 'updatedAt'] },
         });
         phrases.map(p => {
-          allPhrases.push(p.dataValues.text);
+          allPhrases.push(p.dataValues);
         });
       }
     } else {
