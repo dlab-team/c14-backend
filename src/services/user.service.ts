@@ -14,7 +14,7 @@ export interface Response {
 const getAllUsers = async (): Promise<UserAttributes[]> => {
   try {
     const users = await User.findAll({
-      attributes: { exclude: ['createdAt', 'updatedAt', 'password'] },
+      attributes: { exclude: ['updatedAt', 'password'] },
     });
     const usersData = users.map(user => user.get());
     return usersData;
