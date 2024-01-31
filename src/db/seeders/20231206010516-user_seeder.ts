@@ -13,8 +13,7 @@ module.exports = {
         firstName: '3xi',
         lastName: 'ONG',
         email: '3xi@g3xi.com',
-        password:
-          '$argon2id$v=19$m=65536,t=3,p=4$aUUh9Ip+JHt6qarynaYpGw$LbP1QDpr4jjsDGJArFgpzYYO79Z5asJhSn7M4bXN4XI',
+        password,
         active: true,
         superAdmin: true,
         createdAt: new Date(),

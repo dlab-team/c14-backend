@@ -2,16 +2,16 @@ import { SurveyResult, SurveyResultAttributes } from '@/db/models/survey_result'
 import { Response } from './user.service';
 import { ServerError } from '@/errors';
 
-const createPhraseResults = async (data: SurveyResultAttributes): Promise<Response | undefined> => {
+const createResults = async (data: SurveyResultAttributes[]): Promise<Response | undefined> => {
   try {
-    await SurveyResult.create(data, { raw: true });
+    await SurveyResult.bulkCreate(data);
     return {
       success: true,
-      message: 'Phrase result created',
+      message: 'Result created',
     };
   } catch (error) {
-    throw new ServerError('Server error', 500);
+    throw new ServerError(error as string, 500);
   }
 };
 
-export default { createPhraseResults };
+export default { createResults };

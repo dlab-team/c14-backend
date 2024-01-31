@@ -7,19 +7,22 @@ import { Polynomial } from '@/db/models/polynomial';
 import { sequelize } from '../db/models';
 import polynomialOptionService from './polynomial_option.service';
 import surveyResultService from './survey_result.service';
+import { SurveyResultAttributes } from '../db/models/survey_result';
 
 const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   const phrase = await Phrases.create(phrases, { raw: true });
   const polynomialOptions = await polynomialOptionService.getPolyOptionsFromPolyId(
     phrase.polynomialId,
   );
+  const data: SurveyResultAttributes[] = [];
   polynomialOptions.forEach(option => {
-    surveyResultService.createPhraseResults({
+    data.push({
       polynomialOptionId: option.id,
       phraseId: phrase.id,
       percentage: 0,
     });
   });
+  surveyResultService.createResults(data);
   const phraseAtt = {
     id: phrase.id,
     text: phrase.text,
@@ -61,7 +64,7 @@ const getPhrasesId = (idPhrases: IdPhrases) => {
   });
 };
 
-const getPolynomialPhrases = async (polynomialId: string): Promise<object[]> => {
+const getPolynomialPhrases = async (polynomialId: string): Promise<PhrasesAttributes[]> => {
   return Phrases.findAll({
     where: { polynomialId: polynomialId },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -110,6 +113,41 @@ const getPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | vo
   } else {
     throw new Error('No se encontro el id de la opcion del polinomio.');
   }
+};
+
+const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> => {
+  const allPhrases: Array<object> = [];
+  for (const option of ids) {
+    const polynomialOption = await polynomialOptionService.getPolynomialOptionId(option);
+    if (polynomialOption) {
+      if (polynomialOption.dataValues.group === null) {
+        const phrases = await Phrases.findAll({
+          where: {
+            polynomialId: polynomialOption.dataValues.polynomialId,
+          },
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+        });
+        phrases.map(p => {
+          allPhrases.push(p.dataValues);
+        });
+      } else {
+        const phrases = await Phrases.findAll({
+          where: {
+            group: polynomialOption.dataValues.group,
+            polynomialId: polynomialOption.dataValues.polynomialId,
+          },
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+        });
+        phrases.map(p => {
+          allPhrases.push(p.dataValues);
+        });
+      }
+    } else {
+      throw new Error('No se encontro el id de una de las opciones de un polinomio.');
+    }
+  }
+  const socialPhrases = allPhrases.sort(() => Math.random() - 0.5);
+  return socialPhrases;
 };
 
 const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | void> => {
@@ -207,4 +245,5 @@ export default {
   getAllPoliticalPhrases,
   getPoliticalPhrases,
   getInversePoliticalPhrases,
+  getSocialPhrases,
 };
