@@ -95,6 +95,21 @@ const changePass = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { password, newPassword } = req.body;
+    const id = (req as AuthenticatedRequest).decoded?.id;
+    if (id) {
+      const response = await userService.updatePassword(id, password, newPassword);
+      res.json(response);
+    } else {
+      throw new ClientError('Id de usuario invalido', 400);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getAllUsers,
   login,
@@ -102,4 +117,5 @@ export default {
   deleteUser,
   forgotPass,
   changePass,
+  updatePassword,
 };

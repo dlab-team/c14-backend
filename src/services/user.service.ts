@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { Payload, UserResLogin } from '../types';
 import { User, UserAttributes, UserCreationAttributes } from '../db/models/user';
-import { signToken, verifyText } from '@/helpers';
+import { hashText, signToken, verifyText } from '@/helpers';
 import { verifyToken } from '@/helpers/jsonToken';
 import { transport } from '@/config/config';
 import { ClientError, ServerError } from '@/errors';
@@ -144,6 +144,32 @@ const loginBd = async (email: string, password: string): Promise<UserResLogin> =
   }
 };
 
+const updatePassword = async (
+  id: string,
+  password: string,
+  newPassword: string,
+): Promise<Response | void> => {
+  try {
+    const user = await User.findOne({ where: { id } });
+    if (!user) {
+      throw new ClientError('Usuario no encontrado', 404);
+    }
+    const { password: oldHashedPassword } = user;
+    const verify = await verifyText(password, oldHashedPassword);
+    if (!verify) {
+      throw new ClientError('Tu contraseña actual es incorrecta', 400);
+    }
+    const hashedPassword = await hashText(newPassword);
+    await User.update({ password: hashedPassword }, { where: { id } });
+    return {
+      success: true,
+      message: 'Password changed successfully',
+    };
+  } catch (error) {
+    throw new ServerError('Server error', 500);
+  }
+};
+
 export default {
   getAllUsers,
   createUser,
@@ -152,4 +178,5 @@ export default {
   forgotPass,
   changePass,
   loginBd,
+  updatePassword,
 };
