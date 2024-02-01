@@ -4,8 +4,9 @@ import { ClientError } from '@/errors';
 import { hashText } from '../helpers/argon';
 import { UserCreationAttributes } from '@/db/models/user';
 import { AuthenticatedRequest } from '@/middleware/isAuthenticated';
+
 //Create User
-const createUser = async (req: Request, res: Response, next: NextFunction) => {
+const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userData: UserCreationAttributes = req.body;
     const response = await userService.createUser(userData);
@@ -16,7 +17,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 //Read Users
-const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+const getAllUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const users = await userService.getAllUsers();
     res.json(users);
@@ -27,13 +28,17 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
 
 //Delete one user
 
-const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+const deleteUser = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   const { email }: { email: string } = req.body;
-  const superAdmin = (req as AuthenticatedRequest).decoded;
+  const superAdmin = req.decoded;
   if (superAdmin?.email != email) {
     try {
       const response = await userService.deleteUser(email);
-      console.log(response);
+
       if (response) {
         res.status(200).json(response);
       }
@@ -46,7 +51,7 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
+const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { email, password }: { email: string; password: string } = req.body;
   try {
     const data = await userService.loginBd(email.toLowerCase(), password);
@@ -65,7 +70,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const forgotPass = async (req: Request, res: Response, next: NextFunction) => {
+const forgotPass = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const email: string = req.body.email;
     const response = await userService.forgotPass(email);
@@ -75,7 +80,7 @@ const forgotPass = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const changePass = async (req: Request, res: Response, next: NextFunction) => {
+const changePass = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const auth = req.headers.authorization;
     const { newPassword } = req.body;
@@ -95,6 +100,28 @@ const changePass = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const updateProfile = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { firstName, lastName } = req.body;
+    if (req.decoded && firstName && lastName) {
+      const response = await userService.updateProfileDB(req.decoded.id, { firstName, lastName });
+      if (response) {
+        res.json({
+          response,
+        });
+      }
+    } else {
+      throw new ClientError('Invalid information', 400);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getAllUsers,
   login,
@@ -102,4 +129,5 @@ export default {
   deleteUser,
   forgotPass,
   changePass,
+  updateProfile,
 };

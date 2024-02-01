@@ -1,6 +1,11 @@
 import 'dotenv/config';
 import { Payload, UserResLogin } from '../types';
-import { User, UserAttributes, UserCreationAttributes } from '../db/models/user';
+import {
+  User,
+  UserAttributes,
+  UserCreationAttributes,
+  UserUpdateAttributes,
+} from '../db/models/user';
 import { signToken, verifyText } from '@/helpers';
 import { verifyToken } from '@/helpers/jsonToken';
 import { transport } from '@/config/config';
@@ -144,6 +149,21 @@ const loginBd = async (email: string, password: string): Promise<UserResLogin> =
   }
 };
 
+const updateProfileDB = async (id: string, data: UserUpdateAttributes): Promise<Response> => {
+  const user = await User.update(data, { where: { id } });
+  if (user[0] != 0) {
+    return {
+      success: true,
+      message: 'Profile Updated',
+    };
+  } else {
+    return {
+      success: false,
+      message: 'Profile Not Updated',
+    };
+  }
+};
+
 export default {
   getAllUsers,
   createUser,
@@ -152,4 +172,5 @@ export default {
   forgotPass,
   changePass,
   loginBd,
+  updateProfileDB,
 };
