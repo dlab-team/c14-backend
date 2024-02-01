@@ -100,6 +100,21 @@ const changePass = async (req: Request, res: Response, next: NextFunction): Prom
   }
 };
 
+export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { password, newPassword } = req.body;
+    const id = (req as AuthenticatedRequest).decoded?.id;
+    if (id) {
+      const response = await userService.updatePassword(id, password, newPassword);
+      res.json(response);
+    } else {
+      throw new ClientError('Id de usuario invalido', 400);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 const updateProfile = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -129,5 +144,6 @@ export default {
   deleteUser,
   forgotPass,
   changePass,
+  updatePassword,
   updateProfile,
 };
