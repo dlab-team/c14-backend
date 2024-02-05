@@ -26,7 +26,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'polynomial_options',
+          model: 'polynomial_option',
           key: 'id',
         },
         onUpdate: 'CASCADE',
