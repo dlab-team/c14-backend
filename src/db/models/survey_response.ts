@@ -15,7 +15,7 @@ export interface SurveyResponseInstance
 }
 
 export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
-  'survey_response',
+  'survey_responses',
   {
     id: {
       allowNull: false,
@@ -39,6 +39,6 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
     },
   },
   {
-    tableName: 'survey_response',
+    tableName: 'survey_responses',
   },
 );
