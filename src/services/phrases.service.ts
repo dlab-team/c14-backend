@@ -9,6 +9,7 @@ import polynomialOptionService from './polynomial_option.service';
 import surveyResultService from './survey_result.service';
 import { SurveyResultAttributes } from '../db/models/survey_result';
 import { PhrasesInstance } from '@/db/models/phrases';
+import { group } from '@/enums';
 
 const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   const phrase = await Phrases.create(phrases, { raw: true });
@@ -161,7 +162,10 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
       throw new Error('No se encontro el id de una de las opciones de un polinomio.');
     }
 
-    let targetGroup = polynomialOption.dataValues.group === null ? null : 'Extremo 1';
+    let targetGroup =
+      polynomialOption.dataValues.group === null
+        ? group[Math.floor(Math.random() * 2)]
+        : polynomialOption.dataValues.group;
     if (targetGroup === 'Extremo 1') {
       targetGroup = 'Extremo 2';
     } else if (targetGroup === 'Extremo 2') {
