@@ -44,7 +44,10 @@ const deletePolynomialDB = async (idPolynomial: IdPolynomial): Promise<Response>
 };
 
 const getPolynomials = () => {
-  return Polynomial.findAll({ attributes: { exclude: ['createdAt', 'updatedAt'] } });
+  return Polynomial.findAll({
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: { model: PolynomialOption },
+  });
 };
 
 const getPolynomialsId = (idPolynomial: IdPolynomial) => {
