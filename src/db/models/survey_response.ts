@@ -3,16 +3,19 @@ import { sequelize } from '.';
 
 export interface SurveyResponseAttributes {
   id: string;
-  createdAt: Date;
+  os: string;
+  country: string;
+  region: string;
+  city: string;
+  startDate: Date;
   finishDate: Date;
+  finishedSocialForm: boolean;
   duration: number;
 }
 
 export interface SurveyResponseInstance
   extends Model<SurveyResponseAttributes>,
-    SurveyResponseAttributes {
-  updatedAt?: Date;
-}
+    SurveyResponseAttributes {}
 
 export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
   'survey_response',
@@ -24,7 +27,27 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
     },
-    createdAt: {
+    os: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+    },
+    country: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+    },
+    region: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+    },
+    city: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+    },
+    finishedSocialForm: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+    },
+    startDate: {
       allowNull: false,
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
