@@ -4,22 +4,33 @@ import { DataTypes, QueryInterface } from 'sequelize';
 
 module.exports = {
   up: async (queryInterface: QueryInterface, Sequelize: typeof DataTypes) => {
-    await queryInterface.createTable('survey_responses', {
+    await queryInterface.createTable('survey_response_profile', {
       id: {
         allowNull: false,
         autoIncrement: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
-        unique: true,
       },
-      endDate: {
+      surveyResponseId: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.UUID,
+        references: {
+          model: 'survey_responses',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
-      duration: {
+      polynomialOptionId: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
+        references: {
+          model: 'polynomial_options',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,
@@ -29,11 +40,12 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
     });
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('survey_responses');
+    await queryInterface.dropTable('survey_response_profile');
   },
 };
