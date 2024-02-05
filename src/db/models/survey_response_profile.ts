@@ -52,5 +52,7 @@ export const SurveyResponseProfile = sequelize.define<SurveyResponseProfileInsta
   },
 );
 
+SurveyResponse.hasMany(SurveyResponseProfile, { foreignKey: 'surveyResponseId' });
 SurveyResponseProfile.belongsTo(SurveyResponse, { foreignKey: 'surveyResponseId' });
+PolynomialOption.hasMany(SurveyResponseProfile, { foreignKey: 'polynomialOptionId ' });
 SurveyResponseProfile.belongsTo(PolynomialOption, { foreignKey: 'polynomialOptionId' });
