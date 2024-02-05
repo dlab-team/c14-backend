@@ -1,13 +1,11 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '.';
-import { Polynomial } from './polynomial';
-import { group } from '@/enums';
+import { Group } from './group';
 
 export interface PolynomialOptionAttributes {
   id: string;
   name: string;
-  group: group | null;
-  polynomialId: string;
+  groupId: string;
 }
 
 export interface PolynomialOptionCreationAttributes
@@ -35,15 +33,11 @@ export const PolynomialOption = sequelize.define<PolynomialOptionInstance>(
       allowNull: false,
       type: DataTypes.TEXT,
     },
-    group: {
-      allowNull: true,
-      type: DataTypes.ENUM('Extremo 1', 'Extremo 2'),
-    },
-    polynomialId: {
+    groupId: {
       allowNull: false,
       type: DataTypes.UUID,
       references: {
-        model: 'polynomial',
+        model: 'groups',
         key: 'id',
       },
       onUpdate: 'CASCADE',
@@ -55,5 +49,5 @@ export const PolynomialOption = sequelize.define<PolynomialOptionInstance>(
   },
 );
 
-Polynomial.hasMany(PolynomialOption, { foreignKey: 'polynomialId' });
-PolynomialOption.belongsTo(Polynomial, { foreignKey: 'polynomialId' });
+Group.hasMany(PolynomialOption, { foreignKey: 'groupId' });
+PolynomialOption.belongsTo(Group, { foreignKey: 'groupId' });

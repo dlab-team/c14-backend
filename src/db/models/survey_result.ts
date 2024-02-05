@@ -1,11 +1,11 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '.';
-import { PolynomialOption } from './polynomial_option';
+import { Group } from './group';
 import { Phrases } from './phrases';
 
 export interface SurveyResultAttributes {
   phraseId: string;
-  polynomialOptionId: string;
+  groupId: string;
   percentage: number;
 }
 
@@ -32,14 +32,14 @@ export const SurveyResult = sequelize.define<SurveyResultInstance>(
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
-    polynomialOptionId: {
+    groupId: {
       allowNull: false,
       autoIncrement: false,
       primaryKey: true,
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUID,
       references: {
-        model: 'polynomial_option',
+        model: 'group',
         key: 'id',
       },
       onUpdate: 'CASCADE',
@@ -55,7 +55,7 @@ export const SurveyResult = sequelize.define<SurveyResultInstance>(
   },
 );
 
-PolynomialOption.hasMany(SurveyResult, { foreignKey: 'polynomialOptionId' });
-SurveyResult.belongsTo(PolynomialOption, { foreignKey: 'polynomialOptionId' });
+Group.hasMany(SurveyResult, { foreignKey: 'groupId' });
 Phrases.hasMany(SurveyResult, { foreignKey: 'phraseId' });
+SurveyResult.belongsTo(Group, { foreignKey: 'groupId' });
 SurveyResult.belongsTo(Phrases, { foreignKey: 'phraseId' });

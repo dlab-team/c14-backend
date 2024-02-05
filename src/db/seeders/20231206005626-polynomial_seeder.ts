@@ -2,32 +2,23 @@
 
 import { QueryInterface } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
-// import { faker } from '@faker-js/faker';
+
+export const polynomialsData: string[] = [
+  'Político',
+  'Género',
+  'Regiones',
+  'Ingresos',
+  'Pueblos indígenas',
+  'Credo',
+  'Inmigración',
+  'Directivo',
+  'Etario',
+  'Orientación sexual',
+];
 
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
-    // // If 'length' is changed, the number of created polynomials changes
-    // const polynomials = Array.from({ length: 10 }, () => ({
-    //   id: uuidv4(),
-    //   name: faker.lorem.sentence(),
-    //   political: faker.helpers.arrayElement([true, false]),
-    //   active: true,
-    //   createdAt: new Date(),
-    //   updatedAt: new Date(),
-    // }));
-    const data: string[] = [
-      'Político',
-      'Género',
-      'Regiones',
-      'Ingresos',
-      'Pueblos indígenas',
-      'Credo',
-      'Inmigración',
-      'Directivo',
-      'Etario',
-      'Orientación sexual',
-    ];
-    const polynomials = data.map(polynomialName => {
+    const polynomials = polynomialsData.map(polynomialName => {
       const newPolynomial = {
         id: uuidv4(),
         name: polynomialName,

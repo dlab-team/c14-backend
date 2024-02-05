@@ -1,13 +1,11 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '.';
-import { Polynomial } from './polynomial';
-import { group } from '@/enums';
+import { Group } from './group';
 
 export interface PhrasesAttributes {
   id: string;
   text: string;
-  group: group;
-  polynomialId: string;
+  groupId: string;
 }
 
 export interface PhrasesCreationAttributes extends Optional<PhrasesAttributes, 'id'> {}
@@ -34,17 +32,13 @@ export const Phrases = sequelize.define<PhrasesInstance>(
       allowNull: false,
       type: DataTypes.TEXT,
     },
-    group: {
-      allowNull: false,
-      type: DataTypes.ENUM('Extremo 1', 'Extremo 2'),
-    },
-    polynomialId: {
+    groupId: {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUID,
       references: {
-        model: 'polynomial',
+        model: 'group',
         key: 'id',
       },
       onUpdate: 'CASCADE',
@@ -56,5 +50,5 @@ export const Phrases = sequelize.define<PhrasesInstance>(
   },
 );
 
-Polynomial.hasMany(Phrases, { foreignKey: 'polynomialId' });
-Phrases.belongsTo(Polynomial, { foreignKey: 'polynomialId' });
+Group.hasMany(Phrases, { foreignKey: 'groupId' });
+Phrases.belongsTo(Group, { foreignKey: 'groupId' });

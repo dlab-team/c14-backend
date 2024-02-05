@@ -7,6 +7,8 @@ import { ClientError } from '@/errors';
 import { Response } from './user.service';
 import { IdPolynomial, PolynomialUpdateService } from '@/types';
 import { PolynomialOption } from '@/db/models/polynomial_option';
+import { Group } from '@/db/models/group';
+import { Phrases } from '@/db/models/phrases';
 
 const createPolynomialDB = (
   polynomial: PolynomialCreationAttributes,
@@ -44,7 +46,20 @@ const deletePolynomialDB = async (idPolynomial: IdPolynomial): Promise<Response>
 };
 
 const getPolynomials = () => {
-  return Polynomial.findAll({ attributes: { exclude: ['createdAt', 'updatedAt'] } });
+  return Polynomial.findAll({
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: [
+      {
+        model: Group,
+        include: [
+          { model: Group, attributes: ['name'] },
+          { model: Phrases, attributes: ['text'] },
+          { model: PolynomialOption, attributes: ['name'] },
+        ],
+        attributes: ['name', 'oppositeGroupId'],
+      },
+    ],
+  });
 };
 
 const getPolynomialsId = (idPolynomial: IdPolynomial) => {

@@ -5,6 +5,7 @@ import { QueryInterface } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { Polynomial } from '../models/polynomial';
 
+
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
     const groups = {
@@ -407,10 +408,10 @@ module.exports = {
       ageOption,
       sexualOrientationOption,
     );
-    await queryInterface.bulkInsert('polynomial_option', polynomialOptions, {});
+    // await queryInterface.bulkInsert('polynomial_option', polynomialOptions, {});
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkDelete('polynomial_option', {});
+    // await queryInterface.bulkDelete('polynomial_option', {});
   },
 };

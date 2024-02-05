@@ -18,13 +18,13 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      polynomialOptionId: {
+      groupId: {
         allowNull: false,
         autoIncrement: false,
         primaryKey: true,
         type: Sequelize.UUID,
         references: {
-          model: 'polynomial_option',
+          model: 'groups',
           key: 'id',
         },
         onUpdate: 'CASCADE',

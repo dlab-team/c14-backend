@@ -16,15 +16,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT,
       },
-      group: {
-        allowNull: true,
-        type: Sequelize.ENUM('Extremo 1', 'Extremo 2'),
-      },
-      polynomialId: {
+      groupId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'polynomial',
+          model: 'groups',
           key: 'id',
         },
         onUpdate: 'CASCADE',

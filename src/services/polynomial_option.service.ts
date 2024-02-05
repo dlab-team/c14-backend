@@ -14,11 +14,11 @@ const createPolynomialOption = async (
   polynomialOption: PolynomialOptionCreationAttributes,
 ): Promise<PolynomialOptionAttributes> => {
   const option = await PolynomialOption.create(polynomialOption);
-  const polyPhrases = await phrasesService.getPolynomialPhrases(option.polynomialId);
+  const polyPhrases = await phrasesService.getPolynomialPhrases(option.groupId);
   const data: SurveyResultAttributes[] = [];
   polyPhrases.forEach(phrase => {
     data.push({
-      polynomialOptionId: option.id,
+      groupId: option.id,
       phraseId: phrase.id,
       percentage: 0,
     });
@@ -66,7 +66,7 @@ const getPoliticalPolyOption = async () => {
   if (politicalPolyId) {
     const politicalPolyOption = await PolynomialOption.findAll({
       where: {
-        polynomialId: politicalPolyId.id, //ID del polinomio politico
+        groupId: politicalPolyId.id, //ID del polinomio politico
       },
       attributes: ['id', 'name'],
     });
@@ -75,12 +75,10 @@ const getPoliticalPolyOption = async () => {
   return;
 };
 
-const getPolyOptionsFromPolyId = async (
-  polynomialId: string,
-): Promise<PolynomialOptionAttributes[]> => {
+const getPolyOptionsFromPolyId = async (groupId: string): Promise<PolynomialOptionAttributes[]> => {
   const polyOptions = await PolynomialOption.findAll({
     where: {
-      polynomialId,
+      groupId,
     },
     attributes: ['id', 'name'],
   });
