@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
-    // // If 'length' is changed, the number of created polynomials changes
+    // If 'length' is changed, the number of created polynomials changes
     // const polynomials = Array.from({ length: 10 }, () => ({
     //   id: uuidv4(),
     //   name: faker.lorem.sentence(),
@@ -32,6 +32,7 @@ module.exports = {
         id: uuidv4(),
         name: polynomialName,
         political: polynomialName === 'Político' ? true : false,
+        question: 'Lorem ipsum dolor sit amet consectetuer',
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
