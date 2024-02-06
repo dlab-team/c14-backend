@@ -3,7 +3,7 @@ import usersRoutes from './users.routes';
 import polynomialsRoutes from './polynomial.routes';
 import polynomialsOptionsRoutes from './polynomial_option.routes';
 import phrasesRoutes from './phrases.routes';
-import surveyRoutes from './survey_result.routes';
+import surveyResponseRoutes from './survey_response.routes';
 import { errorHandler } from '@/errors';
 
 const router = Router();
@@ -13,7 +13,7 @@ router.use('/users', usersRoutes);
 router.use('/polynomials', polynomialsRoutes);
 router.use('/polynomialsoptions', polynomialsOptionsRoutes);
 router.use('/phrases', phrasesRoutes);
-router.use('/survey', surveyRoutes);
+router.use('/surveyresponse', surveyResponseRoutes);
 /**
  * Manejador de errores
  * Los errores en la parte de servicios no se deben manejar, todos se deben manejar en la
