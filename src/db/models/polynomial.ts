@@ -5,6 +5,7 @@ export interface PolynomialAttributes {
   id: string;
   name: string;
   political: boolean;
+  question: string;
   active: boolean;
 }
 
@@ -37,6 +38,10 @@ export const Polynomial = sequelize.define<PolynomialInstance>(
       allowNull: false,
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    question: {
+      allowNull: false,
+      type: DataTypes.TEXT,
     },
     active: {
       allowNull: false,
