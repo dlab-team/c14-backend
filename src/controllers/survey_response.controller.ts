@@ -12,6 +12,16 @@ const createResponse = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
+const getMetrics = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const metrics = await surveyResponseService.getMetrics();
+    res.status(200).json(metrics);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createResponse,
+  getMetrics,
 };
