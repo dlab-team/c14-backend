@@ -11,6 +11,10 @@ export interface UserAttributes {
   active: boolean;
 }
 
+export interface UserUpdateAttributes {
+  firstName?: string;
+  lastName?: string;
+}
 export interface UserCreationAttributes
   extends Optional<UserAttributes, 'id' | 'password' | 'active'> {}
 

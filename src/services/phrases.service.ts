@@ -8,6 +8,8 @@ import { sequelize } from '../db/models';
 import polynomialOptionService from './polynomial_option.service';
 import surveyResultService from './survey_result.service';
 import { SurveyResultAttributes } from '../db/models/survey_result';
+import { PhrasesInstance } from '@/db/models/phrases';
+import { group } from '@/enums';
 
 const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   const phrase = await Phrases.create(phrases, { raw: true });
@@ -138,7 +140,7 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
           },
           attributes: { exclude: ['createdAt', 'updatedAt'] },
         });
-        phrases.map(p => {
+        phrases.map((p: PhrasesInstance) => {
           allPhrases.push(p.dataValues);
         });
       }
@@ -146,6 +148,43 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
       throw new Error('No se encontro el id de una de las opciones de un polinomio.');
     }
   }
+  const socialPhrases = allPhrases.sort(() => Math.random() - 0.5);
+  return socialPhrases;
+};
+
+const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | void> => {
+  const allPhrases: Array<object> = [];
+
+  for (const option of ids) {
+    const polynomialOption = await polynomialOptionService.getPolynomialOptionId(option);
+
+    if (!polynomialOption) {
+      throw new Error('No se encontro el id de una de las opciones de un polinomio.');
+    }
+
+    let targetGroup =
+      polynomialOption.dataValues.group === null
+        ? group[Math.floor(Math.random() * 2)]
+        : polynomialOption.dataValues.group;
+    if (targetGroup === 'Extremo 1') {
+      targetGroup = 'Extremo 2';
+    } else if (targetGroup === 'Extremo 2') {
+      targetGroup = 'Extremo 1';
+    }
+
+    const phrases = await Phrases.findAll({
+      where: {
+        group: targetGroup,
+        polynomialId: polynomialOption.dataValues.polynomialId,
+      },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+    });
+
+    phrases.forEach((phrase: PhrasesInstance) => {
+      allPhrases.push(phrase.dataValues);
+    });
+  }
+
   const socialPhrases = allPhrases.sort(() => Math.random() - 0.5);
   return socialPhrases;
 };
@@ -246,4 +285,5 @@ export default {
   getPoliticalPhrases,
   getInversePoliticalPhrases,
   getSocialPhrases,
+  getInverseSocialPhrases,
 };

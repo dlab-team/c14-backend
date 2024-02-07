@@ -5,6 +5,17 @@ import { QueryInterface } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { Polynomial } from '../models/polynomial';
 
+const createOptions = (options: { name: string; group?: string }[], polynomialId: string) => {
+  return options.map(({ name, group }) => ({
+    id: uuidv4(),
+    name,
+    group,
+    polynomialId,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }));
+};
+
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
     const groups = {
@@ -20,394 +31,173 @@ module.exports = {
       name: result.getDataValue('name'),
     }));
 
-    let politicalOption: any[] = [];
-    let genderOption: any[] = [];
-    let regionOption: any[] = [];
-    let incomeOption: any[] = [];
-    let indigenousOption: any[] = [];
-    let religionOption: any[] = [];
-    let immigrationOption: any[] = [];
-    let managementOption: any[] = [];
-    let ageOption: any[] = [];
-    let sexualOrientationOption: any[] = [];
+    const politicaId = dataArray.find(p => p.name === 'Político')?.id;
+    const generoId = dataArray.find(p => p.name === 'Género')?.id;
+    const regionId = dataArray.find(p => p.name === 'Regiones')?.id;
+    const ingresoId = dataArray.find(p => p.name === 'Ingresos')?.id;
+    const puebloId = dataArray.find(p => p.name === 'Pueblos indígenas')?.id;
+    const credolId = dataArray.find(p => p.name === 'Credo')?.id;
+    const inmigracionId = dataArray.find(p => p.name === 'Inmigración')?.id;
+    const directivoId = dataArray.find(p => p.name === 'Directivo')?.id;
+    const etarioId = dataArray.find(p => p.name === 'Etario')?.id;
+    const orientationId = dataArray.find(p => p.name === 'Orientación sexual')?.id;
 
-    for (let i = 0; i < dataArray.length; i++) {
-      if (dataArray[i].name === 'Político') {
-        politicalOption = [
-          {
-            id: uuidv4(),
-            name: 'Derecha',
-            group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Izquierda',
-            group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Centro',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Independiente',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ];
-      }
-      if (dataArray[i].name === 'Género') {
-        genderOption = [
-          {
-            id: uuidv4(),
-            name: 'Masculino',
-            group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Femenino',
-            group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Otro',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ];
-      }
-      if (dataArray[i].name === 'Regiones') {
-        const regions = [
-          'Antofagasta',
-          'Arica y Parinacota',
-          'Atacama',
-          'Aysén',
-          'Biobío',
-          'Coquimbo',
-          'El Maule',
-          'La Araucanía',
-          'Los Lagos',
-          'Los Ríos',
-          'Magallanes',
-          'Ñuble',
-          'O’Higgins',
-          'Tarapacá',
-          'Valparaíso',
-        ];
+    const options = [];
 
-        for (let j = 0; j < 15; j++) {
-          regionOption.push({
-            id: uuidv4(),
-            name: regions[j],
-            group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-        }
-        const regionOption1 = [
+    if (politicaId) {
+      const data = createOptions(
+        [
+          { name: 'Derecha', group: groups.Extremo1 },
+          { name: 'Izquierda', group: groups.Extremo2 },
+          { name: 'Centro' },
+          { name: 'Independiente' },
+        ],
+        politicaId,
+      );
+      options.push(...data);
+    }
+
+    if (generoId) {
+      const data = createOptions(
+        [
+          { name: 'Masculino', group: groups.Extremo1 },
+          { name: 'Femenino', group: groups.Extremo2 },
+          { name: 'Otro' },
+        ],
+        generoId,
+      );
+      options.push(...data);
+    }
+    if (regionId) {
+      const data = createOptions(
+        [
           {
-            id: uuidv4(),
-            name: 'Metropolitana',
+            name: 'Vivo en región',
+            group: groups.Extremo1,
+          },
+          {
+            name: 'Vivo en la R. Metropolitana',
             group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
-        ];
-        regionOption = regionOption.concat(regionOption1);
-      }
-      if (dataArray[i].name === 'Ingresos') {
-        incomeOption = [
+        ],
+        regionId,
+      );
+      options.push(...data);
+    }
+    if (ingresoId) {
+      const data = createOptions(
+        [
           {
-            id: uuidv4(),
-            name: 'Ingresos altos',
+            name: 'Ingresos medio altos - altos',
             group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
           {
-            id: uuidv4(),
-            name: 'Ingresos medio altos',
-            group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
             name: 'Ingresos medios',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
           {
-            id: uuidv4(),
-            name: 'Ingresos medio bajos',
+            name: 'Ingresos medio bajos - bajos',
             group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
+        ],
+        ingresoId,
+      );
+      options.push(...data);
+    }
+    if (puebloId) {
+      const data = createOptions(
+        [
           {
-            id: uuidv4(),
-            name: 'Ingresos bajos',
-            group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ];
-      }
-      if (dataArray[i].name === 'Pueblos indígenas') {
-        const indigenous = [
-          'Atacameño',
-          'Aymara',
-          'Chango',
-          'Colla',
-          'Diaguita',
-          'Kawésqar',
-          'Mapuche',
-          'Quechua',
-          'Rapa Nui',
-          'Selknam',
-          'Yagán',
-          'Otro',
-        ];
-
-        for (let j = 0; j < 12; j++) {
-          indigenousOption.push({
-            id: uuidv4(),
-            name: indigenous[j],
+            name: 'Pertenezco a un pueblo originario o indígena',
             group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-        }
-        const indigenousOption1 = [
+          },
           {
-            id: uuidv4(),
             name: 'No me considero perteneciente a ningún pueblo originario o indígena',
             group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
-        ];
-        indigenousOption = indigenousOption.concat(indigenousOption1);
-      }
-      if (dataArray[i].name === 'Credo') {
-        religionOption = [
+        ],
+        puebloId,
+      );
+      options.push(...data);
+    }
+    if (credolId) {
+      const data = createOptions(
+        [
+          { name: 'Práctico alguna religión', group: groups.Extremo1 },
+          { name: 'Sin Religión', group: groups.Extremo2 },
+        ],
+        credolId,
+      );
+      options.push(...data);
+    }
+    if (inmigracionId) {
+      const data = createOptions(
+        [
+          { name: 'Inmigrante', group: groups.Extremo1 },
+          { name: 'Chileno', group: groups.Extremo2 },
+        ],
+        inmigracionId,
+      );
+      options.push(...data);
+    }
+    if (directivoId) {
+      const data = createOptions(
+        [
           {
-            id: uuidv4(),
-            name: 'Creyente',
-            group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Ateo',
-            group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Agnóstico',
-            group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Sin Religión',
-            group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ];
-      }
-      if (dataArray[i].name === 'Inmigración') {
-        immigrationOption = [
-          {
-            id: uuidv4(),
-            name: 'Inmigrante',
-            group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Chileno',
-            group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ];
-      }
-      if (dataArray[i].name === 'Directivo') {
-        managementOption = [
-          {
-            id: uuidv4(),
             name: 'Ocupo un cargo directivo en la empresa u organización donde trabajo',
             group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
           {
-            id: uuidv4(),
             name: 'No tengo un rol directivo en la empresa u organización donde trabajo',
             group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
           {
-            id: uuidv4(),
             name: 'Soy independiente y trabajo solo. No trabajo en ninguna empresa u organización',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
           {
-            id: uuidv4(),
             name: 'En este momento no tengo trabajo remunerado (soy estudiante, jubilado, desempleado, labores del hogar, etc.)',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
-        ];
-      }
-      if (dataArray[i].name === 'Etario') {
-        ageOption = [
+        ],
+        directivoId,
+      );
+      options.push(...data);
+    }
+    if (etarioId) {
+      const data = createOptions(
+        [
           {
-            id: uuidv4(),
             name: '29 años o menos',
             group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
           {
-            id: uuidv4(),
             name: 'Entre 30 y 59 años',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
           {
-            id: uuidv4(),
             name: '60 años o más',
             group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
-        ];
-      }
-      if (dataArray[i].name === 'Orientación sexual') {
-        sexualOrientationOption = [
+        ],
+        etarioId,
+      );
+      options.push(...data);
+    }
+    if (orientationId) {
+      const data = createOptions(
+        [
           {
-            id: uuidv4(),
             name: 'Heterosexual',
             group: groups.Extremo1,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
           {
-            id: uuidv4(),
-            name: 'Gay',
+            name: 'LGTBQ+',
             group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
           },
-          {
-            id: uuidv4(),
-            name: 'Lesbiana',
-            group: groups.Extremo2,
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Bisexual',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Pansexual',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Asexual',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Queer',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            id: uuidv4(),
-            name: 'Otra',
-            polynomialId: dataArray[i].id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ];
-      }
+        ],
+        orientationId,
+      );
+      options.push(...data);
     }
-    const polynomialOptions = politicalOption.concat(
-      genderOption,
-      regionOption,
-      incomeOption,
-      indigenousOption,
-      religionOption,
-      immigrationOption,
-      managementOption,
-      ageOption,
-      sexualOrientationOption,
-    );
-    await queryInterface.bulkInsert('polynomial_option', polynomialOptions, {});
+
+    await queryInterface.bulkInsert('polynomial_option', options, {});
   },
 
   down: async (queryInterface: QueryInterface) => {

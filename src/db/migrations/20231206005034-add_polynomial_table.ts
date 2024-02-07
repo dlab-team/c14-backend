@@ -21,6 +21,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
+      question: {
+        allowNull: false,
+        type: Sequelize.TEXT,
+      },
       active: {
         allowNull: false,
         type: Sequelize.BOOLEAN,

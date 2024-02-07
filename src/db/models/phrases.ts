@@ -12,7 +12,7 @@ export interface PhrasesAttributes {
 
 export interface PhrasesCreationAttributes extends Optional<PhrasesAttributes, 'id'> {}
 
-interface PhrasesInstance
+export interface PhrasesInstance
   extends Model<PhrasesAttributes, PhrasesCreationAttributes>,
     PhrasesAttributes {
   createdAt?: Date;

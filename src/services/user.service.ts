@@ -1,7 +1,12 @@
 import 'dotenv/config';
 import { Payload, UserResLogin } from '../types';
-import { User, UserAttributes, UserCreationAttributes } from '../db/models/user';
-import { signToken, verifyText } from '@/helpers';
+import { hashText, signToken, verifyText } from '@/helpers';
+import {
+  User,
+  UserAttributes,
+  UserCreationAttributes,
+  UserUpdateAttributes,
+} from '../db/models/user';
 import { verifyToken } from '@/helpers/jsonToken';
 import { transport } from '@/config/config';
 import { ClientError, ServerError } from '@/errors';
@@ -144,6 +149,47 @@ const loginBd = async (email: string, password: string): Promise<UserResLogin> =
   }
 };
 
+const updatePassword = async (
+  id: string,
+  password: string,
+  newPassword: string,
+): Promise<Response | void> => {
+  try {
+    const user = await User.findOne({ where: { id } });
+    if (!user) {
+      throw new ClientError('Usuario no encontrado', 404);
+    }
+    const { password: oldHashedPassword } = user;
+    const verify = await verifyText(password, oldHashedPassword);
+    if (!verify) {
+      throw new ClientError('Tu contraseña actual es incorrecta', 400);
+    }
+    const hashedPassword = await hashText(newPassword);
+    await User.update({ password: hashedPassword }, { where: { id } });
+    return {
+      success: true,
+      message: 'Password changed successfully',
+    };
+  } catch (error) {
+    throw new ServerError('Server error', 500);
+  }
+};
+
+const updateProfileDB = async (id: string, data: UserUpdateAttributes): Promise<Response> => {
+  const user = await User.update(data, { where: { id } });
+  if (user[0] != 0) {
+    return {
+      success: true,
+      message: 'Profile Updated',
+    };
+  } else {
+    return {
+      success: false,
+      message: 'Profile Not Updated',
+    };
+  }
+};
+
 export default {
   getAllUsers,
   createUser,
@@ -152,4 +198,6 @@ export default {
   forgotPass,
   changePass,
   loginBd,
+  updatePassword,
+  updateProfileDB,
 };
