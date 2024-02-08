@@ -1,5 +1,6 @@
 import { SurveyResponseAttributes } from '@/db/models/survey_response';
 import surveyResponseService from '@/services/survey_response.service';
+import { SurveyResponseCharacter } from '@/types';
 import { NextFunction, Request, Response } from 'express';
 
 const createResponse = async (req: Request, res: Response, next: NextFunction) => {
@@ -21,7 +22,18 @@ const getMetrics = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const finishResponse = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data: SurveyResponseCharacter = req.body;
+    const character = await surveyResponseService.responseCharater(data);
+    res.status(201).json(character);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createResponse,
   getMetrics,
+  finishResponse,
 };
