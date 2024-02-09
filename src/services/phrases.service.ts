@@ -10,6 +10,7 @@ import { SurveyResultAttributes } from '../db/models/survey_result';
 import { PhrasesInstance } from '@/db/models/phrases';
 import { group } from '@/enums';
 import { SurveyResult } from '../db/models/survey_result';
+import { PolynomialOption } from '@/db/models/polynomial_option';
 
 const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   const phrase = await Phrases.create(phrases, { raw: true });
@@ -205,27 +206,23 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
     throw new Error('No se encontró el id de la opción del polinomio.');
   }
 
-  const { group } = polynomialOption.dataValues;
-
-  if (group === null) {
-    return getCombinedPoliticalPhrases(polynomialOption.id);
-  }
-
   const politicalPolyId = await polynomialService.getPoliticalPolyId();
 
   if (!politicalPolyId) {
     throw new Error('No se encontró el id del polinomio político.');
   }
 
-  const targetGroup = group?.toString() === 'Extremo 1' ? 'Extremo 2' : 'Extremo 1';
+  const { group } = polynomialOption.dataValues;
+
+  if (group === null) {
+    return getInverseCombinedPoliticalPhrases(politicalPolyId.id);
+  }
 
   const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(
-    polynomialOption.dataValues.id,
+    polynomialOption.id,
   );
 
-  console.log(
-    'El valor es  ' + inversePolyOptionId + ' y el tipo es: ' + typeof inversePolyOptionId,
-  );
+  const targetGroup = group?.toString() === 'Extremo 1' ? 'Extremo 2' : 'Extremo 1';
 
   const phrases = await Phrases.findAll({
     where: {
@@ -322,6 +319,70 @@ const getAllPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => 
   return;
 };
 
+const getInverseCombinedPoliticalPhrases = async (
+  polyId: string,
+): Promise<PhrasesAttributes[] | void> => {
+  const polyOptionIdExt1 = await PolynomialOption.findOne({
+    attributes: ['id'],
+    where: {
+      polynomialId: polyId,
+      group: 'Extremo 1',
+    },
+  });
+
+  const polyOptionIdExt2 = await PolynomialOption.findOne({
+    attributes: ['id'],
+    where: {
+      polynomialId: polyId,
+      group: 'Extremo 2',
+    },
+  });
+
+  const phrasesExtreme1 = await Phrases.findAll({
+    where: {
+      polynomialId: polyId,
+      group: 'Extremo 1',
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: [
+      {
+        model: SurveyResult,
+        where: {
+          polynomialOptionId: polyOptionIdExt1?.id,
+        },
+        attributes: ['percentage'],
+      },
+    ],
+    order: [[{ model: SurveyResult, as: 'survey_results' }, 'percentage', 'DESC']],
+    limit: 5,
+  });
+
+  const phrasesExtreme2 = await Phrases.findAll({
+    where: {
+      polynomialId: polyId,
+      group: 'Extremo 2',
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: [
+      {
+        model: SurveyResult,
+        where: {
+          polynomialOptionId: polyOptionIdExt2?.id,
+        },
+        attributes: ['percentage'],
+      },
+    ],
+    order: [[{ model: SurveyResult, as: 'survey_results' }, 'percentage', 'DESC']],
+    limit: 5,
+  });
+
+  if (!phrasesExtreme1 || !phrasesExtreme2) {
+    throw new Error('No se encontraron frases politicas.');
+  }
+  const phrases = phrasesExtreme1.concat(phrasesExtreme2);
+  return phrases;
+};
+
 export default {
   createPhrasesDB,
   updatePhrasesDB,
@@ -336,4 +397,5 @@ export default {
   getInversePoliticalPhrases,
   getSocialPhrases,
   getInverseSocialPhrases,
+  getInverseCombinedPoliticalPhrases,
 };
