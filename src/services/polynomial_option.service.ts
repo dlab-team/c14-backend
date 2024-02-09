@@ -8,7 +8,6 @@ import polynomialService from './polynomial.service';
 import phrasesService from './phrases.service';
 import surveyResultService from './survey_result.service';
 import { SurveyResultAttributes } from '../db/models/survey_result';
-import { group } from '@/enums';
 
 const createPolynomialOption = async (
   polynomialOption: PolynomialOptionCreationAttributes,
@@ -87,6 +86,39 @@ const getPolyOptionsFromPolyId = async (
   return polyOptions;
 };
 
+const getInversePolyOptionId = async (polynomialOptionId: string) => {
+  const polyOptionId = await PolynomialOption.findOne({
+    attributes: ['id', 'group'],
+    where: {
+      id: polynomialOptionId,
+    },
+  });
+
+  if (!polyOptionId) {
+    throw new Error('No se encontró el id de la opción del polinomio.');
+  }
+  let inversePolyOption;
+  if (polyOptionId.group?.toString() === 'Extremo 1') {
+    inversePolyOption = await PolynomialOption.findOne({
+      attributes: ['id', 'group'],
+      where: {
+        group: 'Extremo 2',
+      },
+    });
+  } else if (polyOptionId.group?.toString() === 'Extremo 2') {
+    inversePolyOption = await PolynomialOption.findOne({
+      attributes: ['id', 'group'],
+      where: {
+        group: 'Extremo 1',
+      },
+    });
+  }
+  if (!inversePolyOption) {
+    throw new Error('No se encontró la opción de polinomio inversa.');
+  }
+  return inversePolyOption;
+};
+
 export default {
   createPolynomialOption,
   getPolynomialOptionId,
@@ -95,4 +127,5 @@ export default {
   getPolynomialOptions,
   getPoliticalPolyOption,
   getPolyOptionsFromPolyId,
+  getInversePolyOptionId,
 };
