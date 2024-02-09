@@ -8,7 +8,7 @@ export interface SurveyResponseAttributes {
   region: string;
   city: string;
   startDate: Date;
-  finishDate?: Date | null;
+  finishDate?: Date | null ;
   finishedSocialForm: boolean;
   duration: number;
 }
