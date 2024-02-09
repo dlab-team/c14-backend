@@ -200,7 +200,6 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
 
 const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | void> => {
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
-  console.log('AAA ' + polynomialOption);
 
   if (!polynomialOption) {
     throw new Error('No se encontró el id de la opción del polinomio.');
@@ -208,9 +207,9 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
 
   const { group } = polynomialOption.dataValues;
 
-  //if (group === null) {
-  //  return getCombinedPoliticalPhrases();
-  //}
+  if (group === null) {
+    return getCombinedPoliticalPhrases(polynomialOption.id);
+  }
 
   const politicalPolyId = await polynomialService.getPoliticalPolyId();
 
