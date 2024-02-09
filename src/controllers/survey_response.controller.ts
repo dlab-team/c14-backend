@@ -1,6 +1,7 @@
+import { NextFunction, Request, Response } from 'express';
 import { SurveyResponseAttributes } from '@/db/models/survey_response';
 import surveyResponseService from '@/services/survey_response.service';
-import { NextFunction, Request, Response } from 'express';
+import { SurveyResponseCharacter } from '@/types';
 
 const createResponse = async (req: Request, res: Response, next: NextFunction) => {
   const surveyResponse: SurveyResponseAttributes = req.body;
@@ -18,6 +19,25 @@ const getGroupedPolynomialOptions = async (req: Request, res: Response, next: Ne
     const surveyResponseCreated =
       await surveyResponseService.getGroupedPolynomialOptions(polynomialId);
     res.status(201).json(surveyResponseCreated);
+      } catch (error) {
+    next(error);
+  }
+};
+
+const getMetrics = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const metrics = await surveyResponseService.getMetrics();
+    res.status(200).json(metrics);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const finishResponse = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data: SurveyResponseCharacter = req.body;
+    const character = await surveyResponseService.responseCharater(data);
+    res.status(201).json(character);
   } catch (error) {
     next(error);
   }
@@ -26,4 +46,6 @@ const getGroupedPolynomialOptions = async (req: Request, res: Response, next: Ne
 export default {
   createResponse,
   getGroupedPolynomialOptions,
+  getMetrics,
+  finishResponse,
 };

@@ -8,7 +8,7 @@ export interface SurveyResponseAttributes {
   region: string;
   city: string;
   startDate: Date;
-  finishDate: Date;
+  finishDate?: Date | null ;
   finishedSocialForm: boolean;
   duration: number;
 }
@@ -18,7 +18,7 @@ export interface SurveyResponseInstance
     SurveyResponseAttributes {}
 
 export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
-  'survey_responses',
+  'survey_response',
   {
     id: {
       allowNull: false,
@@ -53,7 +53,7 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
       defaultValue: DataTypes.NOW,
     },
     finishDate: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.DATE,
     },
     duration: {
@@ -62,6 +62,6 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
     },
   },
   {
-    tableName: 'survey_responses',
+    tableName: 'survey_response',
   },
 );
