@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '.';
 import { SurveyResponse } from './survey_response';
 import { PolynomialOption } from './polynomial_option';
@@ -9,8 +9,11 @@ export interface SurveyResponseProfileAttributes {
   polynomialOptionId: string;
 }
 
+export interface SurveyResponseProfileCreateAttributes
+  extends Optional<SurveyResponseProfileAttributes, 'id'> {}
+
 export interface SurveyResponseProfileInstance
-  extends Model<SurveyResponseProfileAttributes>,
+  extends Model<SurveyResponseProfileAttributes, SurveyResponseProfileCreateAttributes>,
     SurveyResponseProfileAttributes {
   createdAt?: Date;
   updatedAt?: Date;
