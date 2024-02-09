@@ -47,7 +47,7 @@ export const SurveyResult = sequelize.define<SurveyResultInstance>(
     },
     percentage: {
       allowNull: false,
-      type: DataTypes.FLOAT,
+      type: DataTypes.INTEGER,
     },
   },
   {
