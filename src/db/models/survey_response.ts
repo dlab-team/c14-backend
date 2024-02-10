@@ -63,5 +63,6 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
   },
   {
     tableName: 'survey_response',
+    timestamps: false,
   },
 );
