@@ -157,8 +157,12 @@ const getInversePoliticalPhrasesByGroup = async (
 };
 
 const getCombinedPoliticalPhrases = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.body;
   try {
-    const combinatedPhrases = await phrasesService.getCombinedPoliticalPhrases();
+    if (!id) {
+      throw new ClientError('Debe ingresar el id de una opcion de polinomio por body');
+    }
+    const combinatedPhrases = await phrasesService.getCombinedPoliticalPhrases(id);
     res.status(200).json(combinatedPhrases);
   } catch (error) {
     next(error);

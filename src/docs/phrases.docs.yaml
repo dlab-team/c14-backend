@@ -219,7 +219,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/generalError'
-  /api/phrases//political:
+  /api/phrases/political:
     get:
       summary: Trae las frases de un polinomio politico
       tags:
@@ -239,7 +239,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/generalError'
-  /api/phrases//political/{group}:
+  /api/phrases/political/{group}:
     parameters:
       - name: group
         in: path
