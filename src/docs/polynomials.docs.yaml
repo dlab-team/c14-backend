@@ -6,11 +6,15 @@ components:
         name:
           type: string
           description: Nombre del polinomio nuevo
+        question:
+          type: string
+          description: Pregunta
         active:
           type: boolean
           description: Si estara activa o no
       example:
         name: Ejemplo 1
+        question: Esta es una pregunta
         active: true
     update:
       type: object
@@ -19,12 +23,17 @@ components:
           type: string
           description: Nombre del polinomio a actualizar
           nullable: true
+        question:
+          type: string
+          description: Pregunta
+          nullable: true
         active:
           type: boolean
           description: Si este estara activo o no
           nullable: true
       example:
         name: ejemplo
+        question: esta es una actualizacion
         active: true
   securitySchemes:
     BearerAuth:
@@ -51,6 +60,9 @@ components:
         active:
           type: boolean
           description: Informa si esta activo o no
+        question:
+          type: string
+          description: Es una pregunta
     allPolynomials:
       type: array
       items:
@@ -68,6 +80,10 @@ components:
         political:
           type: boolean
           example: false
+        question:
+          type: string
+          description: Es una pregunta
+          example: Lorem ipsum
         active:
           type: boolean
           example: true
@@ -112,7 +128,55 @@ components:
       example:
         status: success
         message: Recurso eliminado
+    PoliticalEntity:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: '560166fc-77a0-477d-a555-eea873ef2231'
+        name:
+          type: 'string'
+          example: 'Político'
+        political:
+          type: 'boolean'
+          example: true
+        question:
+          type: 'string'
+          example: 'Lorem ipsum dolor sit amet consectetuer'
+        active:
+          type: 'boolean'
+          example: true
+        polynomial_options:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/PolynomialOption'
 
+    PolynomialOption:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: '12d1e8d8-cc8e-4be1-9783-b76a26cb367d'
+        name:
+          type: 'string'
+          example: 'Derecha'
+        group:
+          type: ['string', 'null']
+          example: 'Extremo 1'
+        polynomialId:
+          type: 'string'
+          format: 'uuid'
+          example: '560166fc-77a0-477d-a555-eea873ef2231'
+        createdAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-02-10T22:15:06.311Z'
+        updatedAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-02-10T22:15:06.311Z'
 paths:
   /api/polynomials:
     get:
@@ -121,11 +185,13 @@ paths:
         - Polynomial
       responses:
         '200':
-          description: Retorna todo los polinomios
+          description: Retorna todo los polinomios con sus opciones
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/allPolynomials'
+                type: array
+                items:
+                  $ref: '#/components/responses/PoliticalEntity'
         '500':
           description: Error general del servidor
           content:
