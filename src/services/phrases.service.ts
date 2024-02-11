@@ -138,6 +138,15 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
             polynomialId: polynomialOption.dataValues.polynomialId,
           },
           attributes: { exclude: ['createdAt', 'updatedAt'] },
+          include: [
+            {
+              model: SurveyResult,
+              where: {
+                polynomialOptionId: polynomialOption.dataValues.id,
+              },
+              attributes: ['percentage'],
+            }
+          ]
         });
         phrases.map(p => {
           allPhrases.push(p.dataValues);
@@ -149,6 +158,15 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
             polynomialId: polynomialOption.dataValues.polynomialId,
           },
           attributes: { exclude: ['createdAt', 'updatedAt'] },
+          include: [
+            {
+              model: SurveyResult,
+              where: {
+                polynomialOptionId: polynomialOption.dataValues.id,
+              },
+              attributes: ['percentage'],
+            }
+          ]
         });
         phrases.map((p: PhrasesInstance) => {
           allPhrases.push(p.dataValues);
@@ -188,6 +206,15 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
         polynomialId: polynomialOption.dataValues.polynomialId,
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      include: [
+        {
+          model: SurveyResult,
+          where: {
+            polynomialOptionId: polynomialOption.dataValues.id,
+          },
+          attributes: ['percentage'],
+        }
+      ]
     });
 
     phrases.forEach((phrase: PhrasesInstance) => {
