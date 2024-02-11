@@ -69,14 +69,14 @@ const responseCharater = async ({ id, polinomialOptionsId }: SurveyResponseChara
   const response = await SurveyResponse.findByPk(id);
   if (response) {
     const duration = finishDate.getTime() - response.startDate.getTime();
-    response.update({ duration, finishDate });
+    await response.update({ duration, finishDate });
     const profile = polinomialOptionsId.map(idOption => {
       return SurveyResponseProfile.create({
         surveyResponseId: response.id,
         polynomialOptionId: idOption,
       });
     });
-    return profile;
+    return Promise.all(profile);
   } else {
     throw new ClientError('El id no corresponde', 403);
   }
