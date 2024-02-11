@@ -8,6 +8,12 @@ export const validatePolynomialCreate = [
     .notEmpty()
     .withMessage('No puede esta vacio el campo')
     .escape(),
+  body('question')
+    .isString()
+    .withMessage('Tiene que se un string')
+    .notEmpty()
+    .withMessage('No puede esta vacio el campo')
+    .escape(),
   body('active')
     .isBoolean({ strict: true })
     .withMessage('Debe ser un booleano este campo')

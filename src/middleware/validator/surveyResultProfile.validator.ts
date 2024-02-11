@@ -10,12 +10,6 @@ export const resultProfile = [
     .isUUID()
     .withMessage('Tiene que se un uuid')
     .escape(),
-  body('polinomialOptionsId').custom(idOptions => {
-    idOptions.foreach((value: string) => {
-      if (typeof value !== 'string') {
-        throw new Error('Tiene que ser un string');
-      }
-    });
-  }),
+  body('polinomialOptionsId').isArray({ min: 1 }),
   validateResult,
 ];
