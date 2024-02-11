@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import phrasesService from '../services/phrases.service';
 import { PhrasesCreationAttributes } from '@/db/models/phrases';
-import { PhrasesAttributesOptional } from '@/types';
+import { IdsSocials, PhrasesAttributesOptional } from '@/types';
 import { ClientError } from '@/errors';
 import { groups } from '@/enums';
 
@@ -110,7 +110,7 @@ const getSocialPhrasesByGroup = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const { ids } = req.body;
+  const { ids }: IdsSocials = req.body;
   try {
     if (!ids) {
       throw new ClientError('Debe ingresar los id de las opciones de polinomios por body');

@@ -64,6 +64,34 @@ components:
       example:
         status: success
         message: Recurso eliminado
+    SurveyResult:
+      type: 'object'
+      properties:
+        percentage:
+          type: 'number'
+          format: 'float'
+          example: 0.767904712120071
+    SurveyObject:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: '25913eff-a035-49cf-a868-ebe3b7df2b08'
+        text:
+          type: 'string'
+          example: 'Siempre que exista la posibilidad de hacerlo, se deben subir los impuestos'
+        group:
+          type: 'string'
+          example: 'Extremo 2'
+        polynomialId:
+          type: 'string'
+          format: 'uuid'
+          example: '560166fc-77a0-477d-a555-eea873ef2231'
+        survey_results:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/SurveyResult'
 
 paths:
   /api/phrases:
@@ -269,10 +297,17 @@ paths:
               schema:
                 $ref: '#/components/responses/generalError'
   /api/phrases/neutral/political:
-    get:
-      summary: Trae las frases combinadas para neutral
+    post:
+      summary: Trae las frases neutral del polinomio politico neutral
       tags:
         - Phrases
+      requestBody:
+        required: true
+        description: Id de opcion de polinomio politico que su group es null
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idOption'
       responses:
         '200':
           description: Frases de polinomio combinada
@@ -281,7 +316,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/responses/phrasesBasic'
+                  $ref: '#/components/responses/SurveyObject'
         '500':
           description: Error general del servidor
           content:
@@ -308,7 +343,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/responses/phrasesBasic'
+                  $ref: '#/components/responses/SurveyObject'
         '500':
           description: Error general del servidor
           content:
@@ -327,6 +362,72 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/idOption'
+      responses:
+        '200':
+          description: Frases de polinomio
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/SurveyObject'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/bygroup/social:
+    post:
+      summary: Trae frases sociales del extremo pasando el id de opcion polinomio diferente politico
+      tags:
+        - Phrases
+      requestBody:
+        required: true
+        description: Id de opcion de polinomio
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                    example: '25913eff-a035-49cf-a868-ebe3b7df2b08'
+      responses:
+        '200':
+          description: Frases de polinomio
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/inverse/social:
+    post:
+      summary: Trae frases sociales del extremo contrario pasando el id de opcion polinomio diferente politico
+      tags:
+        - Phrases
+      requestBody:
+        required: true
+        description: Id de opcion de polinomio
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                    example: '25913eff-a035-49cf-a868-ebe3b7df2b08'
       responses:
         '200':
           description: Frases de polinomio

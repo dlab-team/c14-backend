@@ -45,6 +45,10 @@ export interface PhrasesUpdateService extends Pick<PhrasesAttributes, 'id'> {
   polynomialId?: string;
 }
 
+export interface IdsSocials {
+  ids: string[];
+}
+
 //survey
 export interface SurveyResponseCharacter extends Pick<SurveyResponseAttributes, 'id'> {
   polinomialOptionsId: string[];
