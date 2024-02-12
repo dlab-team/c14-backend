@@ -70,6 +70,17 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   }
 };
 
+const logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    res.status(200).clearCookie('accessToken').json({
+      success: true,
+      message: 'User Logged out',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const forgotPass = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const email: string = req.body.email;
@@ -146,4 +157,5 @@ export default {
   changePass,
   updatePassword,
   updateProfile,
+  logout,
 };
