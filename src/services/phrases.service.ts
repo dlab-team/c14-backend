@@ -145,8 +145,8 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
                 polynomialOptionId: polynomialOption.dataValues.id,
               },
               attributes: ['percentage'],
-            }
-          ]
+            },
+          ],
         });
         phrases.map(p => {
           allPhrases.push(p.dataValues);
@@ -165,8 +165,8 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
                 polynomialOptionId: polynomialOption.dataValues.id,
               },
               attributes: ['percentage'],
-            }
-          ]
+            },
+          ],
         });
         phrases.map((p: PhrasesInstance) => {
           allPhrases.push(p.dataValues);
@@ -200,6 +200,10 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
       targetGroup = 'Extremo 1';
     }
 
+    const Array: string[] = [polynomialOption.id];
+
+    const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(Array);
+
     const phrases = await Phrases.findAll({
       where: {
         group: targetGroup,
@@ -210,11 +214,11 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
         {
           model: SurveyResult,
           where: {
-            polynomialOptionId: polynomialOption.dataValues.id,
+            polynomialOptionId: inversePolyOptionId,
           },
           attributes: ['percentage'],
-        }
-      ]
+        },
+      ],
     });
 
     phrases.forEach((phrase: PhrasesInstance) => {
@@ -245,9 +249,9 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
     return getInverseCombinedPoliticalPhrases(politicalPolyId.id);
   }
 
-  const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(
-    polynomialOption.id,
-  );
+  const Array: string[] = [polynomialOption.id];
+
+  const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(Array);
 
   const targetGroup = group?.toString() === 'Extremo 1' ? 'Extremo 2' : 'Extremo 1';
 
@@ -263,7 +267,7 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
       {
         model: SurveyResult,
         where: {
-          polynomialOptionId: inversePolyOptionId.id,
+          polynomialOptionId: inversePolyOptionId,
         },
         attributes: ['percentage'],
       },
