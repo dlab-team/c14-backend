@@ -8,10 +8,17 @@ import polynomialService from './polynomial.service';
 import phrasesService from './phrases.service';
 import surveyResultService from './survey_result.service';
 import { SurveyResultAttributes } from '../db/models/survey_result';
+import { group } from '@/enums';
 
 const createPolynomialOption = async (
   polynomialOption: PolynomialOptionCreationAttributes,
 ): Promise<PolynomialOptionAttributes> => {
+  if (
+    polynomialOption.group &&
+    ![group['Extremo 1'], group['Extremo 2']].includes(polynomialOption.group)
+  ) {
+    polynomialOption.group = null;
+  }
   const option = await PolynomialOption.create(polynomialOption);
   const polyPhrases = await phrasesService.getPolynomialPhrases(option.polynomialId);
   const data: SurveyResultAttributes[] = [];
