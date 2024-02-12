@@ -86,37 +86,43 @@ const getPolyOptionsFromPolyId = async (
   return polyOptions;
 };
 
-const getInversePolyOptionId = async (polynomialOptionId: string) => {
-  const polyOptionId = await PolynomialOption.findOne({
-    attributes: ['id', 'group'],
-    where: {
-      id: polynomialOptionId,
-    },
-  });
+const getInversePolyOptionId = async (ids: Array<string>) => {
+  const allPolyOptions: Array<string> = [];
+  for (const option of ids) {
+    const polynomialOption = await getPolynomialOptionId(option);
 
-  if (!polyOptionId) {
-    throw new Error('No se encontró el id de la opción del polinomio.');
+    if (!polynomialOption) {
+      throw new Error('No se encontró el id de la opción del polinomio.');
+    }
+    let inversePolyOption;
+    if (polynomialOption.group === null) {
+      inversePolyOption = await PolynomialOption.findOne({
+        attributes: ['id', 'group'],
+        where: {
+          group: ['Extremo 1' || 'Extremo 2'],
+        },
+      });
+    } else if (polynomialOption.group?.toString() === 'Extremo 1') {
+      inversePolyOption = await PolynomialOption.findOne({
+        attributes: ['id', 'group'],
+        where: {
+          group: 'Extremo 2',
+        },
+      });
+    } else if (polynomialOption.group?.toString() === 'Extremo 2') {
+      inversePolyOption = await PolynomialOption.findOne({
+        attributes: ['id', 'group'],
+        where: {
+          group: 'Extremo 1',
+        },
+      });
+    }
+    if (!inversePolyOption) {
+      throw new Error('No se encontró la opción de polinomio inversa.');
+    }
+    allPolyOptions.push(inversePolyOption.id);
   }
-  let inversePolyOption;
-  if (polyOptionId.group?.toString() === 'Extremo 1') {
-    inversePolyOption = await PolynomialOption.findOne({
-      attributes: ['id', 'group'],
-      where: {
-        group: 'Extremo 2',
-      },
-    });
-  } else if (polyOptionId.group?.toString() === 'Extremo 2') {
-    inversePolyOption = await PolynomialOption.findOne({
-      attributes: ['id', 'group'],
-      where: {
-        group: 'Extremo 1',
-      },
-    });
-  }
-  if (!inversePolyOption) {
-    throw new Error('No se encontró la opción de polinomio inversa.');
-  }
-  return inversePolyOption;
+  return allPolyOptions;
 };
 
 export default {
