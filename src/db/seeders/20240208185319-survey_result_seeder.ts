@@ -5,13 +5,11 @@ import { faker } from '@faker-js/faker';
 import { PolynomialOption } from '../models/polynomial_option';
 import { Phrases } from '../models/phrases';
 import { SurveyResultAttributes } from '../models/survey_result';
+import { Polynomial } from '../models/polynomial';
 
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
-    const phrases = await Phrases.findAll({
-      attributes: ['id'],
-    });
-    const polinomialOptions = await PolynomialOption.findAll({
+    const polynomials = await Polynomial.findAll({
       attributes: ['id'],
     });
 
@@ -20,32 +18,37 @@ module.exports = {
       updatedAt?: Date;
     }
 
-    const array: SurveyResultInstance[] = [];
+    const data: SurveyResultInstance[] = [];
 
-    polinomialOptions.forEach(function (polynomialOption) {
-      phrases.forEach(function (phrase) {
-        const newResults: SurveyResultInstance = {
-          phraseId: phrase.id,
-          polynomialOptionId: polynomialOption.id,
-          percentage: faker.number.float({ min: 0, max: 1 }),
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-        array.push(newResults);
+    for (let i = 0; i < polynomials.length; i++) {
+      const e = polynomials[i];
+      const phrases = await Phrases.findAll({
+        attributes: ['id'],
+        where: { polynomialId: e.id },
       });
-    });
+      const polinomialOptions = await PolynomialOption.findAll({
+        attributes: ['id'],
+        where: { polynomialId: e.id },
+      });
+      const results = polinomialOptions
+        .map(opt => {
+          return phrases.map(function (phrase) {
+            const newResults: SurveyResultInstance = {
+              phraseId: phrase.id,
+              polynomialOptionId: opt.id,
+              percentage: faker.number.float({ min: 0, max: 1, precision: 0.01 }),
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            };
+            return newResults;
+          });
+        })
+        .flat();
 
-    /* const createResults = (array: SurveyResultAttributes[]) => {
-      return array.map(result => ({
-        result,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }));
-    };
-    const results = createResults(array);
-    console.log(typeof results); */
+      data.push(...results);
+    }
 
-    await queryInterface.bulkInsert('survey_result', array, {});
+    await queryInterface.bulkInsert('survey_result', data, {});
   },
 
   down: async (queryInterface: QueryInterface) => {
