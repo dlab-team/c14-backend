@@ -35,12 +35,16 @@ const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<Phra
   return phraseAtt;
 };
 
-const updatePhrasesDB = async (phrasesUpdate: PhrasesUpdateService): Promise<PhrasesAttributes> => {
-  const phrase = await getPhrasesId(phrasesUpdate);
+const updatePhrasesDB = async (
+  { survey_results: surveyResults, ...phrasesUpdate }: PhrasesUpdateService,
+  id: string,
+): Promise<PhrasesAttributes> => {
+  const phrase = await getPhrasesId({ id });
   if (phrase) {
-    phrase.update(phrasesUpdate);
+    phrase.update({ text: phrasesUpdate.text, group: phrasesUpdate.group });
     const { id, text, group, polynomialId } = phrase.dataValues;
     const restPhrases = { id, text, group, polynomialId };
+    await surveyResultService.updateResults(surveyResults);
     return restPhrases;
   } else {
     throw new ClientError('La frase a actualizar no existe', 404);

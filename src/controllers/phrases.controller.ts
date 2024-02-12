@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import phrasesService from '../services/phrases.service';
 import { PhrasesCreationAttributes } from '@/db/models/phrases';
-import { IdsSocials, PhrasesAttributesOptional } from '@/types';
+import { IdsSocials, PhrasesUpdateService } from '@/types';
+import { SurveyResultAttributes } from '@/db/models/survey_result';
 import { ClientError } from '@/errors';
 import { groups } from '@/enums';
 
@@ -17,9 +18,9 @@ const createPhrases = async (req: Request, res: Response, next: NextFunction) =>
 
 const putPhrases = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
-  const phrase: PhrasesAttributesOptional = req.body;
+  const phrase: PhrasesUpdateService & { survey_results: SurveyResultAttributes[] } = req.body;
   try {
-    const phrasesUpdate = await phrasesService.updatePhrasesDB({ ...phrase, id });
+    const phrasesUpdate = await phrasesService.updatePhrasesDB(phrase, id);
     res.status(200).json(phrasesUpdate);
   } catch (error) {
     next(error);
