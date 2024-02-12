@@ -71,6 +71,17 @@ const getPolynomialPhrases = async (polynomialId: string): Promise<PhrasesAttrib
   return Phrases.findAll({
     where: { polynomialId: polynomialId },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: [
+      {
+        model: SurveyResult,
+        include: [
+          {
+            model: PolynomialOption,
+            attributes: ['name'],
+          },
+        ],
+      },
+    ],
   });
 };
 
