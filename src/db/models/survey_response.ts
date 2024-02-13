@@ -17,7 +17,9 @@ export interface SurveyResponseCreationAttributes
   extends Optional<SurveyResponseAttributes, 'id' | 'finishDate'> {}
 export interface SurveyResponseInstance
   extends Model<SurveyResponseAttributes, SurveyResponseCreationAttributes>,
-    SurveyResponseAttributes {}
+    SurveyResponseAttributes {
+  total: string;
+}
 
 export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
   'survey_response',
