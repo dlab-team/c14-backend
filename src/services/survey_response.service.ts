@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { ClientError, ServerError } from '@/errors';
 import { SurveyResponse, SurveyResponseAttributes } from '@/db/models/survey_response';
 import { SurveyResponseProfile } from '@/db/models/survey_response_profile';
@@ -58,7 +58,22 @@ const getMetrics = async () => {
         },
       },
     });
-    return { unfinished: unfinished.length, finished: finished.length };
+
+    const totalAmount = await SurveyResponse.findOne({
+      attributes: [
+        [Sequelize.fn('AVG', Sequelize.col('duration')), 'total'],
+      ],
+      where: {
+        finishDate: {
+          [Op.not]: null,
+        },
+      },
+      raw: true,
+    })
+
+    const duration = totalAmount ? parseInt(totalAmount.total) : 0;
+
+    return { unfinished: unfinished.length, finished: finished.length, duration: duration };
   } catch (error) {
     throw new ServerError(error as string, 500);
   }
