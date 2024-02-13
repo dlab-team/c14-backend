@@ -97,7 +97,6 @@ const getInversePolyOptionId = async (ids: Array<string>) => {
   const allPolyOptions: Array<string> = [];
   for (const option of ids) {
     const polynomialOption = await getPolynomialOptionId(option);
-
     if (!polynomialOption) {
       throw new Error('No se encontró el id de la opción del polinomio.');
     }
@@ -106,6 +105,7 @@ const getInversePolyOptionId = async (ids: Array<string>) => {
       inversePolyOption = await PolynomialOption.findOne({
         attributes: ['id', 'group'],
         where: {
+          polynomialId: polynomialOption?.polynomialId,
           group: ['Extremo 1' || 'Extremo 2'],
         },
       });
@@ -113,6 +113,7 @@ const getInversePolyOptionId = async (ids: Array<string>) => {
       inversePolyOption = await PolynomialOption.findOne({
         attributes: ['id', 'group'],
         where: {
+          polynomialId: polynomialOption?.polynomialId,
           group: 'Extremo 2',
         },
       });
@@ -120,6 +121,7 @@ const getInversePolyOptionId = async (ids: Array<string>) => {
       inversePolyOption = await PolynomialOption.findOne({
         attributes: ['id', 'group'],
         where: {
+          polynomialId: polynomialOption?.polynomialId,
           group: 'Extremo 1',
         },
       });
