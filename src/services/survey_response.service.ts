@@ -64,12 +64,16 @@ const getMetrics = async () => {
   }
 };
 
-const responseCharater = async ({ id, polinomialOptionsId }: SurveyResponseCharacter) => {
+const responseCharater = async ({
+  id,
+  polinomialOptionsId,
+  finishedSocialForm,
+}: SurveyResponseCharacter) => {
   const finishDate = new Date();
   const response = await SurveyResponse.findByPk(id);
   if (response) {
     const duration = finishDate.getTime() - response.startDate.getTime();
-    await response.update({ duration, finishDate });
+    await response.update({ duration, finishDate, finishedSocialForm });
     const profile = polinomialOptionsId.map(idOption => {
       return SurveyResponseProfile.create({
         surveyResponseId: response.id,

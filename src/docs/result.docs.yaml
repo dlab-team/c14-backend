@@ -52,6 +52,9 @@ components:
           items:
             type: string
             description: Son los id de las opciones seleccionada por el usuario
+        finishedSocialForm:
+          type: boolean
+          description: Boolean que indica si termina la encuesta social
   responses:
     metrics:
       type: object
