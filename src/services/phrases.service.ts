@@ -219,23 +219,43 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
 
     const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(Array);
 
-    const phrases = await Phrases.findAll({
-      where: {
-        group: targetGroup,
-        polynomialId: polynomialOption.dataValues.polynomialId,
-      },
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
-      include: [
-        {
-          model: SurveyResult,
-          where: {
-            polynomialOptionId: inversePolyOptionId,
-          },
-          attributes: ['percentage'],
-        },
-      ],
-    });
+    console.log('targetGroup ' + targetGroup);
 
+    let phrases;
+    if (polynomialOption.dataValues.group === null) {
+      phrases = await Phrases.findAll({
+        where: {
+          polynomialId: polynomialOption.dataValues.polynomialId,
+        },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        include: [
+          {
+            model: SurveyResult,
+            where: {
+              polynomialOptionId: inversePolyOptionId,
+            },
+            attributes: ['percentage'],
+          },
+        ],
+      });
+    } else {
+      phrases = await Phrases.findAll({
+        where: {
+          group: targetGroup,
+          polynomialId: polynomialOption.dataValues.polynomialId,
+        },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        include: [
+          {
+            model: SurveyResult,
+            where: {
+              polynomialOptionId: inversePolyOptionId,
+            },
+            attributes: ['percentage'],
+          },
+        ],
+      });
+    }
     phrases.forEach((phrase: PhrasesInstance) => {
       allPhrases.push(phrase.dataValues);
     });
