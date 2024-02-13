@@ -27,12 +27,25 @@ module.exports = {
       'Etario',
       'Orientación sexual',
     ];
-    const polynomials = data.map(polynomialName => {
+
+    const dataQuestions: string[] = [
+      '¿Con quién te identificas?',
+      '¿Con qué Género te identificas?',
+      '¿En qué Región resides?',
+      'En qué rango de ingresos te clasificas?',
+      '¿Perteneces a un pueblo indígena?',
+      '¿Con qué credo te identificas?',
+      '¿Cual es tu estado actual?',
+      '¿En qué grupo laboral te clasificas?',
+      '¿A que grupo etario perteneces?',
+      '¿Cual es tu orientación sexual?',
+    ]
+    const polynomials = data.map((polynomialName, index) => {
       const newPolynomial = {
         id: uuidv4(),
         name: polynomialName,
         political: polynomialName === 'Político' ? true : false,
-        question: 'Lorem ipsum dolor sit amet consectetuer',
+        question: dataQuestions[index],
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
