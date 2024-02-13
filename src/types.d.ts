@@ -52,7 +52,8 @@ export interface IdsSocials {
 }
 
 //survey
-export interface SurveyResponseCharacter extends Pick<SurveyResponseAttributes, 'id'> {
+export interface SurveyResponseCharacter
+  extends Pick<SurveyResponseAttributes, 'id' | 'finishedSocialForm'> {
   polinomialOptionsId: string[];
 }
 export interface SurveyProfileCreate extends Omit<SurveyResponseProfileAttributes, 'id'> {}
