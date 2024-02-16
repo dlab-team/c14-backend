@@ -329,14 +329,12 @@ const getCombinedNeutralPoliticalPhrases = async (
     throw new Error('No se encontró el id del polinomio político.');
   }
 
-  const phrasesExtreme1 = await Phrases.findAll({
+  const phrasesPolarized = await Phrases.findAll({
     where: {
       polynomialId: politicalPolyId.id,
-      group: 'Extremo 1',
       neutral: true,
     },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
-    limit: 5,
     // order: sequelize.random(),
     include: [
       {
@@ -349,30 +347,10 @@ const getCombinedNeutralPoliticalPhrases = async (
     ],
   });
 
-  const phrasesExtreme2 = await Phrases.findAll({
-    where: {
-      polynomialId: politicalPolyId.id,
-      group: 'Extremo 2',
-      neutral: true,
-    },
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-    limit: 5,
-    // order: sequelize.random(),
-    include: [
-      {
-        model: SurveyResult,
-        where: {
-          polynomialOptionId: polynomialOption.dataValues.id,
-        },
-        attributes: ['percentage'],
-      },
-    ],
-  });
-
-  if (!phrasesExtreme1 || !phrasesExtreme2) {
+  if (!phrasesPolarized) {
     throw new Error('No se encontraron frases politicas.');
   }
-  const phrases = phrasesExtreme1.concat(phrasesExtreme2).sort(() => Math.random() - 0.5);
+  const phrases = phrasesPolarized.sort(() => Math.random() - 0.5);
   return phrases;
 };
 
