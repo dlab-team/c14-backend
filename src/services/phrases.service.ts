@@ -31,6 +31,7 @@ const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<Phra
     text: phrase.text,
     group: phrase.group,
     polynomialId: phrase.polynomialId,
+    neutral: phrase.neutral,
   };
   return phraseAtt;
 };
@@ -42,8 +43,8 @@ const updatePhrasesDB = async (
   const phrase = await getPhrasesId({ id });
   if (phrase) {
     phrase.update({ text: phrasesUpdate.text, group: phrasesUpdate.group });
-    const { id, text, group, polynomialId } = phrase.dataValues;
-    const restPhrases = { id, text, group, polynomialId };
+    const { id, text, group, polynomialId, neutral } = phrase.dataValues;
+    const restPhrases = { id, text, group, polynomialId, neutral };
     await surveyResultService.updateResults(surveyResults);
     return restPhrases;
   } else {
@@ -110,7 +111,7 @@ const getPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | vo
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
   if (polynomialOption) {
     if (polynomialOption.dataValues.group === null) {
-      return getCombinedPoliticalPhrases(polynomialOption.id);
+      return getCombinedNeutralPoliticalPhrases(polynomialOption.id);
     } else {
       const politicalPolyId = await polynomialService.getPoliticalPolyId();
       if (politicalPolyId) {
@@ -311,7 +312,9 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
   return phrases;
 };
 
-const getCombinedPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | void> => {
+const getCombinedNeutralPoliticalPhrases = async (
+  id: string,
+): Promise<PhrasesAttributes[] | void> => {
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
 
   if (!polynomialOption) {
@@ -330,10 +333,11 @@ const getCombinedPoliticalPhrases = async (id: string): Promise<PhrasesAttribute
     where: {
       polynomialId: politicalPolyId.id,
       group: 'Extremo 1',
+      neutral: true,
     },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     limit: 5,
-    order: sequelize.random(),
+    // order: sequelize.random(),
     include: [
       {
         model: SurveyResult,
@@ -349,10 +353,11 @@ const getCombinedPoliticalPhrases = async (id: string): Promise<PhrasesAttribute
     where: {
       polynomialId: politicalPolyId.id,
       group: 'Extremo 2',
+      neutral: true,
     },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     limit: 5,
-    order: sequelize.random(),
+    // order: sequelize.random(),
     include: [
       {
         model: SurveyResult,
@@ -457,7 +462,7 @@ export default {
   getPhrasesId,
   getPolynomialPhrases,
   getExtrmPoliticalPhrases,
-  getCombinedPoliticalPhrases,
+  getCombinedNeutralPoliticalPhrases,
   getAllPoliticalPhrases,
   getPoliticalPhrases,
   getInversePoliticalPhrases,
