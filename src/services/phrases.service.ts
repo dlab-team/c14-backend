@@ -42,11 +42,13 @@ const updatePhrasesDB = async (
 ): Promise<PhrasesAttributes> => {
   const phrase = await getPhrasesId({ id });
   if (phrase) {
-    phrase.update({ text: phrasesUpdate.text, group: phrasesUpdate.group });
-    const { id, text, group, polynomialId, neutral } = phrase.dataValues;
-    const restPhrases = { id, text, group, polynomialId, neutral };
+    phrase.update({
+      text: phrasesUpdate.text ?? phrase.text,
+      group: phrasesUpdate.group ?? phrase.group,
+      neutral: phrasesUpdate.neutral ?? phrase.neutral,
+    });
     await surveyResultService.updateResults(surveyResults);
-    return restPhrases;
+    return phrase.dataValues;
   } else {
     throw new ClientError('La frase a actualizar no existe', 404);
   }
@@ -220,8 +222,6 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
 
     const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(Array);
 
-    console.log('targetGroup ' + targetGroup);
-
     let phrases;
     if (polynomialOption.dataValues.group === null) {
       phrases = await Phrases.findAll({
@@ -316,7 +316,6 @@ const getCombinedNeutralPoliticalPhrases = async (
   id: string,
 ): Promise<PhrasesAttributes[] | void> => {
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
-
   if (!polynomialOption) {
     throw new Error('No se encontró el id de la opción del polinomio.');
   }
@@ -354,12 +353,54 @@ const getCombinedNeutralPoliticalPhrases = async (
   return phrases;
 };
 
+const getCombinedNeutralPoliticalInverse = async (
+  id: string,
+): Promise<PhrasesAttributes[] | void> => {
+  const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
+
+  if (!polynomialOption) {
+    throw new Error('No se encontró el id de la opción del polinomio.');
+  }
+  if (polynomialOption.group !== null) {
+    throw new Error('Se debe ingresar una opción de polinomio neutra.');
+  }
+  const politicalPolyId = await polynomialService.getPoliticalPolyId();
+
+  if (!politicalPolyId) {
+    throw new Error('No se encontró el id del polinomio político.');
+  }
+
+  const phrasesNoPolarized = await Phrases.findAll({
+    where: {
+      polynomialId: politicalPolyId.id,
+      neutral: false,
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    // order: sequelize.random(),
+    include: [
+      {
+        model: SurveyResult,
+        where: {
+          polynomialOptionId: polynomialOption.dataValues.id,
+        },
+        attributes: ['percentage'],
+      },
+    ],
+  });
+
+  if (!phrasesNoPolarized) {
+    throw new Error('No se encontraron frases politicas.');
+  }
+  const phrases = phrasesNoPolarized.sort(() => Math.random() - 0.5);
+  return phrases;
+};
+
 const getAllPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => {
   const politicalPolyId = await polynomialService.getPoliticalPolyId();
   if (politicalPolyId) {
     const phrases = await Phrases.findAll({
       where: {
-        polynomialId: politicalPolyId.id, //ID del polinomio politico
+        polynomialId: politicalPolyId.id,
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
     });
@@ -432,6 +473,24 @@ const getInverseCombinedPoliticalPhrases = async (
   return phrases;
 };
 
+const allNeutralPhares = async () => {
+  const politicalPolyId = await polynomialService.getPoliticalPolyId();
+  const polarizedPhrases = await Phrases.findAll({
+    where: {
+      neutral: true,
+      polynomialId: politicalPolyId?.id,
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  });
+  const noPolarizedPhrases = await Phrases.findAll({
+    where: {
+      neutral: false,
+      polynomialId: politicalPolyId?.id,
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  });
+  return { polarizadas: polarizedPhrases, noPolarizadas: noPolarizedPhrases };
+};
 export default {
   createPhrasesDB,
   updatePhrasesDB,
@@ -447,4 +506,6 @@ export default {
   getSocialPhrases,
   getInverseSocialPhrases,
   getInverseCombinedPoliticalPhrases,
+  getCombinedNeutralPoliticalInverse,
+  allNeutralPhares,
 };

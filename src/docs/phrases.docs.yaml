@@ -22,12 +22,46 @@ components:
           type: string
           format: 'uuid'
           example: '5444db52-6a11-406e-9329-a9ff35ddf872'
+        neutral:
+          type: boolean
+          example: false
     idOption:
       type: object
       properties:
         id:
           type: string
           example: 'bf24ac15-3ba9-4372-af55-287cee388f0e'
+    UpdatePhrases:
+      type: 'object'
+      properties:
+        text:
+          type: 'string'
+          example: 'esta es una prueba'
+        group:
+          type: 'string'
+          example: 'Extremo 1'
+        neutral:
+          type: 'boolean'
+          example: true
+        survey_results:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/SurveyResult'
+    SurveyResult:
+      type: 'object'
+      properties:
+        phraseId:
+          type: 'string'
+          format: 'uuid'
+          example: '248931b0-a866-449e-be2d-967a5cb6d754'
+        polynomialOptionId:
+          type: 'string'
+          format: 'uuid'
+          example: '6a0ae3d2-3cce-4c91-9e3d-6a3f6d0b7be6'
+        percentage:
+          type: 'number'
+          format: 'float'
+          example: 0.16
   responses:
     phrasesBasic:
       type: object
@@ -46,6 +80,9 @@ components:
           type: string
           format: 'uuid'
           example: '4c0ed4d4-028f-4583-bf53-bcd2e43c4ef1'
+        neutral:
+          type: boolean
+          example: false
     generalError:
       type: object
       properties:
@@ -64,6 +101,17 @@ components:
       example:
         status: success
         message: Recurso eliminado
+    PolarizedResult:
+      type: 'object'
+      properties:
+        polarizadas:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/phrasesBasic'
+        noPolarizadas:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/phrasesBasic'
     SurveyResult:
       type: 'object'
       properties:
@@ -182,7 +230,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/newPhrases'
+              $ref: '#/components/schemas/UpdatePhrases'
       responses:
         '201':
           description: Se actualizacion exitosamente el recurso
@@ -297,8 +345,53 @@ paths:
               schema:
                 $ref: '#/components/responses/generalError'
   /api/phrases/neutral/political:
+    get:
+      summary: Trae todas las frases politicas separadas por polarizadas y no polarizadas
+      tags:
+        - Phrases
+      responses:
+        '200':
+          description: Entrega frases por polarizadas y no polarizadas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/PolarizedResult'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/neutral/polarized:
     post:
-      summary: Trae las frases neutral del polinomio politico neutral
+      summary: Trae las frases neutral del polinomio politico neutral polarizadas
+      tags:
+        - Phrases
+      requestBody:
+        required: true
+        description: Id de opcion de polinomio politico que su group es null
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idOption'
+      responses:
+        '200':
+          description: Frases de polinomio combinada
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/SurveyObject'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/phrases/neutral/inverse:
+    post:
+      summary: Trae las frases neutral del polinomio politico neutral no polarizadas
       tags:
         - Phrases
       requestBody:
