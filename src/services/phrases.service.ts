@@ -334,7 +334,7 @@ const getCombinedNeutralPoliticalPhrases = async (
       neutral: true,
     },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
-    order: sequelize.random(),
+    // order: sequelize.random(),
     include: [
       {
         model: SurveyResult,
@@ -344,7 +344,6 @@ const getCombinedNeutralPoliticalPhrases = async (
         attributes: ['percentage'],
       },
     ],
-    group: 'group',
   });
 
   if (!phrasesPolarized) {
