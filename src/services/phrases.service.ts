@@ -282,7 +282,7 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
   const { group } = polynomialOption.dataValues;
 
   if (group === null) {
-    return getInverseCombinedPoliticalPhrases(politicalPolyId.id);
+    return getCombinedNeutralPoliticalInverse(id);
   }
 
   const Array: string[] = [polynomialOption.id];
@@ -334,7 +334,7 @@ const getCombinedNeutralPoliticalPhrases = async (
       neutral: true,
     },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
-    // order: sequelize.random(),
+    order: sequelize.random(),
     include: [
       {
         model: SurveyResult,
@@ -344,6 +344,7 @@ const getCombinedNeutralPoliticalPhrases = async (
         attributes: ['percentage'],
       },
     ],
+    group: 'group',
   });
 
   if (!phrasesPolarized) {
@@ -375,7 +376,7 @@ const getCombinedNeutralPoliticalInverse = async (
       polynomialId: politicalPolyId.id,
       neutral: false,
     },
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    attributes: { exclude: ['polynomialId', 'neutral', 'createdAt', 'updatedAt'] },
     // order: sequelize.random(),
     include: [
       {
@@ -407,70 +408,6 @@ const getAllPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => 
     return phrases;
   }
   return;
-};
-
-const getInverseCombinedPoliticalPhrases = async (
-  polyId: string,
-): Promise<PhrasesAttributes[] | void> => {
-  const polyOptionIdExt1 = await PolynomialOption.findOne({
-    attributes: ['id'],
-    where: {
-      polynomialId: polyId,
-      group: 'Extremo 1',
-    },
-  });
-
-  const polyOptionIdExt2 = await PolynomialOption.findOne({
-    attributes: ['id'],
-    where: {
-      polynomialId: polyId,
-      group: 'Extremo 2',
-    },
-  });
-
-  const phrasesExtreme1 = await Phrases.findAll({
-    where: {
-      polynomialId: polyId,
-      group: 'Extremo 1',
-    },
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-    include: [
-      {
-        model: SurveyResult,
-        where: {
-          polynomialOptionId: polyOptionIdExt1?.id,
-        },
-        attributes: ['percentage'],
-      },
-    ],
-    order: [[{ model: SurveyResult, as: 'survey_results' }, 'percentage', 'DESC']],
-    limit: 5,
-  });
-
-  const phrasesExtreme2 = await Phrases.findAll({
-    where: {
-      polynomialId: polyId,
-      group: 'Extremo 2',
-    },
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-    include: [
-      {
-        model: SurveyResult,
-        where: {
-          polynomialOptionId: polyOptionIdExt2?.id,
-        },
-        attributes: ['percentage'],
-      },
-    ],
-    order: [[{ model: SurveyResult, as: 'survey_results' }, 'percentage', 'DESC']],
-    limit: 5,
-  });
-
-  if (!phrasesExtreme1 || !phrasesExtreme2) {
-    throw new Error('No se encontraron frases politicas.');
-  }
-  const phrases = phrasesExtreme1.concat(phrasesExtreme2);
-  return phrases;
 };
 
 const allNeutralPhares = async () => {
@@ -505,7 +442,6 @@ export default {
   getInversePoliticalPhrases,
   getSocialPhrases,
   getInverseSocialPhrases,
-  getInverseCombinedPoliticalPhrases,
   getCombinedNeutralPoliticalInverse,
   allNeutralPhares,
 };
