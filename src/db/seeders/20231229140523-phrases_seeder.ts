@@ -9,16 +9,19 @@ const createPhrases = ({
   texts,
   group,
   polynomialId,
+  neutral,
 }: {
   texts: string[];
   group: string;
   polynomialId: string;
+  neutral?: boolean;
 }) => {
   return texts.map(text => ({
     id: uuidv4(),
     text,
     group,
     polynomialId,
+    neutral: neutral === undefined ? false : neutral,
     createdAt: new Date(),
     updatedAt: new Date(),
   }));
@@ -113,33 +116,48 @@ module.exports = {
     const right = createPhrases({
       texts: [
         'El aborto debe volver a ser prohibido, es decir, no debe permitirse bajo ninguna causal',
-        'Se deben reducir los impuestos, para potenciar la economía',
         'La educación y la salud deben ser provistas principalmente por empresas y organizaciones privadas',
-        'El gobierno militar no priorizó los derechos humanos, pero lo importante es que hubo orden y desarrollo económico.',
-        'Se debe privilegiar el crecimiento económico y el empleo por sobre la protección del medioambiente',
-        'El lenguaje inclusivo es una exageración basada en una ideología',
         'El Estado debe mantenerse alejado de toda actividad empresarial',
         'Las personas deben poder acceder libremente a armas para su defensa personal',
-        'Los carabineros deben poder usar sus armas con libertad, sin restricciones',
       ],
       polynomialId: politicalPolyId!,
       group: groups.Extremo1,
     });
 
+    const rightPolarized = createPhrases({
+      texts: [
+        'Se debe privilegiar el crecimiento económico y el empleo por sobre la protección del medioambiente',
+        'El lenguaje inclusivo es una exageración basada en una ideología',
+        'Se deben reducir los impuestos, para potenciar la economía',
+        'El gobierno militar no priorizó los derechos humanos, pero lo importante es que hubo orden y desarrollo económico.',
+        'Los carabineros deben poder usar sus armas con libertad, sin restricciones',
+      ],
+      polynomialId: politicalPolyId!,
+      group: groups.Extremo1,
+      neutral: true,
+    });
+
     const left = createPhrases({
       texts: [
-        'El aborto debe permitirse bajo cualquier causa que la mujer esgrima, solo con límites de plazos',
         'Siempre que exista la posibilidad de hacerlo, se deben subir los impuestos',
         'Los derechos sociales como educación y salud deben ser provistos principalmente por el Estado',
-        'Durante los años de dictadura la economía del país vivió un retroceso importante.',
         'Se deben eliminar las restricciones de ingreso de inmigrantes al país',
-        'Debe permitirse el consumo recreativo de la marihuana',
-        'Los pueblos indígenas deben tener sus propios territorios',
         'Los sindicatos deben poder participar con voz y voto en los directorios de las empresas',
-        'Cuando hay mucha injusticia social, se justifican las manifestaciones con rayados, barricadas y bloqueos de calles',
       ],
       polynomialId: politicalPolyId!,
       group: groups.Extremo2,
+    });
+    const leftPolarized = createPhrases({
+      texts: [
+        'Cuando hay mucha injusticia social, se justifican las manifestaciones con rayados, barricadas y bloqueos de calles',
+        'El aborto debe permitirse bajo cualquier causa que la mujer esgrima, solo con límites de plazos',
+        'Debe permitirse el consumo recreativo de la marihuana',
+        'Los pueblos indígenas deben tener sus propios territorios',
+        'Durante los años de dictadura la economía del país vivió un retroceso importante.',
+      ],
+      polynomialId: politicalPolyId!,
+      group: groups.Extremo2,
+      neutral: true,
     });
 
     const male = createPhrases({
@@ -270,7 +288,7 @@ module.exports = {
       polynomialId: managementPolyId!,
     });
 
-    const political = right.concat(left);
+    const political = right.concat(left).concat(leftPolarized).concat(rightPolarized);
     const gender = male.concat(female);
     const age = old.concat(young);
     const income = lowIncome.concat(highIncome);

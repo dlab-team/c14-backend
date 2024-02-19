@@ -157,13 +157,13 @@ const getInversePoliticalPhrasesByGroup = async (
   }
 };
 
-const getCombinedPoliticalPhrases = async (req: Request, res: Response, next: NextFunction) => {
+const getPoliticalNeutralPolarized = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.body;
   try {
     if (!id) {
       throw new ClientError('Debe ingresar el id de una opcion de polinomio por body');
     }
-    const combinatedPhrases = await phrasesService.getCombinedPoliticalPhrases(id);
+    const combinatedPhrases = await phrasesService.getCombinedNeutralPoliticalPhrases(id);
     res.status(200).json(combinatedPhrases);
   } catch (error) {
     next(error);
@@ -182,6 +182,28 @@ const getAllPoliticalPhrases = async (
   }
 };
 
+const getPoliticalNeutralInverse = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.body;
+  try {
+    if (!id) {
+      throw new ClientError('Debe ingresar el id de una opcion de polinomio por body');
+    }
+    const combinatedPhrases = await phrasesService.getCombinedNeutralPoliticalInverse(id);
+    res.status(200).json(combinatedPhrases);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getNeutralPhrases = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const neutralPhrases = await phrasesService.allNeutralPhares();
+    res.json(neutralPhrases);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createPhrases,
   putPhrases,
@@ -190,10 +212,12 @@ export default {
   getAllPhrases,
   getPolynomialPhrases,
   getPoliticalPhrases,
-  getCombinedPoliticalPhrases,
+  getPoliticalNeutralPolarized,
   getAllPoliticalPhrases,
   getPoliticalPhrasesByGroup,
   getInversePoliticalPhrasesByGroup,
   getSocialPhrasesByGroup,
   getInverseSocialPhrasesByGroup,
+  getPoliticalNeutralInverse,
+  getNeutralPhrases,
 };

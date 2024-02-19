@@ -41,9 +41,9 @@ export type PhrasesAttributesOptional = Omit<PhrasesAttributes, 'id'> & {
 };
 export type IdPhrases = Pick<PhrasesAttributes, 'id'>;
 
-export type PhrasesUpdateService = Omit<PhrasesAttributes, 'id'> & {
+export type PhrasesUpdateService = Omit<PhrasesAttributes, 'id' | 'polynomialId'> & {
   text?: string;
-  polynomialId?: string;
+  neutral?: boolean;
   survey_results: SurveyResultAttributes[];
 };
 
