@@ -11,6 +11,7 @@ import { PhrasesInstance } from '@/db/models/phrases';
 import { group } from '@/enums';
 import { SurveyResult } from '../db/models/survey_result';
 import { PolynomialOption } from '@/db/models/polynomial_option';
+import { Polynomial } from '@/db/models/polynomial';
 
 const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   const phrase = await Phrases.create(phrases, { raw: true });
@@ -256,8 +257,18 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
         ],
       });
     }
+    const polynomialName = await Polynomial.findOne({
+      where: {
+        id: polynomialOption.dataValues.polynomialId,
+      },
+      attributes: ['name'],
+    });
     phrases.forEach((phrase: PhrasesInstance) => {
-      allPhrases.push(phrase.dataValues);
+      const phrasesWithPolyNames = {
+        ...phrase.dataValues,
+        polynomialName: polynomialName,
+      };
+      allPhrases.push(phrasesWithPolyNames);
     });
   }
 
