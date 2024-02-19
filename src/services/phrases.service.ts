@@ -375,7 +375,7 @@ const getCombinedNeutralPoliticalInverse = async (
       polynomialId: politicalPolyId.id,
       neutral: false,
     },
-    attributes: { exclude: ['polynomialId', 'neutral', 'createdAt', 'updatedAt'] },
+    attributes: { exclude: ['neutral', 'createdAt', 'updatedAt'] },
     // order: sequelize.random(),
     include: [
       {
