@@ -362,6 +362,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/generalError'
+  /api/phrases/neutral/political/{phraseId}:
+    put:
+      summary: Actualiza la polarizacion de la frase con id frase
+      tags:
+        - Phrases
+      parameters:
+        - name: phraseId
+          in: path
+          required: true
+          type: string
+          description: Id para actualizar la polarizacion de la phrase
+      responses:
+        '200':
+          description: Entrega frases por polarizadas y no polarizadas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/phrasesBasic'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
   /api/phrases/neutral/polarized:
     post:
       summary: Trae las frases neutral del polinomio politico neutral polarizadas

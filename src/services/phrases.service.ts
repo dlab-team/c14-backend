@@ -427,6 +427,16 @@ const allNeutralPhares = async () => {
   });
   return { polarizadas: polarizedPhrases, noPolarizadas: noPolarizedPhrases };
 };
+
+const updatePolarized = async (idPhrases: string) => {
+  const updatePhrase = await Phrases.findByPk(idPhrases);
+  if (!updatePhrase) {
+    throw new ClientError('No se encuentra el id sumisnitrado', 400);
+  }
+  await updatePhrase.update({ neutral: !updatePhrase.neutral });
+  const { id, polynomialId, text, neutral, group } = updatePhrase.dataValues;
+  return { id, polynomialId, text, neutral, group };
+};
 export default {
   createPhrasesDB,
   updatePhrasesDB,
@@ -443,4 +453,5 @@ export default {
   getInverseSocialPhrases,
   getCombinedNeutralPoliticalInverse,
   allNeutralPhares,
+  updatePolarized,
 };
