@@ -431,7 +431,7 @@ const allNeutralPhares = async () => {
 const updatePolarized = async (idPhrases: string) => {
   const updatePhrase = await Phrases.findByPk(idPhrases);
   if (!updatePhrase) {
-    throw new ClientError('No se encuentra el id sumisnitrado', 400);
+    throw new ClientError('No se encuentra el id suministrado', 400);
   }
   await updatePhrase.update({ neutral: !updatePhrase.neutral });
   const { id, polynomialId, text, neutral, group } = updatePhrase.dataValues;

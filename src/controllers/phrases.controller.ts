@@ -206,7 +206,6 @@ const getNeutralPhrases = async (req: Request, res: Response, next: NextFunction
 
 const putPhrasesPolarized = async (req: Request, res: Response, next: NextFunction) => {
   const { phraseId } = req.params;
-  console.log(phraseId);
   try {
     const updatePolarized = await phrasesService.updatePolarized(phraseId);
     res.status(200).json(updatePolarized);
