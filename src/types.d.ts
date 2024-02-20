@@ -3,6 +3,7 @@ import { PolynomialOptionAttributes } from './db/models/polynomial_option';
 import { PhrasesAttributes } from './db/models/phrases';
 import { SurveyResponseAttributes } from './db/models/survey_response';
 import { SurveyResponseProfileAttributes } from './db/models/survey_response_profile';
+import { SurveyResultAttributes } from './db/models/survey_result';
 
 //tipos de JWT
 export interface Payload {
@@ -40,13 +41,19 @@ export type PhrasesAttributesOptional = Omit<PhrasesAttributes, 'id'> & {
 };
 export type IdPhrases = Pick<PhrasesAttributes, 'id'>;
 
-export interface PhrasesUpdateService extends Pick<PhrasesAttributes, 'id'> {
+export type PhrasesUpdateService = Omit<PhrasesAttributes, 'id' | 'polynomialId'> & {
   text?: string;
-  polynomialId?: string;
+  neutral?: boolean;
+  survey_results: SurveyResultAttributes[];
+};
+
+export interface IdsSocials {
+  ids: string[];
 }
 
 //survey
-export interface SurveyResponseCharacter extends Pick<SurveyResponseAttributes, 'id'> {
+export interface SurveyResponseCharacter
+  extends Pick<SurveyResponseAttributes, 'id' | 'finishedSocialForm'> {
   polinomialOptionsId: string[];
 }
 export interface SurveyProfileCreate extends Omit<SurveyResponseProfileAttributes, 'id'> {}

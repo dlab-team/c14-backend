@@ -4,6 +4,7 @@ import polynomialController from '@/controllers/polynomial.controller';
 import { isAuthenticated } from '../middleware/isAuthenticated';
 const router = Router();
 
+router.get('/political', polynomialController.getPoliticalPolynomial);
 router.get('/notpolitical', polynomialController.getAllPolynomialsNotPolitical);
 router.delete('/:id', isAuthenticated, polynomialController.deletePolynomial);
 router.get('/:id', polynomialController.getPolynomialsId);

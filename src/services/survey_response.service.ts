@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { ClientError, ServerError } from '@/errors';
 import { SurveyResponse, SurveyResponseAttributes } from '@/db/models/survey_response';
 import { SurveyResponseProfile } from '@/db/models/survey_response_profile';
@@ -58,25 +58,44 @@ const getMetrics = async () => {
         },
       },
     });
-    return { unfinished: unfinished.length, finished: finished.length };
+
+    const totalAmount = await SurveyResponse.findOne({
+      attributes: [
+        [Sequelize.fn('AVG', Sequelize.col('duration')), 'total'],
+      ],
+      where: {
+        finishDate: {
+          [Op.not]: null,
+        },
+      },
+      raw: true,
+    })
+
+    const duration = totalAmount ? parseInt(totalAmount.total) : 0;
+
+    return { unfinished: unfinished.length, finished: finished.length, duration: duration };
   } catch (error) {
     throw new ServerError(error as string, 500);
   }
 };
 
-const responseCharater = async ({ id, polinomialOptionsId }: SurveyResponseCharacter) => {
+const responseCharater = async ({
+  id,
+  polinomialOptionsId,
+  finishedSocialForm,
+}: SurveyResponseCharacter) => {
   const finishDate = new Date();
   const response = await SurveyResponse.findByPk(id);
   if (response) {
     const duration = finishDate.getTime() - response.startDate.getTime();
-    response.update({ duration, finishDate });
+    await response.update({ duration, finishDate, finishedSocialForm });
     const profile = polinomialOptionsId.map(idOption => {
       return SurveyResponseProfile.create({
         surveyResponseId: response.id,
         polynomialOptionId: idOption,
       });
     });
-    return profile;
+    return Promise.all(profile);
   } else {
     throw new ClientError('El id no corresponde', 403);
   }

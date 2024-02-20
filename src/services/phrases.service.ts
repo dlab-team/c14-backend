@@ -31,17 +31,24 @@ const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<Phra
     text: phrase.text,
     group: phrase.group,
     polynomialId: phrase.polynomialId,
+    neutral: phrase.neutral,
   };
   return phraseAtt;
 };
 
-const updatePhrasesDB = async (phrasesUpdate: PhrasesUpdateService): Promise<PhrasesAttributes> => {
-  const phrase = await getPhrasesId(phrasesUpdate);
+const updatePhrasesDB = async (
+  { survey_results: surveyResults, ...phrasesUpdate }: PhrasesUpdateService,
+  id: string,
+): Promise<PhrasesAttributes> => {
+  const phrase = await getPhrasesId({ id });
   if (phrase) {
-    phrase.update(phrasesUpdate);
-    const { id, text, group, polynomialId } = phrase.dataValues;
-    const restPhrases = { id, text, group, polynomialId };
-    return restPhrases;
+    phrase.update({
+      text: phrasesUpdate.text ?? phrase.text,
+      group: phrasesUpdate.group ?? phrase.group,
+      neutral: phrasesUpdate.neutral ?? phrase.neutral,
+    });
+    await surveyResultService.updateResults(surveyResults);
+    return phrase.dataValues;
   } else {
     throw new ClientError('La frase a actualizar no existe', 404);
   }
@@ -71,6 +78,17 @@ const getPolynomialPhrases = async (polynomialId: string): Promise<PhrasesAttrib
   return Phrases.findAll({
     where: { polynomialId: polynomialId },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: [
+      {
+        model: SurveyResult,
+        include: [
+          {
+            model: PolynomialOption,
+            attributes: ['name'],
+          },
+        ],
+      },
+    ],
   });
 };
 
@@ -95,7 +113,7 @@ const getPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | vo
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
   if (polynomialOption) {
     if (polynomialOption.dataValues.group === null) {
-      return getCombinedPoliticalPhrases(polynomialOption.id);
+      return getCombinedNeutralPoliticalPhrases(polynomialOption.id);
     } else {
       const politicalPolyId = await polynomialService.getPoliticalPolyId();
       if (politicalPolyId) {
@@ -138,6 +156,15 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
             polynomialId: polynomialOption.dataValues.polynomialId,
           },
           attributes: { exclude: ['createdAt', 'updatedAt'] },
+          include: [
+            {
+              model: SurveyResult,
+              where: {
+                polynomialOptionId: polynomialOption.dataValues.id,
+              },
+              attributes: ['percentage'],
+            },
+          ],
         });
         phrases.map(p => {
           allPhrases.push(p.dataValues);
@@ -149,6 +176,15 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
             polynomialId: polynomialOption.dataValues.polynomialId,
           },
           attributes: { exclude: ['createdAt', 'updatedAt'] },
+          include: [
+            {
+              model: SurveyResult,
+              where: {
+                polynomialOptionId: polynomialOption.dataValues.id,
+              },
+              attributes: ['percentage'],
+            },
+          ],
         });
         phrases.map((p: PhrasesInstance) => {
           allPhrases.push(p.dataValues);
@@ -182,14 +218,45 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
       targetGroup = 'Extremo 1';
     }
 
-    const phrases = await Phrases.findAll({
-      where: {
-        group: targetGroup,
-        polynomialId: polynomialOption.dataValues.polynomialId,
-      },
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
-    });
+    const Array: string[] = [polynomialOption.id];
 
+    const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(Array);
+
+    let phrases;
+    if (polynomialOption.dataValues.group === null) {
+      phrases = await Phrases.findAll({
+        where: {
+          polynomialId: polynomialOption.dataValues.polynomialId,
+        },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        include: [
+          {
+            model: SurveyResult,
+            where: {
+              polynomialOptionId: inversePolyOptionId,
+            },
+            attributes: ['percentage'],
+          },
+        ],
+      });
+    } else {
+      phrases = await Phrases.findAll({
+        where: {
+          group: targetGroup,
+          polynomialId: polynomialOption.dataValues.polynomialId,
+        },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        include: [
+          {
+            model: SurveyResult,
+            where: {
+              polynomialOptionId: inversePolyOptionId,
+            },
+            attributes: ['percentage'],
+          },
+        ],
+      });
+    }
     phrases.forEach((phrase: PhrasesInstance) => {
       allPhrases.push(phrase.dataValues);
     });
@@ -215,12 +282,12 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
   const { group } = polynomialOption.dataValues;
 
   if (group === null) {
-    return getInverseCombinedPoliticalPhrases(politicalPolyId.id);
+    return getCombinedNeutralPoliticalInverse(id);
   }
 
-  const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(
-    polynomialOption.id,
-  );
+  const Array: string[] = [polynomialOption.id];
+
+  const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(Array);
 
   const targetGroup = group?.toString() === 'Extremo 1' ? 'Extremo 2' : 'Extremo 1';
 
@@ -236,7 +303,7 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
       {
         model: SurveyResult,
         where: {
-          polynomialOptionId: inversePolyOptionId.id,
+          polynomialOptionId: inversePolyOptionId,
         },
         attributes: ['percentage'],
       },
@@ -245,7 +312,50 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
   return phrases;
 };
 
-const getCombinedPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | void> => {
+const getCombinedNeutralPoliticalPhrases = async (
+  id: string,
+): Promise<PhrasesAttributes[] | void> => {
+  const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
+  if (!polynomialOption) {
+    throw new Error('No se encontró el id de la opción del polinomio.');
+  }
+  if (polynomialOption.group !== null) {
+    throw new Error('Se debe ingresar una opción de polinomio neutra.');
+  }
+  const politicalPolyId = await polynomialService.getPoliticalPolyId();
+
+  if (!politicalPolyId) {
+    throw new Error('No se encontró el id del polinomio político.');
+  }
+
+  const phrasesPolarized = await Phrases.findAll({
+    where: {
+      polynomialId: politicalPolyId.id,
+      neutral: true,
+    },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    // order: sequelize.random(),
+    include: [
+      {
+        model: SurveyResult,
+        where: {
+          polynomialOptionId: polynomialOption.dataValues.id,
+        },
+        attributes: ['percentage'],
+      },
+    ],
+  });
+
+  if (!phrasesPolarized) {
+    throw new Error('No se encontraron frases politicas.');
+  }
+  const phrases = phrasesPolarized.sort(() => Math.random() - 0.5);
+  return phrases;
+};
+
+const getCombinedNeutralPoliticalInverse = async (
+  id: string,
+): Promise<PhrasesAttributes[] | void> => {
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
 
   if (!polynomialOption) {
@@ -260,14 +370,13 @@ const getCombinedPoliticalPhrases = async (id: string): Promise<PhrasesAttribute
     throw new Error('No se encontró el id del polinomio político.');
   }
 
-  const phrasesExtreme1 = await Phrases.findAll({
+  const phrasesNoPolarized = await Phrases.findAll({
     where: {
       polynomialId: politicalPolyId.id,
-      group: 'Extremo 1',
+      neutral: false,
     },
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-    limit: 5,
-    order: sequelize.random(),
+    attributes: { exclude: ['neutral', 'createdAt', 'updatedAt'] },
+    // order: sequelize.random(),
     include: [
       {
         model: SurveyResult,
@@ -279,29 +388,10 @@ const getCombinedPoliticalPhrases = async (id: string): Promise<PhrasesAttribute
     ],
   });
 
-  const phrasesExtreme2 = await Phrases.findAll({
-    where: {
-      polynomialId: politicalPolyId.id,
-      group: 'Extremo 2',
-    },
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-    limit: 5,
-    order: sequelize.random(),
-    include: [
-      {
-        model: SurveyResult,
-        where: {
-          polynomialOptionId: polynomialOption.dataValues.id,
-        },
-        attributes: ['percentage'],
-      },
-    ],
-  });
-
-  if (!phrasesExtreme1 || !phrasesExtreme2) {
+  if (!phrasesNoPolarized) {
     throw new Error('No se encontraron frases politicas.');
   }
-  const phrases = phrasesExtreme1.concat(phrasesExtreme2).sort(() => Math.random() - 0.5);
+  const phrases = phrasesNoPolarized.sort(() => Math.random() - 0.5);
   return phrases;
 };
 
@@ -310,7 +400,7 @@ const getAllPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => 
   if (politicalPolyId) {
     const phrases = await Phrases.findAll({
       where: {
-        polynomialId: politicalPolyId.id, //ID del polinomio politico
+        polynomialId: politicalPolyId.id,
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
     });
@@ -319,70 +409,24 @@ const getAllPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => 
   return;
 };
 
-const getInverseCombinedPoliticalPhrases = async (
-  polyId: string,
-): Promise<PhrasesAttributes[] | void> => {
-  const polyOptionIdExt1 = await PolynomialOption.findOne({
-    attributes: ['id'],
+const allNeutralPhares = async () => {
+  const politicalPolyId = await polynomialService.getPoliticalPolyId();
+  const polarizedPhrases = await Phrases.findAll({
     where: {
-      polynomialId: polyId,
-      group: 'Extremo 1',
-    },
-  });
-
-  const polyOptionIdExt2 = await PolynomialOption.findOne({
-    attributes: ['id'],
-    where: {
-      polynomialId: polyId,
-      group: 'Extremo 2',
-    },
-  });
-
-  const phrasesExtreme1 = await Phrases.findAll({
-    where: {
-      polynomialId: polyId,
-      group: 'Extremo 1',
+      neutral: true,
+      polynomialId: politicalPolyId?.id,
     },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
-    include: [
-      {
-        model: SurveyResult,
-        where: {
-          polynomialOptionId: polyOptionIdExt1?.id,
-        },
-        attributes: ['percentage'],
-      },
-    ],
-    order: [[{ model: SurveyResult, as: 'survey_results' }, 'percentage', 'DESC']],
-    limit: 5,
   });
-
-  const phrasesExtreme2 = await Phrases.findAll({
+  const noPolarizedPhrases = await Phrases.findAll({
     where: {
-      polynomialId: polyId,
-      group: 'Extremo 2',
+      neutral: false,
+      polynomialId: politicalPolyId?.id,
     },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
-    include: [
-      {
-        model: SurveyResult,
-        where: {
-          polynomialOptionId: polyOptionIdExt2?.id,
-        },
-        attributes: ['percentage'],
-      },
-    ],
-    order: [[{ model: SurveyResult, as: 'survey_results' }, 'percentage', 'DESC']],
-    limit: 5,
   });
-
-  if (!phrasesExtreme1 || !phrasesExtreme2) {
-    throw new Error('No se encontraron frases politicas.');
-  }
-  const phrases = phrasesExtreme1.concat(phrasesExtreme2);
-  return phrases;
+  return { polarizadas: polarizedPhrases, noPolarizadas: noPolarizedPhrases };
 };
-
 export default {
   createPhrasesDB,
   updatePhrasesDB,
@@ -391,11 +435,12 @@ export default {
   getPhrasesId,
   getPolynomialPhrases,
   getExtrmPoliticalPhrases,
-  getCombinedPoliticalPhrases,
+  getCombinedNeutralPoliticalPhrases,
   getAllPoliticalPhrases,
   getPoliticalPhrases,
   getInversePoliticalPhrases,
   getSocialPhrases,
   getInverseSocialPhrases,
-  getInverseCombinedPoliticalPhrases,
+  getCombinedNeutralPoliticalInverse,
+  allNeutralPhares,
 };

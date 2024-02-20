@@ -18,6 +18,9 @@ router.delete('/delete', isSuperAdmin, userController.deleteUser);
 //Login
 router.post('/login', userController.login);
 
+//Logout
+router.post('/logout', isAuthenticated, userController.logout);
+
 //Password reset request
 //! TODO requiere middleware para verificar si el correo ingresado existe en la base de datos
 router.post('/forgot', userController.forgotPass);

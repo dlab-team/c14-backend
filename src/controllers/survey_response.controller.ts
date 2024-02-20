@@ -19,7 +19,7 @@ const getGroupedPolynomialOptions = async (req: Request, res: Response, next: Ne
     const surveyResponseCreated =
       await surveyResponseService.getGroupedPolynomialOptions(polynomialId);
     res.status(201).json(surveyResponseCreated);
-      } catch (error) {
+  } catch (error) {
     next(error);
   }
 };
@@ -39,6 +39,7 @@ const finishResponse = async (req: Request, res: Response, next: NextFunction) =
     const character = await surveyResponseService.responseCharater(data);
     res.status(201).json(character);
   } catch (error) {
+    console.error(error);
     next(error);
   }
 };

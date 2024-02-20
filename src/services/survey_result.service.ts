@@ -14,4 +14,20 @@ const createResults = async (data: SurveyResultAttributes[]): Promise<Response |
   }
 };
 
-export default { createResults };
+const updateResults = async (data: SurveyResultAttributes[]): Promise<void> => {
+  await Promise.all(
+    data.map(result =>
+      SurveyResult.update(
+        { percentage: result.percentage },
+        {
+          where: {
+            phraseId: result.phraseId,
+            polynomialOptionId: result.polynomialOptionId,
+          },
+        },
+      ),
+    ),
+  );
+};
+
+export default { createResults, updateResults };

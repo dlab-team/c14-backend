@@ -8,9 +8,10 @@ export interface PhrasesAttributes {
   text: string;
   group: group;
   polynomialId: string;
+  neutral: boolean;
 }
 
-export interface PhrasesCreationAttributes extends Optional<PhrasesAttributes, 'id'> {}
+export interface PhrasesCreationAttributes extends Optional<PhrasesAttributes, 'id' | 'neutral'> {}
 
 export interface PhrasesInstance
   extends Model<PhrasesAttributes, PhrasesCreationAttributes>,
@@ -49,6 +50,10 @@ export const Phrases = sequelize.define<PhrasesInstance>(
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
+    },
+    neutral: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

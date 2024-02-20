@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '.';
 
 export interface SurveyResponseAttributes {
@@ -8,14 +8,18 @@ export interface SurveyResponseAttributes {
   region: string;
   city: string;
   startDate: Date;
-  finishDate?: Date | null ;
+  finishDate?: Date | null;
   finishedSocialForm: boolean;
   duration: number;
 }
 
+export interface SurveyResponseCreationAttributes
+  extends Optional<SurveyResponseAttributes, 'id' | 'finishDate'> {}
 export interface SurveyResponseInstance
-  extends Model<SurveyResponseAttributes>,
-    SurveyResponseAttributes {}
+  extends Model<SurveyResponseAttributes, SurveyResponseCreationAttributes>,
+    SurveyResponseAttributes {
+  total: string;
+}
 
 export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
   'survey_response',
@@ -63,5 +67,6 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
   },
   {
     tableName: 'survey_response',
+    timestamps: false,
   },
 );

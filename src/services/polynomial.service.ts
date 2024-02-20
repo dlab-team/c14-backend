@@ -63,7 +63,7 @@ const getPoliticalPolyId = async () => {
   const res = await Polynomial.findOne({
     attributes: ['id'],
     where: {
-      name: 'Político',
+      political: true,
     },
   });
   return res;
