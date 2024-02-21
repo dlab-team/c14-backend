@@ -89,6 +89,10 @@ const getPolynomialPhrases = async (polynomialId: string): Promise<PhrasesAttrib
         ],
       },
     ],
+    order: [
+      ['createdAt', 'DESC'],
+      ['id', 'ASC'],
+    ],
   });
 };
 
@@ -403,6 +407,10 @@ const getAllPoliticalPhrases = async (): Promise<PhrasesAttributes[] | void> => 
         polynomialId: politicalPolyId.id,
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'ASC'],
+      ],
     });
     return phrases;
   }
