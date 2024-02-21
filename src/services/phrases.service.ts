@@ -92,6 +92,7 @@ const getPolynomialPhrases = async (polynomialId: string): Promise<PhrasesAttrib
     order: [
       ['createdAt', 'DESC'],
       ['id', 'ASC'],
+      [SurveyResult, PolynomialOption, 'name', 'ASC'],
     ],
   });
 };
