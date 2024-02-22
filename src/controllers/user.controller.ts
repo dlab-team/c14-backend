@@ -33,11 +33,11 @@ const deleteUser = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const { email }: { email: string } = req.body;
+  const { id } = req.params;
   const superAdmin = req.decoded;
-  if (superAdmin?.email != email) {
+  if (superAdmin?.id != id) {
     try {
-      const response = await userService.deleteUser(email);
+      const response = await userService.deleteUser(id);
 
       if (response) {
         res.status(200).json(response);
@@ -62,7 +62,7 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
         maxAge: 60 * 60 * 25 * 7 * 1000,
         httpOnly: true,
         sameSite: 'none',
-        secure: true,
+        secure: false,
       })
       .json(userData);
   } catch (error) {
