@@ -62,7 +62,7 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
         maxAge: 60 * 60 * 25 * 7 * 1000,
         httpOnly: true,
         sameSite: 'none',
-        secure: false,
+        secure: true,
       })
       .json(userData);
   } catch (error) {
