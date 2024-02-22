@@ -69,10 +69,14 @@ const createUser = async (userAttributes: UserCreationAttributes): Promise<Respo
 
 //delete user
 
-const deleteUser = async (mail: string): Promise<Response | void> => {
-  const userToDelete = await getUserByEmail(mail);
+const deleteUser = async (id: string): Promise<Response | void> => {
+  const userToDelete = await User.findOne({
+    where: {
+      id: id,
+    },
+  });
   if (userToDelete) {
-    const resp = await User.destroy({ where: { email: mail } });
+    const resp = await User.destroy({ where: { id: id } });
     if (resp) {
       return {
         success: true,

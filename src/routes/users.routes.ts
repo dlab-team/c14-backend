@@ -13,7 +13,7 @@ router.post('/', isAuthenticated, userController.createUser);
 router.get('/', isAuthenticated, userController.getAllUsers);
 
 // Delete one user
-router.delete('/delete', isSuperAdmin, userController.deleteUser);
+router.delete('/:id', isSuperAdmin, userController.deleteUser);
 
 //Login
 router.post('/login', userController.login);
