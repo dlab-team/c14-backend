@@ -15,6 +15,7 @@ router.delete('/:id', isAuthenticated, phrasesController.deletePhrases);
 router.post('/neutral/polarized', phrasesController.getPoliticalNeutralPolarized);
 router.post('/neutral/inverse', phrasesController.getPoliticalNeutralInverse);
 router.get('/neutral/political', phrasesController.getNeutralPhrases);
+router.put('/neutral/political/:phraseId', phrasesController.putPhrasesPolarized);
 router.post('/bygroup/political', phrasesController.getPoliticalPhrasesByGroup);
 router.post('/inverse/political', phrasesController.getInversePoliticalPhrasesByGroup);
 router.post('/bygroup/social', phrasesController.getSocialPhrasesByGroup);
