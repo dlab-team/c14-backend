@@ -7,7 +7,6 @@ const router = Router();
 router.get('/', isAuthenticated, feedbackController.getAllFeedback);
 router.post(
     '/',
-    isAuthenticated,
     validate.validateFeedback,
     feedbackController.createFeedback,
   );
