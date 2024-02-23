@@ -11,5 +11,6 @@ router.post(
     validate.validateFeedback,
     feedbackController.createFeedback,
   );
+router.delete('/:id', isAuthenticated, feedbackController.deleteFeedback);
 
 export default router;

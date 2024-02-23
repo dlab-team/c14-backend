@@ -21,7 +21,20 @@ const getAllFeedback = async (req: Request, res: Response, next: NextFunction) =
     }
   };
 
+  const deleteFeedback = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    console.log(id)
+    try {
+      const feedbackDelete = await feedbackService.deleteFeedback(id);
+      res.status(200).json(feedbackDelete);
+    }catch (error) {
+      next(error);
+    }
+  }
+
+
   export default {
     getAllFeedback,
-    createFeedback
+    createFeedback,
+    deleteFeedback
   }

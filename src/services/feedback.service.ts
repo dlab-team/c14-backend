@@ -3,6 +3,7 @@ import {
     FeedbackAttributes,
     FeedbackCreationAttributes,
   } from '@/db/models/feedback';
+import { ClientError } from '@/errors';
 
   const getAllFeedback = () => {
     return Feedback.findAll({
@@ -17,7 +18,30 @@ import {
     ) 
   }
 
+  const deleteFeedback = async (id: string) => {
+    const feedback = await Feedback.findOne({
+      where: {
+        id: id,
+      }
+    });
+    if (feedback) {
+      const resp = await Feedback.destroy({ where: { id: id } });
+      if (resp) {
+        return {
+          success: true,
+          message: 'Feedback deleted',
+        }
+      } else {
+        throw new ClientError('Feedback not found', 400);
+      } 
+    } else  {
+      throw new ClientError('Feedback not found', 400);
+    }
+  }
+
+
   export default {
     getAllFeedback,
-    createFeedback
+    createFeedback,
+    deleteFeedback
   }
