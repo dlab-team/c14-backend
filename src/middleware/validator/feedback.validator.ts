@@ -5,8 +5,6 @@ export const validateFeedback = [
     body('feedback')
         .isString()
         .withMessage('Tiene que ser un string')
-        .notEmpty()
-        .withMessage('No puede estar vacio')
         .escape(),
     body('rating')
         .isNumeric()
