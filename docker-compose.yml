@@ -2,6 +2,23 @@ version: '3.9'
 
 services:
 # Comment the 'server' section if you want to work local
+  server:
+    build:
+      context: .
+      target: dev
+    environment:
+      NODE_ENV: development
+      DATABASE_HOST: postgres
+    ports:
+      - 3001:3001
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./src:/usr/src/app/src
+    networks:
+      - postgres-network
+
   postgres:
     image: postgres
     restart: always
