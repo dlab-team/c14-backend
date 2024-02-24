@@ -10,7 +10,7 @@ const swaggerOptions: swaggerJSDoc.Options = {
       version: '1.0',
     },
   },
-  apis: [`${__dirname}/docs/*.yaml`],
+  apis: ['./src/docs/*.yaml'],
 };
 
 export default swaggerOptions;
