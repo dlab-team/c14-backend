@@ -157,7 +157,7 @@ const getGroupedResponseForAYear = async (year: string) => {
       const monthIndex = date.getUTCMonth();
       const monthNames = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Deciembre"
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
       ];
       response.label = monthNames[monthIndex];
     });
