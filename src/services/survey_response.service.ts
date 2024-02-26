@@ -101,4 +101,71 @@ const responseCharater = async ({
   }
 };
 
-export default { createResponse, getMetrics, responseCharater, getGroupedPolynomialOptions };
+const getGroupedResponsesByYear = async () => {
+  try {
+    const responses = await SurveyResponse.findAll({
+      attributes: [
+        [Sequelize.fn('DATE_TRUNC', Sequelize.literal("'year'"), Sequelize.col('startDate')), 'label'],
+        [
+          Sequelize.fn('COUNT', Sequelize.literal('CASE WHEN "finishedSocialForm" IS NOT NULL THEN 1 END')),
+          'Visitas',
+        ],
+        [
+          Sequelize.fn('COUNT', Sequelize.literal('CASE WHEN "finishDate" IS NOT NULL THEN 1 END')),
+          'Finalizadas',
+        ],
+      ],
+      group: [Sequelize.fn('DATE_TRUNC', Sequelize.literal("'year'"), Sequelize.col('startDate'))],
+      raw: true,
+      order: [['label', 'ASC']],
+    });
+
+    responses.forEach((response) => {
+      const date = new Date(response.label);
+      const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+      response.label = adjustedDate.getFullYear().toString();
+    });
+
+    return responses;
+  } catch (error) {
+    throw new ServerError(error as string, 500);
+  }
+};
+  
+const getGroupedResponseForAYear = async (year: string) => {
+  try {
+    const responses = await SurveyResponse.findAll({
+      attributes: [
+        [Sequelize.fn('DATE_TRUNC', Sequelize.literal("'month'"), Sequelize.col('startDate')), 'label'],
+        [
+          Sequelize.fn('COUNT', Sequelize.literal('CASE WHEN "finishedSocialForm" IS NOT NULL THEN 1 END')),
+          'Visitas',
+        ],
+        [
+          Sequelize.fn('COUNT', Sequelize.literal('CASE WHEN "finishDate" IS NOT NULL THEN 1 END')),
+          'Finalizadas',
+        ],
+      ],
+      where: Sequelize.where(Sequelize.fn('EXTRACT', Sequelize.literal('YEAR FROM "startDate"')), year),
+      group: [Sequelize.fn('DATE_TRUNC', Sequelize.literal("'month'"), Sequelize.col('startDate'))],
+      order: [['label', 'ASC']],
+      raw: true,
+    });
+
+    responses.forEach((response) => {
+      const date = new Date(response.label);
+      const monthIndex = date.getUTCMonth();
+      const monthNames = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      ];
+      response.label = monthNames[monthIndex];
+    });
+    
+    return responses;
+  } catch (error) {
+    throw new ServerError(error as string, 500);
+  }
+};
+
+export default { createResponse, getMetrics, responseCharater, getGroupedPolynomialOptions, getGroupedResponsesByYear, getGroupedResponseForAYear };

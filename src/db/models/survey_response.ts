@@ -18,6 +18,7 @@ export interface SurveyResponseCreationAttributes
 export interface SurveyResponseInstance
   extends Model<SurveyResponseAttributes, SurveyResponseCreationAttributes>,
     SurveyResponseAttributes {
+  label: string;
   total: string;
 }
 
