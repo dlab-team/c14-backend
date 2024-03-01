@@ -39,14 +39,34 @@ const finishResponse = async (req: Request, res: Response, next: NextFunction) =
     const character = await surveyResponseService.responseCharater(data);
     res.status(201).json(character);
   } catch (error) {
-    console.error(error);
     next(error);
   }
 };
+
+const getGroupedResponsesByYear = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const responses = await surveyResponseService.getGroupedResponsesByYear();
+    res.status(200).json(responses);
+  } catch (error) {
+    next(error);
+  }
+}
+
+  const getGroupedResponseForAYear = async (req: Request, res: Response, next: NextFunction) => {
+    const { year } = req.params;
+    try {
+      const responses = await surveyResponseService.getGroupedResponseForAYear(year);
+      res.status(200).json(responses);
+    } catch (error) {
+      next(error);
+    }
+  }
 
 export default {
   createResponse,
   getGroupedPolynomialOptions,
   getMetrics,
   finishResponse,
+  getGroupedResponsesByYear,
+  getGroupedResponseForAYear
 };
