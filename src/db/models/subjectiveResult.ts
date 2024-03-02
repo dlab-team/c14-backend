@@ -34,7 +34,7 @@ export const SubjectiveResult = sequelize.define<SubjectiveResultInstance>(
       onDelete: 'CASCADE',
     },
     value: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.SMALLINT,
       allowNull: false,
     },
     phraseId: {

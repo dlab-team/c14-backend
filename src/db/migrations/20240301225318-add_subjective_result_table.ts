@@ -23,7 +23,7 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       value: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.SMALLINT,
         allowNull: false,
       },
       phraseId: {
