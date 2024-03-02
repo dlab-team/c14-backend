@@ -1,19 +1,21 @@
 import { DataTypes, Optional, Model } from 'sequelize';
 import { sequelize } from '.';
-import { stringResultAttributes } from '@/types';
+import { ResultOpinionAttributes } from '@/types';
 import { responses } from '@/enums';
+import { SurveyResponse } from './survey_response';
+import { Phrases } from './phrases';
 
-export interface stringResultCreate extends Optional<stringResultAttributes, 'id'> {}
+export interface ResultOpinionCreate extends Optional<ResultOpinionAttributes, 'id'> {}
 
-interface stringResultInstance
-  extends Model<stringResultAttributes, stringResultCreate>,
-    stringResultAttributes {
+interface ResultOpinionInstace
+  extends Model<ResultOpinionAttributes, ResultOpinionCreate>,
+    ResultOpinionAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export const NumberResult = sequelize.define<stringResultInstance>(
-  'number_result',
+export const ResultOpinion = sequelize.define<ResultOpinionInstace>(
+  'result_opinion',
   {
     id: {
       allowNull: false,
@@ -48,6 +50,11 @@ export const NumberResult = sequelize.define<stringResultInstance>(
     },
   },
   {
-    tableName: 'number_result',
+    tableName: 'result_opinion',
   },
 );
+
+SurveyResponse.hasMany(ResultOpinion, { foreignKey: 'surveyResponseId' });
+ResultOpinion.belongsTo(SurveyResponse, { foreignKey: 'surveyResponseId' });
+Phrases.hasMany(ResultOpinion, { foreignKey: 'phraseId' });
+ResultOpinion.belongsTo(Phrases, { foreignKey: 'phraseId' });

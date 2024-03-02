@@ -4,7 +4,7 @@ import { DataTypes, QueryInterface } from 'sequelize';
 
 module.exports = {
   up: async (queryInterface: QueryInterface, Sequelize: typeof DataTypes) => {
-    await queryInterface.createTable('survey_response_profile', {
+    await queryInterface.createTable('subjective_result', {
       id: {
         allowNull: false,
         autoIncrement: false,
@@ -50,6 +50,6 @@ module.exports = {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('survey_response_profile');
+    await queryInterface.dropTable('subjective_result');
   },
 };

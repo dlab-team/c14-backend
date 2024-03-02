@@ -5,7 +5,7 @@ import { responses } from '@/enums';
 
 module.exports = {
   up: async (queryInterface: QueryInterface, Sequelize: typeof DataTypes) => {
-    await queryInterface.createTable('survey_response_profile', {
+    await queryInterface.createTable('result_opinion', {
       id: {
         allowNull: false,
         autoIncrement: false,
@@ -51,6 +51,6 @@ module.exports = {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('survey_response_profile');
+    await queryInterface.dropTable('result_opinion');
   },
 };

@@ -5,6 +5,7 @@ import polynomialsOptionsRoutes from './polynomial_option.routes';
 import phrasesRoutes from './phrases.routes';
 import surveyResponseRoutes from './survey_response.routes';
 import feedbackRoutes from './feedback.routes';
+import resultsRoutes from './results.routes';
 import { errorHandler } from '@/errors';
 
 const router = Router();
@@ -16,6 +17,7 @@ router.use('/polynomialsoptions', polynomialsOptionsRoutes);
 router.use('/phrases', phrasesRoutes);
 router.use('/surveyresponse', surveyResponseRoutes);
 router.use('/feedback', feedbackRoutes);
+router.use('/results', resultsRoutes);
 /**
  * Manejador de errores
  * Los errores en la parte de servicios no se deben manejar, todos se deben manejar en la

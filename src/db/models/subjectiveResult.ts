@@ -1,18 +1,20 @@
 import { DataTypes, Optional, Model } from 'sequelize';
 import { sequelize } from '.';
-import { numberResultAttributes } from '@/types';
+import { SubjectiveResultAttributes } from '@/types';
+import { SurveyResponse } from './survey_response';
+import { Phrases } from './phrases';
 
-export interface numberResultCreate extends Optional<numberResultAttributes, 'id'> {}
+export interface SubjectiveResultCreate extends Optional<SubjectiveResultAttributes, 'id'> {}
 
-interface numberResultInstance
-  extends Model<numberResultAttributes, numberResultCreate>,
-    numberResultAttributes {
+interface SubjectiveResultInstance
+  extends Model<SubjectiveResultAttributes, SubjectiveResultCreate>,
+    SubjectiveResultAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export const NumberResult = sequelize.define<numberResultInstance>(
-  'number_result',
+export const SubjectiveResult = sequelize.define<SubjectiveResultInstance>(
+  'subjective_result',
   {
     id: {
       allowNull: false,
@@ -47,6 +49,11 @@ export const NumberResult = sequelize.define<numberResultInstance>(
     },
   },
   {
-    tableName: 'number_result',
+    tableName: 'subjective_result',
   },
 );
+
+SurveyResponse.hasMany(SubjectiveResult, { foreignKey: 'surveyResponseId' });
+SubjectiveResult.belongsTo(SurveyResponse, { foreignKey: 'surveyResponseId' });
+Phrases.hasMany(SubjectiveResult, { foreignKey: 'phraseId' });
+SubjectiveResult.belongsTo(Phrases, { foreignKey: 'phraseId' });

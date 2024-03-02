@@ -59,14 +59,14 @@ export interface SurveyResponseCharacter
 export interface SurveyProfileCreate extends Omit<SurveyResponseProfileAttributes, 'id'> {}
 
 //result
-export interface stringResultAttributes {
+export interface ResultOpinionAttributes {
   id: string;
   surveyResponseId: string;
   value: string;
   phraseId: string;
 }
 
-export interface numberResultAttributes {
+export interface SubjectiveResultAttributes {
   id: string;
   surveyResponseId: string;
   value: number;
