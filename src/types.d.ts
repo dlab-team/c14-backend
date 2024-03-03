@@ -57,3 +57,18 @@ export interface SurveyResponseCharacter
   polinomialOptionsId: string[];
 }
 export interface SurveyProfileCreate extends Omit<SurveyResponseProfileAttributes, 'id'> {}
+
+//result
+export interface ResultOpinionAttributes {
+  id: string;
+  surveyResponseId: string;
+  value: string;
+  phraseId: string;
+}
+
+export interface SubjectiveResultAttributes {
+  id: string;
+  surveyResponseId: string;
+  value: number;
+  phraseId: string;
+}
