@@ -9,7 +9,7 @@ components:
       in: cookie
       name: accessToken
   schemas:
-    CreateResult:
+    CreateResultOpinion:
       type: object
       properties:
         surveyResponseId:
@@ -17,14 +17,34 @@ components:
           format: uuid
           example: 'd49f4322-8d45-4101-b093-42219afb2afa'
         value:
-          oneOf:
-            - type: string
-            - type: number
+          type: string
+          enum:
+            - Muy de acuerdo
+            - De acuerdo
+            - En desacuerdo
+            - Muy en desacuerdo
+          example: Muy en desacuerdo
+        phraseId:
+          type: string
+          format: uuid
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+    CreateResultSubjetive:
+      type: object
+      properties:
+        surveyResponseId:
+          type: string
+          format: uuid
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+        value:
+          type: number
+          minimum: 1
+          maximum: 100
           example: 50
         phraseId:
           type: string
           format: uuid
           example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+
   responses:
     responseResult:
       type: object
@@ -61,18 +81,43 @@ components:
           type: string
           description: Descripción del error
 paths:
-  /api/results:
+  /api/results/opinion:
     post:
-      summary: Crea una respuesta guardando la seleccion del usuario
+      summary: Crea una respuesta guardando la seleccion del usuario en el formulario de opinion
       tags:
         - Results
       requestBody:
         required: true
-        description: Este es el esquema requerido para crear una respuesta del usuario
+        description: Este es el esquema requerido para crear una respuesta del usuario en el formulario de opinion
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateResult'
+              $ref: '#/components/schemas/CreateResultOpinion'
+      responses:
+        '201':
+          description: Creacion de respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/responseResult'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/results/subjetive:
+    post:
+      summary: Crea una respuesta guardando la seleccion del usuario en el formulario subjetivo
+      tags:
+        - Results
+      requestBody:
+        required: true
+        description: Este es el esquema requerido para crear una respuesta del usuario en el formulario subjetivo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateResultSubjetive'
       responses:
         '201':
           description: Creacion de respuesta exitosa
