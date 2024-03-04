@@ -8,6 +8,8 @@ export interface PolynomialOptionAttributes {
   name: string;
   group: group | null;
   polynomialId: string;
+  color: string;
+  description: string;
 }
 
 export interface PolynomialOptionCreationAttributes
@@ -48,6 +50,14 @@ export const PolynomialOption = sequelize.define<PolynomialOptionInstance>(
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
+    },
+    color: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
   },
   {
