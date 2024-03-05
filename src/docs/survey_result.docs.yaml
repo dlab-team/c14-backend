@@ -338,6 +338,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/responses/SurveyResponseItem'
+        '400':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+
         '500':
           description: Error general del servidor
           content:
