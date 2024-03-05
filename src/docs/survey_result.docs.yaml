@@ -44,17 +44,59 @@ components:
     responseUpdated:
       type: object
       properties:
-        id:
-          type: string
-          description: Es el id de la respuestas creada en la ruta post
-        polinomialOptionsId:
+        character:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Es el id de la respuestas creada en la ruta post
+            polinomialOptionsId:
+              type: array
+              items:
+                type: string
+                description: Son los id de las opciones seleccionada por el usuario
+            finishedSocialForm:
+              type: boolean
+              description: Boolean que indica si termina la encuesta social
+        responseOpinion:
           type: array
           items:
-            type: string
-            description: Son los id de las opciones seleccionada por el usuario
-        finishedSocialForm:
-          type: boolean
-          description: Boolean que indica si termina la encuesta social
+            type: object
+            properties:
+              surveyResponseId:
+                type: string
+                format: uuid
+                example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+              value:
+                type: string
+                enum:
+                  - Muy de acuerdo
+                  - De acuerdo
+                  - En desacuerdo
+                  - Muy en desacuerdo
+                example: Muy en desacuerdo
+              phraseId:
+                type: string
+                format: uuid
+                example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+        responseSubjetive:
+          type: array
+          items:
+            type: object
+            properties:
+              surveyResponseId:
+                type: string
+                format: uuid
+                example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+              value:
+                type: number
+                minimum: 1
+                maximum: 100
+                example: 50
+              phraseId:
+                type: string
+                format: uuid
+                example: 'd49f4322-8d45-4101-b093-42219afb2afa'
   responses:
     metrics:
       type: object
@@ -113,29 +155,99 @@ components:
           type: 'string'
           format: 'date-time'
           example: null
-    SurveyResponseItem:
+    CharacterItem:
       type: 'object'
       properties:
         id:
           type: 'string'
           format: 'uuid'
-          example: '9ec3bdaf-fa47-4ecf-8ef3-442cac9c09d6'
+          example: '8f4fd38e-0c77-4d39-bcff-ed9a604e74bd'
         surveyResponseId:
           type: 'string'
           format: 'uuid'
-          example: 'f212f998-d154-4632-983b-7e7073d5ab6b'
+          example: '00f94cbc-ae65-43b1-a379-f81b9d8c879f'
         polynomialOptionId:
           type: 'string'
           format: 'uuid'
-          example: '73c5164d-aabf-4038-83d9-2c732480eccf'
+          example: '6ec1c73b-583e-47ec-a868-4189bb4b1af0'
         updatedAt:
           type: 'string'
           format: 'date-time'
-          example: '2024-02-11T18:50:49.964Z'
+          example: '2024-03-05T16:26:49.121Z'
         createdAt:
           type: 'string'
           format: 'date-time'
-          example: '2024-02-11T18:50:49.964Z'
+          example: '2024-03-05T16:26:49.121Z'
+
+    OpinionResultItem:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: 'c9ba9633-ee09-4c77-82a0-97e343f4b617'
+        surveyResponseId:
+          type: 'string'
+          format: 'uuid'
+          example: '00f94cbc-ae65-43b1-a379-f81b9d8c879f'
+        value:
+          type: 'string'
+          example: 'Muy en desacuerdo'
+        phraseId:
+          type: 'string'
+          format: 'uuid'
+          example: '07364a05-cf9b-4108-9298-4c58a6604b4b'
+        createdAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.121Z'
+        updatedAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.121Z'
+
+    SubjetiveResultItem:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: '1d4ca217-9e0f-4278-a6c4-257ceed1548f'
+        surveyResponseId:
+          type: 'string'
+          format: 'uuid'
+          example: '00f94cbc-ae65-43b1-a379-f81b9d8c879f'
+        value:
+          type: 'integer'
+          example: 50
+        phraseId:
+          type: 'string'
+          format: 'uuid'
+          example: '07364a05-cf9b-4108-9298-4c58a6604b4b'
+        createdAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.136Z'
+        updatedAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.136Z'
+
+    SurveyResponseItem:
+      type: 'object'
+      properties:
+        character:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/CharacterItem'
+        opinionResult:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/OpinionResultItem'
+        subjetiveResult:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/SubjetiveResultItem'
 paths:
   /api/surveyresponse/metrics:
     get:
@@ -218,7 +330,7 @@ paths:
             schema:
               $ref: '#/components/schemas/responseUpdated'
       responses:
-        '200':
+        '201':
           description: Me muestra el objeto de profile creado
           content:
             application/json:
@@ -226,6 +338,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/responses/SurveyResponseItem'
+        '400':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+
         '500':
           description: Error general del servidor
           content:
