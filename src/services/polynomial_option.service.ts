@@ -74,7 +74,7 @@ const getPoliticalPolyOption = async () => {
       where: {
         polynomialId: politicalPolyId.id, //ID del polinomio politico
       },
-      attributes: ['id', 'name'],
+      attributes: ['id', 'name', 'color', 'description'],
     });
     return politicalPolyOption;
   }
