@@ -11,6 +11,7 @@ import { PhrasesInstance } from '@/db/models/phrases';
 import { group } from '@/enums';
 import { SurveyResult } from '../db/models/survey_result';
 import { PolynomialOption } from '@/db/models/polynomial_option';
+import { Polynomial } from '@/db/models/polynomial';
 
 const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   const phrase = await Phrases.create(phrases, { raw: true });
@@ -114,8 +115,9 @@ const getExtrmPoliticalPhrases = async (group: string): Promise<PhrasesAttribute
   return;
 };
 
-const getPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | void> => {
+const getPoliticalPhrases = async (id: string): Promise<object[] | void> => {
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
+  const allPhrases: Array<object> = [];
   if (polynomialOption) {
     if (polynomialOption.dataValues.group === null) {
       return getCombinedNeutralPoliticalPhrases(polynomialOption.id);
@@ -140,7 +142,14 @@ const getPoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | vo
             },
           ],
         });
-        return phrases;
+        phrases.forEach((phrase: PhrasesInstance) => {
+          const phrasesWithName = {
+            ...phrase.dataValues,
+            name: polynomialOption.dataValues.name,
+          };
+          allPhrases.push(phrasesWithName);
+        });
+        return allPhrases;
       } else {
         throw new Error('No se encontro el id del polinomio politico.');
       }
@@ -155,6 +164,13 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
   for (const option of ids) {
     const polynomialOption = await polynomialOptionService.getPolynomialOptionId(option);
     if (polynomialOption) {
+      const polynomialName = await Polynomial.findOne({
+        where: {
+          id: polynomialOption.dataValues.polynomialId,
+        },
+        attributes: ['name'],
+      });
+
       if (polynomialOption.dataValues.group === null) {
         const phrases = await Phrases.findAll({
           where: {
@@ -171,8 +187,12 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
             },
           ],
         });
-        phrases.map(p => {
-          allPhrases.push(p.dataValues);
+        phrases.forEach((phrase: PhrasesInstance) => {
+          const phrasesWithName = {
+            ...phrase.dataValues,
+            name: polynomialName?.name,
+          };
+          allPhrases.push(phrasesWithName);
         });
       } else {
         const phrases = await Phrases.findAll({
@@ -191,8 +211,12 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
             },
           ],
         });
-        phrases.map((p: PhrasesInstance) => {
-          allPhrases.push(p.dataValues);
+        phrases.forEach((phrase: PhrasesInstance) => {
+          const phrasesWithName = {
+            ...phrase.dataValues,
+            name: polynomialName?.name,
+          };
+          allPhrases.push(phrasesWithName);
         });
       }
     } else {
@@ -212,6 +236,13 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
     if (!polynomialOption) {
       throw new Error('No se encontro el id de una de las opciones de un polinomio.');
     }
+
+    const polynomialName = await Polynomial.findOne({
+      where: {
+        id: polynomialOption.dataValues.polynomialId,
+      },
+      attributes: ['name'],
+    });
 
     let targetGroup =
       polynomialOption.dataValues.group === null
@@ -263,7 +294,11 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
       });
     }
     phrases.forEach((phrase: PhrasesInstance) => {
-      allPhrases.push(phrase.dataValues);
+      const phrasesWithName = {
+        ...phrase.dataValues,
+        name: polynomialName?.name,
+      };
+      allPhrases.push(phrasesWithName);
     });
   }
 
@@ -271,8 +306,9 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
   return socialPhrases;
 };
 
-const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes[] | void> => {
+const getInversePoliticalPhrases = async (id: string): Promise<object[] | void> => {
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
+  const allPhrases: Array<object> = [];
 
   if (!polynomialOption) {
     throw new Error('No se encontró el id de la opción del polinomio.');
@@ -314,13 +350,19 @@ const getInversePoliticalPhrases = async (id: string): Promise<PhrasesAttributes
       },
     ],
   });
-  return phrases;
+  phrases.forEach((phrase: PhrasesInstance) => {
+    const phrasesWithName = {
+      ...phrase.dataValues,
+      name: polynomialOption.name === 'Derecha' ? 'Izquierda' : 'Derecha',
+    };
+    allPhrases.push(phrasesWithName);
+  });
+  return allPhrases;
 };
 
-const getCombinedNeutralPoliticalPhrases = async (
-  id: string,
-): Promise<PhrasesAttributes[] | void> => {
+const getCombinedNeutralPoliticalPhrases = async (id: string): Promise<object[] | void> => {
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
+  const allPhrases: Array<object> = [];
   if (!polynomialOption) {
     throw new Error('No se encontró el id de la opción del polinomio.');
   }
@@ -350,18 +392,25 @@ const getCombinedNeutralPoliticalPhrases = async (
       },
     ],
   });
+  phrasesPolarized.forEach((phrase: PhrasesInstance) => {
+    const name = phrase.dataValues.group.toString() === 'Extremo 1' ? 'Derecha' : 'Izquierda';
+    const phrasesWithName = {
+      ...phrase.dataValues,
+      name: name,
+    };
+    allPhrases.push(phrasesWithName);
+  });
 
   if (!phrasesPolarized) {
     throw new Error('No se encontraron frases politicas.');
   }
-  const phrases = phrasesPolarized.sort(() => Math.random() - 0.5);
+  const phrases = allPhrases.sort(() => Math.random() - 0.5);
   return phrases;
 };
 
-const getCombinedNeutralPoliticalInverse = async (
-  id: string,
-): Promise<PhrasesAttributes[] | void> => {
+const getCombinedNeutralPoliticalInverse = async (id: string): Promise<object[] | void> => {
   const polynomialOption = await polynomialOptionService.getPolynomialOptionId(id);
+  const allPhrases: Array<object> = [];
 
   if (!polynomialOption) {
     throw new Error('No se encontró el id de la opción del polinomio.');
@@ -392,11 +441,19 @@ const getCombinedNeutralPoliticalInverse = async (
       },
     ],
   });
+  phrasesNoPolarized.forEach((phrase: PhrasesInstance) => {
+    const name = phrase.dataValues.group.toString() === 'Extremo 1' ? 'Derecha' : 'Izquierda';
+    const phrasesWithName = {
+      ...phrase.dataValues,
+      name: name,
+    };
+    allPhrases.push(phrasesWithName);
+  });
 
   if (!phrasesNoPolarized) {
     throw new Error('No se encontraron frases politicas.');
   }
-  const phrases = phrasesNoPolarized.sort(() => Math.random() - 0.5);
+  const phrases = allPhrases.sort(() => Math.random() - 0.5);
   return phrases;
 };
 
