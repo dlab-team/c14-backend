@@ -72,11 +72,11 @@ module.exports = {
       const data = createOptions(
         [
           {
-            name: 'Vivo en región',
+            name: 'Otra Región',
             group: groups.Extremo1,
           },
           {
-            name: 'Vivo en la R. Metropolitana',
+            name: 'Región Metropolitana',
             group: groups.Extremo2,
           },
         ],
@@ -88,14 +88,14 @@ module.exports = {
       const data = createOptions(
         [
           {
-            name: 'Ingresos medio altos - altos',
+            name: 'Ingresos altos - medio altos',
             group: groups.Extremo1,
           },
           {
             name: 'Ingresos medios',
           },
           {
-            name: 'Ingresos medio bajos - bajos',
+            name: 'Ingresos bajos - medio bajos',
             group: groups.Extremo2,
           },
         ],
@@ -107,11 +107,11 @@ module.exports = {
       const data = createOptions(
         [
           {
-            name: 'Pertenezco a un pueblo originario o indígena',
+            name: 'Pertenezco a algún pueblo originario o indígena',
             group: groups.Extremo1,
           },
           {
-            name: 'No me considero perteneciente a ningún pueblo originario o indígena',
+            name: 'No pertenezco a ningún pueblo originario o indígena',
             group: groups.Extremo2,
           },
         ],
@@ -122,8 +122,8 @@ module.exports = {
     if (credolId) {
       const data = createOptions(
         [
-          { name: 'Práctico alguna religión', group: groups.Extremo1 },
-          { name: 'Sin Religión', group: groups.Extremo2 },
+          { name: 'Pertenezco o me siento cercano a alguna religión o iglesia', group: groups.Extremo1 },
+          { name: 'No pertenezco ni me siento cercano a ninguna religión o iglesia', group: groups.Extremo2 },
         ],
         credolId,
       );
@@ -132,8 +132,8 @@ module.exports = {
     if (inmigracionId) {
       const data = createOptions(
         [
-          { name: 'Inmigrante', group: groups.Extremo1 },
-          { name: 'Chileno', group: groups.Extremo2 },
+          { name: 'Soy inmigrante', group: groups.Extremo1 },
+          { name: 'Soy chilena/o', group: groups.Extremo2 },
         ],
         inmigracionId,
       );
