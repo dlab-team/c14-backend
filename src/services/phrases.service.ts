@@ -171,33 +171,9 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
         attributes: ['name'],
       });
 
-      if (polynomialOption.dataValues.group === null) {
+      if (polynomialOption.dataValues.group !== null) {
         const phrases = await Phrases.findAll({
           where: {
-            polynomialId: polynomialOption.dataValues.polynomialId,
-          },
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
-          include: [
-            {
-              model: SurveyResult,
-              where: {
-                polynomialOptionId: polynomialOption.dataValues.id,
-              },
-              attributes: ['percentage'],
-            },
-          ],
-        });
-        phrases.forEach((phrase: PhrasesInstance) => {
-          const phrasesWithName = {
-            ...phrase.dataValues,
-            name: polynomialName?.name,
-          };
-          allPhrases.push(phrasesWithName);
-        });
-      } else {
-        const phrases = await Phrases.findAll({
-          where: {
-            group: polynomialOption.dataValues.group,
             polynomialId: polynomialOption.dataValues.polynomialId,
           },
           attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -219,6 +195,7 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
           allPhrases.push(phrasesWithName);
         });
       }
+
     } else {
       throw new Error('No se encontro el id de una de las opciones de un polinomio.');
     }
@@ -259,23 +236,7 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
     const inversePolyOptionId = await polynomialOptionService.getInversePolyOptionId(Array);
 
     let phrases;
-    if (polynomialOption.dataValues.group === null) {
-      phrases = await Phrases.findAll({
-        where: {
-          polynomialId: polynomialOption.dataValues.polynomialId,
-        },
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-        include: [
-          {
-            model: SurveyResult,
-            where: {
-              polynomialOptionId: inversePolyOptionId,
-            },
-            attributes: ['percentage'],
-          },
-        ],
-      });
-    } else {
+    if (polynomialOption.dataValues.group !== null) {
       phrases = await Phrases.findAll({
         where: {
           group: targetGroup,
@@ -293,7 +254,8 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
         ],
       });
     }
-    phrases.forEach((phrase: PhrasesInstance) => {
+    
+    phrases?.forEach((phrase: PhrasesInstance) => {
       const phrasesWithName = {
         ...phrase.dataValues,
         name: polynomialName?.name,
