@@ -91,6 +91,8 @@ const responseCharater = async ({
       duration,
       finishDate,
       finishedSocialForm: character.finishedSocialForm,
+      socialAvg: character.socialAvg && character.socialAvg,
+      politicalAvg: character.politicalAvg && character.politicalAvg,
     });
     const profile = character.polinomialOptionsId.map(idOption => {
       return SurveyResponseProfile.create({

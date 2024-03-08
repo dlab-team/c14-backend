@@ -7,6 +7,8 @@ export interface SurveyResponseAttributes {
   country: string;
   region: string;
   city: string;
+  politicalAvg?: number;
+  socialAvg?: number;
   startDate: Date;
   finishDate?: Date | null;
   finishedSocialForm: boolean;
@@ -64,6 +66,14 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
     duration: {
       allowNull: false,
       type: DataTypes.INTEGER,
+    },
+    politicalAvg: {
+      allowNull: true,
+      type: DataTypes.FLOAT,
+    },
+    socialAvg: {
+      allowNull: true,
+      type: DataTypes.FLOAT,
     },
   },
   {
