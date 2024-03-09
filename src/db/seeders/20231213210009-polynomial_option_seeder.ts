@@ -52,10 +52,32 @@ module.exports = {
     if (politicaId) {
       const data = createOptions(
         [
-          { name: 'Derecha', group: groups.Extremo1, color: 'red', description: 'Derecha' },
-          { name: 'Izquierda', group: groups.Extremo2, color: 'blue', description: 'Izquierda' },
-          { name: 'Centro', color: 'green', description: 'Centro' },
-          { name: 'Independiente', color: 'green', description: 'Independiente' },
+          {
+            name: 'Derecha',
+            group: groups.Extremo1,
+            color: 'red',
+            description:
+              '¿Qué % de personas que dicen pertenecer a la opción de Derecha, está de acuerdo con la siguiente frase?',
+          },
+          {
+            name: 'Izquierda',
+            group: groups.Extremo2,
+            color: 'blue',
+            description:
+              '¿Qué % de personas que dicen pertenecer a la opción de Izquierda, está de acuerdo con la siguiente frase?',
+          },
+          {
+            name: 'Centro',
+            color: 'green',
+            description:
+              '¿Qué % de personas que dicen pertenecer a la opción de Centro, está de acuerdo con la siguiente frase?',
+          },
+          {
+            name: 'Independiente',
+            color: 'green',
+            description:
+              '¿Qué % de personas que dicen ser Independientes, está de acuerdo con la siguiente frase?',
+          },
         ],
         politicaId,
       );
@@ -65,14 +87,32 @@ module.exports = {
     if (generoId) {
       const data = createOptions(
         [
-          { name: 'Masculino', group: groups.Extremo1, color: 'red', description: 'Masculino' },
-          { name: 'Femenino', group: groups.Extremo2, color: 'blue', description: 'Femenino' },
-          { name: 'Otro', color: 'green', description: 'Otro' },
+          {
+            name: 'Masculino',
+            group: groups.Extremo1,
+            color: 'red',
+            description:
+              '¿Qué % de personas que se identifican como Masculino, está de acuerdo con la siguiente frase?',
+          },
+          {
+            name: 'Femenino',
+            group: groups.Extremo2,
+            color: 'blue',
+            description:
+              '¿Qué % de personas que se identifican como Femenino, está de acuerdo con la siguiente frase?',
+          },
+          {
+            name: 'Otro',
+            color: 'green',
+            description:
+              '¿Qué % de personas que se identifican con un género no binario, está de acuerdo con la siguiente frase?',
+          },
         ],
         generoId,
       );
       options.push(...data);
     }
+
     if (regionId) {
       const data = createOptions(
         [
@@ -80,19 +120,22 @@ module.exports = {
             name: 'Otra Región',
             group: groups.Extremo1,
             color: 'blue',
-            description: 'vivo fuera del area metropolitana',
+            description:
+              '¿Qué % de personas que viven fuera del área metropolitana, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Región Metropolitana',
             group: groups.Extremo2,
             color: 'red',
-            description: 'vivo en el area metropolitana',
+            description:
+              '¿Qué % de personas que viven en el área metropolitana, está de acuerdo con la siguiente frase?',
           },
         ],
         regionId,
       );
       options.push(...data);
     }
+
     if (ingresoId) {
       const data = createOptions(
         [
@@ -100,24 +143,28 @@ module.exports = {
             name: 'Ingresos altos - medio altos',
             group: groups.Extremo1,
             color: 'red',
-            description: 'tengo ingresos de clase media-alto y altos',
+            description:
+              '¿Qué % de personas con ingresos de clase media-alta y alta, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Ingresos medios',
             color: 'green',
-            description: 'tengo ingreso de clase media',
+            description:
+              '¿Qué % de personas con ingresos de clase media, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Ingresos bajos - medio bajos',
             group: groups.Extremo2,
             color: 'blue',
-            description: 'tengo ingresos bajos',
+            description:
+              '¿Qué % de personas con ingresos bajos, está de acuerdo con la siguiente frase?',
           },
         ],
         ingresoId,
       );
       options.push(...data);
     }
+
     if (puebloId) {
       const data = createOptions(
         [
@@ -125,19 +172,22 @@ module.exports = {
             name: 'Pertenezco a algún pueblo originario o indígena',
             group: groups.Extremo1,
             color: 'red',
-            description: 'me considero de un pueblo originario o indigena',
+            description:
+              '¿Qué % de personas que se identifican como pertenecientes a un pueblo originario o indígena, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'No pertenezco a ningún pueblo originario o indígena',
             group: groups.Extremo2,
             color: 'blue',
-            description: 'no me considero de un pueblo originario o indegena',
+            description:
+              '¿Qué % de personas que no se identifican como pertenecientes a un pueblo originario o indígena, está de acuerdo con la siguiente frase?',
           },
         ],
         puebloId,
       );
       options.push(...data);
     }
+
     if (credolId) {
       const data = createOptions(
         [
@@ -145,19 +195,22 @@ module.exports = {
             name: 'Pertenezco o me siento cercano a alguna religión o iglesia',
             group: groups.Extremo1,
             color: 'red',
-            description: 'mi frase',
+            description:
+              '¿Qué % de personas que se identifican como pertenecientes a una religión o iglesia, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'No pertenezco ni me siento cercano a ninguna religión o iglesia',
             group: groups.Extremo2,
-            color: 'red',
-            description: 'mi frase',
+            color: 'blue',
+            description:
+              '¿Qué % de personas que no se identifican como pertenecientes a una religión o iglesia, está de acuerdo con la siguiente frase?',
           },
         ],
         credolId,
       );
       options.push(...data);
     }
+
     if (inmigracionId) {
       const data = createOptions(
         [
@@ -165,19 +218,22 @@ module.exports = {
             name: 'Inmigrante',
             group: groups.Extremo1,
             color: 'red',
-            description: 'soy migrante',
+            description:
+              '¿Qué % de personas que se identifican como inmigrantes, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Chileno',
             group: groups.Extremo2,
-            color: 'red',
-            description: 'soy ciudadano chileno',
+            color: 'blue',
+            description:
+              '¿Qué % de personas que se identifican como chilenos, está de acuerdo con la siguiente frase?',
           },
         ],
         inmigracionId,
       );
       options.push(...data);
     }
+
     if (directivoId) {
       const data = createOptions(
         [
@@ -185,29 +241,35 @@ module.exports = {
             name: 'Ocupo un cargo directivo en la empresa u organización donde trabajo',
             group: groups.Extremo1,
             color: 'red',
-            description: 'Ocupo un cargo directivo en la empresa u organización donde trabajo',
+            description:
+              '¿Qué % de personas que ocupan un cargo directivo en su empresa u organización, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'No tengo un rol directivo en la empresa u organización donde trabajo',
             group: groups.Extremo2,
             color: 'blue',
-            description: 'No tengo un rol directivo en la empresa u organización donde trabajo',
+            description:
+              '¿Qué % de personas que no ocupan un cargo directivo en su empresa u organización, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Soy independiente y trabajo solo. No trabajo en ninguna empresa u organización',
             color: 'green',
-            description: 'Soy independiente y trabajo solo',
+            description:
+              '¿Qué % de personas que trabajan de forma independiente y no están afiliadas a ninguna empresa u organización, está de acuerdo con la siguiente frase?',
           },
+
           {
             name: 'En este momento no tengo trabajo remunerado (soy estudiante, jubilado, desempleado, labores del hogar, etc.)',
             color: 'green',
-            description: 'No tengo ninguna remunacion, ni trabajo',
+            description:
+              '¿Qué % de personas que no tienen un trabajo remunerado, está de acuerdo con la siguiente frase?',
           },
         ],
         directivoId,
       );
       options.push(...data);
     }
+
     if (etarioId) {
       const data = createOptions(
         [
@@ -215,24 +277,28 @@ module.exports = {
             name: '29 años o menos',
             group: groups.Extremo1,
             color: 'red',
-            description: 'soy menor de 29 años',
+            description:
+              '¿Qué % de personas de 29 años o menos, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Entre 30 y 59 años',
             color: 'green',
-            description: 'estoy entre los 30 y 59 años',
+            description:
+              '¿Qué % de personas entre 30 y 59 años, está de acuerdo con la siguiente frase?',
           },
           {
             name: '60 años o más',
             group: groups.Extremo2,
             color: 'blue',
-            description: 'soy mayor de 60 años',
+            description:
+              '¿Qué % de personas de 60 años o más, está de acuerdo con la siguiente frase?',
           },
         ],
         etarioId,
       );
       options.push(...data);
     }
+
     if (orientationId) {
       const data = createOptions(
         [
@@ -240,13 +306,15 @@ module.exports = {
             name: 'Heterosexual',
             group: groups.Extremo1,
             color: 'red',
-            description: 'soy heterosexual',
+            description:
+              '¿Qué % de personas que se identifican como heterosexuales, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'LGTBQ+',
             group: groups.Extremo2,
             color: 'blue',
-            description: 'Me considero de la poblacion LGTBQ+',
+            description:
+              '¿Qué % de personas que se identifican como parte de la comunidad LGTBQ+, está de acuerdo con la siguiente frase?',
           },
         ],
         orientationId,
