@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import phrasesService from '../services/phrases.service';
 import { PhrasesCreationAttributes } from '@/db/models/phrases';
-import { IdsSocials, PhrasesUpdateService } from '@/types';
+import { PhrasesUpdateService } from '@/types';
 import { SurveyResultAttributes } from '@/db/models/survey_result';
 import { ClientError } from '@/errors';
 import { groups } from '@/enums';
@@ -89,86 +89,6 @@ const getPoliticalPhrases = async (
   }
 };
 
-const getPoliticalPhrasesByGroup = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  const { id } = req.body;
-  try {
-    if (!id) {
-      throw new ClientError('Debe ingresar el id de una opcion de polinomio por body');
-    }
-    const phrases = await phrasesService.getPoliticalPhrases(id);
-    res.status(200).json(phrases);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getSocialPhrasesByGroup = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  const { ids }: IdsSocials = req.body;
-  try {
-    if (!ids) {
-      throw new ClientError('Debe ingresar los id de las opciones de polinomios por body');
-    }
-    const phrases = await phrasesService.getSocialPhrases(ids);
-    res.status(200).json({ phrases });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getInverseSocialPhrasesByGroup = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  const { ids } = req.body;
-  try {
-    if (!ids) {
-      throw new ClientError('Debe ingresar los id de las opciones de polinomios por body');
-    }
-    const phrases = await phrasesService.getInverseSocialPhrases(ids);
-    res.status(200).json({ phrases });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getInversePoliticalPhrasesByGroup = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  const { id } = req.body;
-  try {
-    if (!id) {
-      throw new ClientError('Debe ingresar el id de una opcion de polinomio por body');
-    }
-    const phrases = await phrasesService.getInversePoliticalPhrases(id);
-    res.status(200).json(phrases);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getPoliticalNeutralPolarized = async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.body;
-  try {
-    if (!id) {
-      throw new ClientError('Debe ingresar el id de una opcion de polinomio por body');
-    }
-    const combinatedPhrases = await phrasesService.getCombinedNeutralPoliticalPhrases(id);
-    res.status(200).json(combinatedPhrases);
-  } catch (error) {
-    next(error);
-  }
-};
 const getAllPoliticalPhrases = async (
   req: Request,
   res: Response,
@@ -177,19 +97,6 @@ const getAllPoliticalPhrases = async (
   try {
     const phrases = await phrasesService.getAllPoliticalPhrases();
     res.status(200).json(phrases);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getPoliticalNeutralInverse = async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.body;
-  try {
-    if (!id) {
-      throw new ClientError('Debe ingresar el id de una opcion de polinomio por body');
-    }
-    const combinatedPhrases = await phrasesService.getCombinedNeutralPoliticalInverse(id);
-    res.status(200).json(combinatedPhrases);
   } catch (error) {
     next(error);
   }
@@ -222,13 +129,7 @@ export default {
   getAllPhrases,
   getPolynomialPhrases,
   getPoliticalPhrases,
-  getPoliticalNeutralPolarized,
   getAllPoliticalPhrases,
-  getPoliticalPhrasesByGroup,
-  getInversePoliticalPhrasesByGroup,
-  getSocialPhrasesByGroup,
-  getInverseSocialPhrasesByGroup,
-  getPoliticalNeutralInverse,
   getNeutralPhrases,
   putPhrasesPolarized,
 };
