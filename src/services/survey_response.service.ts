@@ -98,6 +98,8 @@ const responseCharater = async ({
         polynomialOptionId: idOption,
       });
     });
+
+    // testing
     const opinionResult = await resultService.createOpinionResultArray(responseOpinion);
     const subjetiveResult = await resultService.createSubjetiveResultArray(responseSubjetive);
     const profileFinish = await Promise.all(profile);
