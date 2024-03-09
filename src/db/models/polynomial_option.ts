@@ -53,7 +53,8 @@ export const PolynomialOption = sequelize.define<PolynomialOptionInstance>(
     },
     color: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: null,
     },
     description: {
       type: DataTypes.TEXT,

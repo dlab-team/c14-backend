@@ -32,7 +32,7 @@ module.exports = {
       },
       color: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       description: {
         type: DataTypes.TEXT,
