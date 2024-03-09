@@ -45,6 +45,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
+      politicalAvg: {
+        allowNull: true,
+        type: Sequelize.FLOAT,
+      },
+      socialAvg: {
+        allowNull: true,
+        type: Sequelize.FLOAT,
+      },
     });
   },
 

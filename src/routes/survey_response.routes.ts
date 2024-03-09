@@ -8,7 +8,11 @@ router.post('/', surveyResponseController.createResponse);
 router.put('/', validate.resultProfile, surveyResponseController.finishResponse);
 router.get('/metrics', isAuthenticated, surveyResponseController.getMetrics);
 router.get('/groupby/:polynomialId', surveyResponseController.getGroupedPolynomialOptions);
-router.get('/groupedbyyear',isAuthenticated, surveyResponseController.getGroupedResponsesByYear);
-router.get('/groupedbymonth/:year',isAuthenticated, surveyResponseController.getGroupedResponseForAYear)
+router.get('/groupedbyyear', isAuthenticated, surveyResponseController.getGroupedResponsesByYear);
+router.get(
+  '/groupedbymonth/:year',
+  isAuthenticated,
+  surveyResponseController.getGroupedResponseForAYear,
+);
 
 export default router;

@@ -3,7 +3,8 @@ import { ClientError, ServerError } from '@/errors';
 import { SurveyResponse, SurveyResponseAttributes } from '@/db/models/survey_response';
 import { SurveyResponseProfile } from '@/db/models/survey_response_profile';
 import { PolynomialOption } from '@/db/models/polynomial_option';
-import { SurveyResponseCharacter } from '@/types';
+import { ResponseAllData } from '@/types';
+import * as resultService from '@/services/result.service';
 
 const createResponse = async (
   data: SurveyResponseAttributes,
@@ -60,16 +61,14 @@ const getMetrics = async () => {
     });
 
     const totalAmount = await SurveyResponse.findOne({
-      attributes: [
-        [Sequelize.fn('AVG', Sequelize.col('duration')), 'total'],
-      ],
+      attributes: [[Sequelize.fn('AVG', Sequelize.col('duration')), 'total']],
       where: {
         finishDate: {
           [Op.not]: null,
         },
       },
       raw: true,
-    })
+    });
 
     const duration = totalAmount ? parseInt(totalAmount.total) : 0;
 
@@ -80,22 +79,32 @@ const getMetrics = async () => {
 };
 
 const responseCharater = async ({
-  id,
-  polinomialOptionsId,
-  finishedSocialForm,
-}: SurveyResponseCharacter) => {
+  character,
+  responseOpinion,
+  responseSubjetive,
+}: ResponseAllData) => {
   const finishDate = new Date();
-  const response = await SurveyResponse.findByPk(id);
+  const response = await SurveyResponse.findByPk(character.id);
   if (response) {
     const duration = finishDate.getTime() - response.startDate.getTime();
-    await response.update({ duration, finishDate, finishedSocialForm });
-    const profile = polinomialOptionsId.map(idOption => {
+    await response.update({
+      duration,
+      finishDate,
+      finishedSocialForm: character.finishedSocialForm,
+      //social political average
+      socialAvg: character.socialAvg && character.socialAvg,
+      politicalAvg: character.politicalAvg && character.politicalAvg,
+    });
+    const profile = character.polinomialOptionsId.map(idOption => {
       return SurveyResponseProfile.create({
         surveyResponseId: response.id,
         polynomialOptionId: idOption,
       });
     });
-    return Promise.all(profile);
+    const opinionResult = await resultService.createOpinionResultArray(responseOpinion);
+    const subjetiveResult = await resultService.createSubjetiveResultArray(responseSubjetive);
+    const profileFinish = await Promise.all(profile);
+    return { character: profileFinish, opinionResult, subjetiveResult };
   } else {
     throw new ClientError('El id no corresponde', 403);
   }
@@ -105,9 +114,15 @@ const getGroupedResponsesByYear = async () => {
   try {
     const responses = await SurveyResponse.findAll({
       attributes: [
-        [Sequelize.fn('DATE_TRUNC', Sequelize.literal("'year'"), Sequelize.col('startDate')), 'label'],
         [
-          Sequelize.fn('COUNT', Sequelize.literal('CASE WHEN "finishedSocialForm" IS NOT NULL THEN 1 END')),
+          Sequelize.fn('DATE_TRUNC', Sequelize.literal("'year'"), Sequelize.col('startDate')),
+          'label',
+        ],
+        [
+          Sequelize.fn(
+            'COUNT',
+            Sequelize.literal('CASE WHEN "finishedSocialForm" IS NOT NULL THEN 1 END'),
+          ),
           'Visitas',
         ],
         [
@@ -120,7 +135,7 @@ const getGroupedResponsesByYear = async () => {
       order: [['label', 'ASC']],
     });
 
-    responses.forEach((response) => {
+    responses.forEach(response => {
       const date = new Date(response.label);
       const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
       response.label = adjustedDate.getFullYear().toString();
@@ -131,14 +146,20 @@ const getGroupedResponsesByYear = async () => {
     throw new ServerError(error as string, 500);
   }
 };
-  
+
 const getGroupedResponseForAYear = async (year: string) => {
   try {
     const responses = await SurveyResponse.findAll({
       attributes: [
-        [Sequelize.fn('DATE_TRUNC', Sequelize.literal("'month'"), Sequelize.col('startDate')), 'label'],
         [
-          Sequelize.fn('COUNT', Sequelize.literal('CASE WHEN "finishedSocialForm" IS NOT NULL THEN 1 END')),
+          Sequelize.fn('DATE_TRUNC', Sequelize.literal("'month'"), Sequelize.col('startDate')),
+          'label',
+        ],
+        [
+          Sequelize.fn(
+            'COUNT',
+            Sequelize.literal('CASE WHEN "finishedSocialForm" IS NOT NULL THEN 1 END'),
+          ),
           'Visitas',
         ],
         [
@@ -146,26 +167,46 @@ const getGroupedResponseForAYear = async (year: string) => {
           'Finalizadas',
         ],
       ],
-      where: Sequelize.where(Sequelize.fn('EXTRACT', Sequelize.literal('YEAR FROM "startDate"')), year),
+      where: Sequelize.where(
+        Sequelize.fn('EXTRACT', Sequelize.literal('YEAR FROM "startDate"')),
+        year,
+      ),
       group: [Sequelize.fn('DATE_TRUNC', Sequelize.literal("'month'"), Sequelize.col('startDate'))],
       order: [['label', 'ASC']],
       raw: true,
     });
 
-    responses.forEach((response) => {
+    responses.forEach(response => {
       const date = new Date(response.label);
       const monthIndex = date.getUTCMonth();
       const monthNames = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre',
       ];
       response.label = monthNames[monthIndex];
     });
-    
+
     return responses;
   } catch (error) {
     throw new ServerError(error as string, 500);
   }
 };
 
-export default { createResponse, getMetrics, responseCharater, getGroupedPolynomialOptions, getGroupedResponsesByYear, getGroupedResponseForAYear };
+export default {
+  createResponse,
+  getMetrics,
+  responseCharater,
+  getGroupedPolynomialOptions,
+  getGroupedResponsesByYear,
+  getGroupedResponseForAYear,
+};

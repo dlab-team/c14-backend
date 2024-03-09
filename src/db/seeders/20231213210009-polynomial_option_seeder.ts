@@ -77,13 +77,13 @@ module.exports = {
       const data = createOptions(
         [
           {
-            name: 'Vivo en región',
+            name: 'Otra Región',
             group: groups.Extremo1,
             color: 'blue',
             description: 'vivo fuera del area metropolitana',
           },
           {
-            name: 'Vivo en la R. Metropolitana',
+            name: 'Región Metropolitana',
             group: groups.Extremo2,
             color: 'red',
             description: 'vivo en el area metropolitana',
@@ -97,7 +97,7 @@ module.exports = {
       const data = createOptions(
         [
           {
-            name: 'Ingresos medio altos - altos',
+            name: 'Ingresos altos - medio altos',
             group: groups.Extremo1,
             color: 'red',
             description: 'tengo ingresos de clase media-alto y altos',
@@ -108,7 +108,7 @@ module.exports = {
             description: 'tengo ingreso de clase media',
           },
           {
-            name: 'Ingresos medio bajos - bajos',
+            name: 'Ingresos bajos - medio bajos',
             group: groups.Extremo2,
             color: 'blue',
             description: 'tengo ingresos bajos',
@@ -122,13 +122,13 @@ module.exports = {
       const data = createOptions(
         [
           {
-            name: 'Pertenezco a un pueblo originario o indígena',
+            name: 'Pertenezco a algún pueblo originario o indígena',
             group: groups.Extremo1,
             color: 'red',
             description: 'me considero de un pueblo originario o indigena',
           },
           {
-            name: 'No me considero perteneciente a ningún pueblo originario o indígena',
+            name: 'No pertenezco a ningún pueblo originario o indígena',
             group: groups.Extremo2,
             color: 'blue',
             description: 'no me considero de un pueblo originario o indegena',
@@ -142,16 +142,16 @@ module.exports = {
       const data = createOptions(
         [
           {
-            name: 'Práctico alguna religión',
+            name: 'Pertenezco o me siento cercano a alguna religión o iglesia',
             group: groups.Extremo1,
             color: 'red',
-            description: 'Práctico alguna religión',
+            description: 'mi frase',
           },
           {
-            name: 'Sin Religión',
+            name: 'No pertenezco ni me siento cercano a ninguna religión o iglesia',
             group: groups.Extremo2,
             color: 'red',
-            description: 'No práctico ninguna religión',
+            description: 'mi frase',
           },
         ],
         credolId,
