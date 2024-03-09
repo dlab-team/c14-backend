@@ -6,7 +6,11 @@ import {
 } from '@/db/models/polynomial_option';
 import polynomialOptionService from '@/services/polynomial_option.service';
 
-const createPolynomialOption = async (req: Request, res: Response, next: NextFunction) => {
+const createPolynomialOption = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   const polynomialOption: PolynomialOptionCreationAttributes = req.body;
   try {
     const polynomialOptionsCreate =
