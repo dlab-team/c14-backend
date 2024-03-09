@@ -78,7 +78,23 @@ const getPhrasesId = (idPhrases: IdPhrases) => {
 const getPolynomialPhrases = async (polynomialId: string): Promise<PhrasesAttributes[]> => {
   return Phrases.findAll({
     where: { polynomialId: polynomialId },
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    attributes: {
+      exclude: ['createdAt', 'updatedAt'],
+      include: [
+        [
+          sequelize.literal(`(
+          SELECT STRING_AGG(name, ', ')
+          FROM polynomial_option
+          WHERE
+            polynomial_option.group::text = phrases.group::text
+          AND
+            polynomial_option."polynomialId" = phrases."polynomialId"
+            LIMIT 1
+          )`),
+          'options',
+        ],
+      ],
+    },
     include: [
       {
         model: SurveyResult,
@@ -195,7 +211,6 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
           allPhrases.push(phrasesWithName);
         });
       }
-
     } else {
       throw new Error('No se encontro el id de una de las opciones de un polinomio.');
     }
@@ -254,7 +269,7 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
         ],
       });
     }
-    
+
     phrases?.forEach((phrase: PhrasesInstance) => {
       const phrasesWithName = {
         ...phrase.dataValues,
