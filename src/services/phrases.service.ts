@@ -12,6 +12,20 @@ import { group } from '@/enums';
 import { SurveyResult } from '../db/models/survey_result';
 import { PolynomialOption } from '@/db/models/polynomial_option';
 import { Polynomial } from '@/db/models/polynomial';
+import { Literal } from 'sequelize/types/utils';
+
+const literalPolynomialOptions: [Literal, string] = [
+  sequelize.literal(`(
+    SELECT STRING_AGG(name, ', ')
+    FROM polynomial_option
+    WHERE
+      polynomial_option.group::text = phrases.group::text
+    AND
+      polynomial_option."polynomialId" = phrases."polynomialId"
+      LIMIT 1
+    )`),
+  'options',
+];
 
 const createPhrasesDB = async (phrases: PhrasesCreationAttributes): Promise<PhrasesAttributes> => {
   const phrase = await Phrases.create(phrases, { raw: true });
@@ -80,20 +94,7 @@ const getPolynomialPhrases = async (polynomialId: string): Promise<PhrasesAttrib
     where: { polynomialId: polynomialId },
     attributes: {
       exclude: ['createdAt', 'updatedAt'],
-      include: [
-        [
-          sequelize.literal(`(
-          SELECT STRING_AGG(name, ', ')
-          FROM polynomial_option
-          WHERE
-            polynomial_option.group::text = phrases.group::text
-          AND
-            polynomial_option."polynomialId" = phrases."polynomialId"
-            LIMIT 1
-          )`),
-          'options',
-        ],
-      ],
+      include: [literalPolynomialOptions],
     },
     include: [
       {
@@ -192,7 +193,7 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
           where: {
             polynomialId: polynomialOption.dataValues.polynomialId,
           },
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          attributes: { exclude: ['createdAt', 'updatedAt'], include: [literalPolynomialOptions] },
           include: [
             {
               model: SurveyResult,
@@ -257,7 +258,7 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
           group: targetGroup,
           polynomialId: polynomialOption.dataValues.polynomialId,
         },
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        attributes: { exclude: ['createdAt', 'updatedAt'], include: [literalPolynomialOptions] },
         include: [
           {
             model: SurveyResult,
@@ -480,6 +481,7 @@ const updatePolarized = async (idPhrases: string) => {
   const { id, polynomialId, text, neutral, group } = updatePhrase.dataValues;
   return { id, polynomialId, text, neutral, group };
 };
+
 export default {
   createPhrasesDB,
   updatePhrasesDB,
