@@ -50,6 +50,12 @@ components:
             id:
               type: string
               description: Es el id de la respuestas creada en la ruta post
+            socialAvg:
+              type: number
+              description: Es la brecha social
+            politicalAvg:
+              type: number
+              description: Es la brecha politica
             polinomialOptionsId:
               type: array
               items:
