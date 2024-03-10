@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { Literal } from 'sequelize/types/utils';
 import { sequelize } from '../db/models';
-import { Phrases } from '@/db/models/phrases';
+import { Phrases, PhrasesInstance } from '@/db/models/phrases';
 import polynomialService from '../services/polynomial.service';
 import polynomialOptionService from './polynomial_option.service';
 import { SurveyResult } from '../db/models/survey_result';
@@ -53,8 +53,8 @@ const getPoliticalPhrases = async (id: string): Promise<object[] | void> => {
   }
 };
 
-const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> => {
-  const allPhrases: Array<object> = [];
+const getSocialPhrases = async (ids: Array<string>): Promise<PhrasesInstance[]> => {
+  const allPhrases: PhrasesInstance[] = [];
   for (const option of ids) {
     const polynomialOption = await polynomialOptionService.getPolynomialOptionId(option);
     if (!polynomialOption) {
@@ -81,8 +81,8 @@ const getSocialPhrases = async (ids: Array<string>): Promise<object[] | void> =>
       allPhrases.push(...phrases);
     }
   }
-  const socialPhrases = allPhrases.sort(() => Math.random() - 0.5);
-  return socialPhrases;
+  const phrases = allPhrases.sort(() => Math.random() - 0.5);
+  return phrases;
 };
 
 const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | void> => {
