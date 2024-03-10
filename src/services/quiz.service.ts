@@ -5,6 +5,7 @@ import { Phrases, PhrasesInstance } from '@/db/models/phrases';
 import polynomialService from '../services/polynomial.service';
 import polynomialOptionService from './polynomial_option.service';
 import { SurveyResult } from '../db/models/survey_result';
+import { Polynomial } from '@/db/models/polynomial';
 
 const literalPolynomialOptions: [Literal, string] = [
   sequelize.literal(`(
@@ -69,6 +70,10 @@ const getSocialPhrases = async (ids: Array<string>): Promise<PhrasesInstance[]> 
         attributes: { exclude: ['createdAt', 'updatedAt'], include: [literalPolynomialOptions] },
         include: [
           {
+            model: Polynomial,
+            attributes: ['name'],
+          },
+          {
             model: SurveyResult,
             where: {
               polynomialOptionId: polynomialOption.dataValues.id,
@@ -110,6 +115,10 @@ const getInverseSocialPhrases = async (ids: Array<string>): Promise<object[] | v
         },
         attributes: { exclude: ['createdAt', 'updatedAt'], include: [literalPolynomialOptions] },
         include: [
+          {
+            model: Polynomial,
+            attributes: ['name'],
+          },
           {
             model: SurveyResult,
             where: {
