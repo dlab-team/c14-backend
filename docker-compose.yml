@@ -1,22 +1,57 @@
-PORT=3001
-DATABASE_HOST='localhost'
-POSTGRES_USER='postgres'
-POSTGRES_PASSWORD='pass'
-POSTGRES_DB='db_3xi'
-POSTGRES_PORT='5432'
-APP_HOST='http://localhost:3001/api'
-FRONT_HOST='http://localhost:5173'
-PGADMIN_DEFAULT_EMAIL='mail@gmail.com'  
-PGADMIN_DEFAULT_PASSWORD='pass'
-JWT_SECRET='skfaoef'
-MAIL_USER='email3xitest@gmail.com'
-MAIL_PASSWORD='whbf vdom ximy nihf'
+version: '3.9'
 
-# env variables for render deploy
+services:
+# Comment the 'server' section if you want to work local
+  server:
+    build:
+      context: .
+      target: dev
+    environment:
+      NODE_ENV: development
+      DATABASE_HOST: postgres
+    ports:
+      - 3001:3001
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./src:/usr/src/app/src
+    networks:
+      - postgres-network
 
-# DATABASE_HOST='dpg-cm1dli0cmk4c73d8tdjg-a'
-# POSTGRES_USER='postgres_3xi'
-# POSTGRES_PASSWORD='LUim0tQZ0tkxi0hZ3ujfvjGulKpom1pj'
-# POSTGRES_DB='db_3xi'
-# MAIL_USER='email3xitest@gmail.com'
-# MAIL_PASSWORD='whbf vdom ximy nihf'
+  postgres:
+    image: postgres
+    restart: always
+    user: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - postgres-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
+
+volumes:
+  db-data:
+
+networks:
+  postgres-network:
+    driver: bridge
