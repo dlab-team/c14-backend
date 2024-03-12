@@ -47,6 +47,10 @@ export const SubjectiveResult = sequelize.define<SubjectiveResultInstance>(
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
+    perception:{
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+    }
   },
   {
     tableName: 'subjective_result',

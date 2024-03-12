@@ -82,4 +82,5 @@ export interface SubjectiveResultAttributes {
   surveyResponseId: string;
   value: number;
   phraseId: string;
+  perception: number
 }

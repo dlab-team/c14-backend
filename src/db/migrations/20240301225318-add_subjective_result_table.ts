@@ -26,6 +26,10 @@ module.exports = {
         type: DataTypes.SMALLINT,
         allowNull: false,
       },
+      perception: {
+        type: DataTypes.SMALLINT,
+        allowNull: false,
+      },
       phraseId: {
         type: DataTypes.UUID,
         allowNull: false,
