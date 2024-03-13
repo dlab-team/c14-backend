@@ -61,6 +61,14 @@ export const resultProfile = [
         ) {
           throw new ClientError('El valor debe ser un número entre 0 y 100', 400);
         }
+        if (
+          typeof subjetive.perception !== 'number' ||
+          isNaN(subjetive.perception) ||
+          subjetive.perception < 0 ||
+          subjetive.perception > 100
+        ){
+          throw new ClientError('La percepción debe ser un número entre 0 y 100', 400);
+        }
       });
       return true;
     }),
