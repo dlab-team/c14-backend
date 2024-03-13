@@ -1,6 +1,6 @@
 export enum group {
-  'Extremo 1',
-  'Extremo 2',
+  'Extremo 1' = 'Extremo 1',
+  'Extremo 2' = 'Extremo 2',
 }
 
 export enum response {
