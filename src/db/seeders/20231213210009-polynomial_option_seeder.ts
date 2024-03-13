@@ -55,26 +55,26 @@ module.exports = {
           {
             name: 'Derecha',
             group: groups.Extremo1,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas que dicen pertenecer a la opción de Derecha, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Izquierda',
             group: groups.Extremo2,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas que dicen pertenecer a la opción de Izquierda, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Centro',
-            color: 'green',
+            color: '#01df01',
             description:
               '¿Qué % de personas que dicen pertenecer a la opción de Centro, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Independiente',
-            color: 'green',
+            color: '#01df01',
             description:
               '¿Qué % de personas que dicen ser Independientes, está de acuerdo con la siguiente frase?',
           },
@@ -90,20 +90,20 @@ module.exports = {
           {
             name: 'Masculino',
             group: groups.Extremo1,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas que se identifican como Masculino, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Femenino',
             group: groups.Extremo2,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas que se identifican como Femenino, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Otro',
-            color: 'green',
+            color: '#01df01',
             description:
               '¿Qué % de personas que se identifican con un género no binario, está de acuerdo con la siguiente frase?',
           },
@@ -119,14 +119,14 @@ module.exports = {
           {
             name: 'Otra Región',
             group: groups.Extremo1,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas que viven fuera del área metropolitana, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Región Metropolitana',
             group: groups.Extremo2,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas que viven en el área metropolitana, está de acuerdo con la siguiente frase?',
           },
@@ -142,20 +142,20 @@ module.exports = {
           {
             name: 'Ingresos altos - medio altos',
             group: groups.Extremo1,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas con ingresos de clase media-alta y alta, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Ingresos medios',
-            color: 'green',
+            color: '#01df01',
             description:
               '¿Qué % de personas con ingresos de clase media, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Ingresos bajos - medio bajos',
             group: groups.Extremo2,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas con ingresos bajos, está de acuerdo con la siguiente frase?',
           },
@@ -171,14 +171,14 @@ module.exports = {
           {
             name: 'Pertenezco a algún pueblo originario o indígena',
             group: groups.Extremo1,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas que se identifican como pertenecientes a un pueblo originario o indígena, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'No pertenezco a ningún pueblo originario o indígena',
             group: groups.Extremo2,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas que no se identifican como pertenecientes a un pueblo originario o indígena, está de acuerdo con la siguiente frase?',
           },
@@ -194,14 +194,14 @@ module.exports = {
           {
             name: 'Pertenezco o me siento cercano a alguna religión o iglesia',
             group: groups.Extremo1,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas que se identifican como pertenecientes a una religión o iglesia, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'No pertenezco ni me siento cercano a ninguna religión o iglesia',
             group: groups.Extremo2,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas que no se identifican como pertenecientes a una religión o iglesia, está de acuerdo con la siguiente frase?',
           },
@@ -217,14 +217,14 @@ module.exports = {
           {
             name: 'Inmigrante',
             group: groups.Extremo1,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas que se identifican como inmigrantes, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Chileno',
             group: groups.Extremo2,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas que se identifican como chilenos, está de acuerdo con la siguiente frase?',
           },
@@ -240,27 +240,27 @@ module.exports = {
           {
             name: 'Ocupo un cargo directivo en la empresa u organización donde trabajo',
             group: groups.Extremo1,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas que ocupan un cargo directivo en su empresa u organización, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'No tengo un rol directivo en la empresa u organización donde trabajo',
             group: groups.Extremo2,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas que no ocupan un cargo directivo en su empresa u organización, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Soy independiente y trabajo solo. No trabajo en ninguna empresa u organización',
-            color: 'green',
+            color: '#01df01',
             description:
               '¿Qué % de personas que trabajan de forma independiente y no están afiliadas a ninguna empresa u organización, está de acuerdo con la siguiente frase?',
           },
 
           {
             name: 'En este momento no tengo trabajo remunerado (soy estudiante, jubilado, desempleado, labores del hogar, etc.)',
-            color: 'green',
+            color: '#01df01',
             description:
               '¿Qué % de personas que no tienen un trabajo remunerado, está de acuerdo con la siguiente frase?',
           },
@@ -276,20 +276,20 @@ module.exports = {
           {
             name: '29 años o menos',
             group: groups.Extremo1,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas de 29 años o menos, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'Entre 30 y 59 años',
-            color: 'green',
+            color: '#01df01',
             description:
               '¿Qué % de personas entre 30 y 59 años, está de acuerdo con la siguiente frase?',
           },
           {
             name: '60 años o más',
             group: groups.Extremo2,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas de 60 años o más, está de acuerdo con la siguiente frase?',
           },
@@ -305,14 +305,14 @@ module.exports = {
           {
             name: 'Heterosexual',
             group: groups.Extremo1,
-            color: 'red',
+            color: '#b00029',
             description:
               '¿Qué % de personas que se identifican como heterosexuales, está de acuerdo con la siguiente frase?',
           },
           {
             name: 'LGTBQ+',
             group: groups.Extremo2,
-            color: 'blue',
+            color: '#03396c',
             description:
               '¿Qué % de personas que se identifican como parte de la comunidad LGTBQ+, está de acuerdo con la siguiente frase?',
           },
