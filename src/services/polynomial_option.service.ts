@@ -37,6 +37,12 @@ const updatePolynomialOption = async (
   id: string,
   polynomialOptionUpdate: PolynomialOptionAttributes,
 ) => {
+  if (
+    polynomialOptionUpdate.group &&
+    ![group['Extremo 1'], group['Extremo 2']].includes(polynomialOptionUpdate.group)
+  ) {
+    polynomialOptionUpdate.group = null;
+  }
   const polynomialOption = await getPolynomialOptionId(id);
   const newPolynomias = { ...polynomialOptionUpdate, polynomialOption };
   if (polynomialOption) {
