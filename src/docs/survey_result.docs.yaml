@@ -15,15 +15,19 @@ components:
         os:
           type: string
           description: Sistema operativo del usuario
+          nullable: true
         country:
           type: string
           description: Pais del usuario
+          nullable: true
         region:
           type: string
           description: Region del usuario
+          nullable: true
         city:
           type: string
           description: Ciudad del usuario
+          nullable: true
         startDate:
           type: date
           description: Fecha de inicio de la encuesta
