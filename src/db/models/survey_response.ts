@@ -3,10 +3,10 @@ import { sequelize } from '.';
 
 export interface SurveyResponseAttributes {
   id: string;
-  os: string;
-  country: string;
-  region: string;
-  city: string;
+  os?: string;
+  country?: string;
+  region?: string;
+  city?: string;
   politicalAvg?: number;
   socialAvg?: number;
   startDate: Date;
@@ -35,19 +35,19 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
       defaultValue: DataTypes.UUIDV4,
     },
     os: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT,
     },
     country: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT,
     },
     region: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT,
     },
     city: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT,
     },
     finishedSocialForm: {

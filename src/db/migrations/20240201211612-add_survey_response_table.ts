@@ -14,19 +14,19 @@ module.exports = {
         unique: true,
       },
       os: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.TEXT,
       },
       country: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.TEXT,
       },
       region: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.TEXT,
       },
       city: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.TEXT,
       },
       finishedSocialForm: {
