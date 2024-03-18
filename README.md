@@ -20,10 +20,19 @@ cd c14-backend
 ```bash
 npm install
 ```
+3. Descomentar .example del archivo .env y cambiar configuraciones si se estima necesario.
+
+4. Ejecutar comando necesario
+
+```bash
+docker-compose up
+npm run build
+npm run db:reset
+```
 
 ## Ejecución ▶️
 
-Una vez que haya instalado las dependencias, puede ejecutar la aplicación utilizando el siguiente comando:
+Una vez que haya instalado las dependencias y ejecutado los comandos anteriores, puede iniciar la aplicación utilizando el siguiente comando:
 
 ```bash
 npm run dev
