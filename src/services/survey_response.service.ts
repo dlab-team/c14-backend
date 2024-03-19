@@ -70,7 +70,7 @@ const getMetrics = async () => {
       raw: true,
     });
 
-    const duration = totalAmount ? parseInt(totalAmount.total) : 0;
+    const duration = totalAmount && parseInt(totalAmount.total) || 0;
 
     return { unfinished: unfinished.length, finished: finished.length, duration: duration };
   } catch (error) {
