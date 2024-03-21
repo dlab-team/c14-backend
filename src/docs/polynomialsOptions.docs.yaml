@@ -13,6 +13,12 @@ components:
           type: string
           format: 'uuid'
           example: '5444db52-6a11-406e-9329-a9ff35ddf872'
+        color:
+          type: string
+          example: 'red'
+        description:
+          type: string
+          example: '¿Qué % de personas que dicen pertenecer a la opción de Derecha, está de acuerdo con la siguiente frase?'
   securitySchemes:
     BearerAuth:
       type: http
@@ -23,7 +29,7 @@ components:
       in: cookie
       name: accessToken
   responses:
-    options:
+    option:
       type: object
       properties:
         id:
@@ -40,10 +46,16 @@ components:
           type: string
           format: 'uuid'
           example: '4c0ed4d4-028f-4583-bf53-bcd2e43c4ef1'
+        color:
+          type: string
+          example: 'red'
+        description:
+          type: string
+          example: '¿Qué % de personas que dicen pertenecer a la opción de Derecha, está de acuerdo con la siguiente frase?'
     allOptions:
       type: array
       items:
-        $ref: '#/components/responses/options'
+        $ref: '#/components/responses/option'
     generalError:
       type: object
       properties:
@@ -67,6 +79,12 @@ components:
           type: string
           format: 'uuid'
           example: '5444db52-6a11-406e-9329-a9ff35ddf872'
+        color:
+          type: string
+          example: 'red'
+        description:
+          type: string
+          example: '¿Qué % de personas que dicen pertenecer a la opción de Derecha, está de acuerdo con la siguiente frase?'
         updatedAt:
           type: string
           format: 'date-time'
@@ -89,23 +107,23 @@ components:
       type: array
       items:
         $ref: '#/components/responses/optionsP'
-    option:
-      type: 'object'
-      properties:
-        id:
-          type: 'string'
-          format: 'uuid'
-          example: '6925ff15-0d00-4f1b-9a0f-afc16f721588'
-        name:
-          type: 'string'
-          example: 'Derecha'
-        group:
-          type: 'string'
-          example: 'Extremo 1'
-        polynomialId:
-          type: 'string'
-          format: 'uuid'
-          example: '4c0ed4d4-028f-4583-bf53-bcd2e43c4ef1'
+    # option:
+    #   type: 'object'
+    #   properties:
+    #     id:
+    #       type: 'string'
+    #       format: 'uuid'
+    #       example: '6925ff15-0d00-4f1b-9a0f-afc16f721588'
+    #     name:
+    #       type: 'string'
+    #       example: 'Derecha'
+    #     group:
+    #       type: 'string'
+    #       example: 'Extremo 1'
+    #     polynomialId:
+    #       type: 'string'
+    #       format: 'uuid'
+    #       example: '4c0ed4d4-028f-4583-bf53-bcd2e43c4ef1'
     generalResponse:
       type: object
       properties:
@@ -135,6 +153,12 @@ components:
           type: string
           format: 'uuid'
           example: '5444db52-6a11-406e-9329-a9ff35ddf872'
+        color:
+          type: string
+          example: 'red'
+        description:
+          type: string
+          example: '¿Qué % de personas que dicen pertenecer a la opción de Derecha, está de acuerdo con la siguiente frase?'
         updatedAt:
           type: string
           format: 'date-time'

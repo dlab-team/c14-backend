@@ -3,10 +3,12 @@ import { sequelize } from '.';
 
 export interface SurveyResponseAttributes {
   id: string;
-  os: string;
-  country: string;
-  region: string;
-  city: string;
+  os?: string;
+  country?: string;
+  region?: string;
+  city?: string;
+  politicalAvg?: number;
+  socialAvg?: number;
   startDate: Date;
   finishDate?: Date | null;
   finishedSocialForm: boolean;
@@ -33,19 +35,19 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
       defaultValue: DataTypes.UUIDV4,
     },
     os: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT,
     },
     country: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT,
     },
     region: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT,
     },
     city: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT,
     },
     finishedSocialForm: {
@@ -64,6 +66,14 @@ export const SurveyResponse = sequelize.define<SurveyResponseInstance>(
     duration: {
       allowNull: false,
       type: DataTypes.INTEGER,
+    },
+    politicalAvg: {
+      allowNull: true,
+      type: DataTypes.FLOAT,
+    },
+    socialAvg: {
+      allowNull: true,
+      type: DataTypes.FLOAT,
     },
   },
   {

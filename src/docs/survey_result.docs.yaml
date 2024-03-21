@@ -1,0 +1,363 @@
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+  schemas:
+    createProfile:
+      type: object
+      properties:
+        os:
+          type: string
+          description: Sistema operativo del usuario
+          nullable: true
+        country:
+          type: string
+          description: Pais del usuario
+          nullable: true
+        region:
+          type: string
+          description: Region del usuario
+          nullable: true
+        city:
+          type: string
+          description: Ciudad del usuario
+          nullable: true
+        startDate:
+          type: date
+          description: Fecha de inicio de la encuesta
+        finishedSocialForm:
+          type: boolean
+          description: Booleano que me dice si termina la encuesta social
+        duration:
+          type: number
+          description: Es la duracion que se demora para responder la encuesta
+      example:
+        os: windows
+        country: Chile
+        region: Metropolinata
+        city: Santiago
+        startDate: 2024-02-10T22:15:06.311Z
+        finishedSocialForm: false
+        duration: 0
+    responseUpdated:
+      type: object
+      properties:
+        character:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Es el id de la respuestas creada en la ruta post
+            socialAvg:
+              type: number
+              description: Es la brecha social
+            politicalAvg:
+              type: number
+              description: Es la brecha politica
+            polinomialOptionsId:
+              type: array
+              items:
+                type: string
+                description: Son los id de las opciones seleccionada por el usuario
+            finishedSocialForm:
+              type: boolean
+              description: Boolean que indica si termina la encuesta social
+        responseOpinion:
+          type: array
+          items:
+            type: object
+            properties:
+              surveyResponseId:
+                type: string
+                format: uuid
+                example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+              value:
+                type: string
+                enum:
+                  - Muy de acuerdo
+                  - De acuerdo
+                  - En desacuerdo
+                  - Muy en desacuerdo
+                example: Muy en desacuerdo
+              phraseId:
+                type: string
+                format: uuid
+                example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+        responseSubjetive:
+          type: array
+          items:
+            type: object
+            properties:
+              surveyResponseId:
+                type: string
+                format: uuid
+                example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+              value:
+                type: number
+                minimum: 1
+                maximum: 100
+                example: 50
+              phraseId:
+                type: string
+                format: uuid
+                example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+  responses:
+    metrics:
+      type: object
+      properties:
+        unfinished:
+          type: number
+          description: Trae el numero de encuestas no terminas
+        finished:
+          type: number
+          description: Trael el numero de encuestas terminadas
+    generalError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Descripción del error
+    OptionPolinomial:
+      type: 'object'
+      properties:
+        name:
+          type: 'string'
+          example: 'Masculino'
+        quantity:
+          type: 'integer'
+          example: 0
+    UserData:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+        os:
+          type: 'string'
+          example: 'windows'
+        country:
+          type: 'string'
+          example: 'Chile'
+        region:
+          type: 'string'
+          example: 'Metropolitana'
+        city:
+          type: 'string'
+          example: 'Santiago'
+        startDate:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-02-10T22:15:06.311Z'
+        finishedSocialForm:
+          type: 'boolean'
+          example: false
+        duration:
+          type: 'integer'
+          example: 0
+        finishDate:
+          type: 'string'
+          format: 'date-time'
+          example: null
+    CharacterItem:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: '8f4fd38e-0c77-4d39-bcff-ed9a604e74bd'
+        surveyResponseId:
+          type: 'string'
+          format: 'uuid'
+          example: '00f94cbc-ae65-43b1-a379-f81b9d8c879f'
+        polynomialOptionId:
+          type: 'string'
+          format: 'uuid'
+          example: '6ec1c73b-583e-47ec-a868-4189bb4b1af0'
+        updatedAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.121Z'
+        createdAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.121Z'
+
+    OpinionResultItem:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: 'c9ba9633-ee09-4c77-82a0-97e343f4b617'
+        surveyResponseId:
+          type: 'string'
+          format: 'uuid'
+          example: '00f94cbc-ae65-43b1-a379-f81b9d8c879f'
+        value:
+          type: 'string'
+          example: 'Muy en desacuerdo'
+        phraseId:
+          type: 'string'
+          format: 'uuid'
+          example: '07364a05-cf9b-4108-9298-4c58a6604b4b'
+        createdAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.121Z'
+        updatedAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.121Z'
+
+    SubjetiveResultItem:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: '1d4ca217-9e0f-4278-a6c4-257ceed1548f'
+        surveyResponseId:
+          type: 'string'
+          format: 'uuid'
+          example: '00f94cbc-ae65-43b1-a379-f81b9d8c879f'
+        value:
+          type: 'integer'
+          example: 50
+        phraseId:
+          type: 'string'
+          format: 'uuid'
+          example: '07364a05-cf9b-4108-9298-4c58a6604b4b'
+        createdAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.136Z'
+        updatedAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-03-05T16:26:49.136Z'
+
+    SurveyResponseItem:
+      type: 'object'
+      properties:
+        character:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/CharacterItem'
+        opinionResult:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/OpinionResultItem'
+        subjetiveResult:
+          type: 'array'
+          items:
+            $ref: '#/components/responses/SubjetiveResultItem'
+paths:
+  /api/surveyresponse/metrics:
+    get:
+      summary: Me trae el numero de encuestas terminadas y no terminadas
+      tags:
+        - SurveyResponse
+      responses:
+        '200':
+          description: Me trae un objeto con las encuestas terminadas y no terminadas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/metrics'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/surveyresponse/groupby/{polynomialId}:
+    parameters:
+      - name: polynomialId
+        in: path
+        required: true
+        type: string
+        description: El id del opcion de polinomio
+    get:
+      summary: Trae la cantidad de respuestas de opciones de polinomio, del id de polinomio pasado
+      tags:
+        - SurveyResponse
+      responses:
+        '200':
+          description: Me trae cantidad de respuestas de las opciones de polinomio
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/OptionPolinomial'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+  /api/surveyresponse:
+    post:
+      summary: Crea una respuesta para el usuario
+      tags:
+        - SurveyResponse
+      requestBody:
+        required: true
+        description: Datos requeridos para crear una respuesta profile
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createProfile'
+      responses:
+        '200':
+          description: Me muestra el objeto de profile creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/UserData'
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+    put:
+      summary: Crea profile de la respuesta del usuario
+      tags:
+        - SurveyResponse
+      requestBody:
+        required: true
+        description: Datos requeridos para crear una respuesta profile
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/responseUpdated'
+      responses:
+        '201':
+          description: Me muestra el objeto de profile creado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/responses/SurveyResponseItem'
+        '400':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'
+
+        '500':
+          description: Error general del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/generalError'

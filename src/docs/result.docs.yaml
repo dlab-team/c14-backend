@@ -9,223 +9,122 @@ components:
       in: cookie
       name: accessToken
   schemas:
-    createProfile:
+    CreateResultOpinion:
       type: object
       properties:
-        os:
+        surveyResponseId:
           type: string
-          description: Sistema operativo del usuario
-        country:
+          format: uuid
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+        value:
           type: string
-          description: Pais del usuario
-        region:
+          enum:
+            - Muy de acuerdo
+            - De acuerdo
+            - En desacuerdo
+            - Muy en desacuerdo
+          example: Muy en desacuerdo
+        phraseId:
           type: string
-          description: Region del usuario
-        city:
+          format: uuid
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+    CreateResultSubjetive:
+      type: object
+      properties:
+        surveyResponseId:
           type: string
-          description: Ciudad del usuario
-        startDate:
-          type: date
-          description: Fecha de inicio de la encuesta
-        finishedSocialForm:
-          type: boolean
-          description: Booleano que me dice si termina la encuesta social
-        duration:
+          format: uuid
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+        value:
           type: number
-          description: Es la duracion que se demora para responder la encuesta
-      example:
-        os: windows
-        country: Chile
-        region: Metropolinata
-        city: Santiago
-        startDate: 2024-02-10T22:15:06.311Z
-        finishedSocialForm: false
-        duration: 0
-    responseUpdated:
+          minimum: 1
+          maximum: 100
+          example: 50
+        phraseId:
+          type: string
+          format: uuid
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+
+  responses:
+    responseResult:
       type: object
       properties:
         id:
           type: string
-          description: Es el id de la respuestas creada en la ruta post
-        polinomialOptionsId:
-          type: array
-          items:
-            type: string
-            description: Son los id de las opciones seleccionada por el usuario
-        finishedSocialForm:
-          type: boolean
-          description: Boolean que indica si termina la encuesta social
-  responses:
-    metrics:
-      type: object
-      properties:
-        unfinished:
-          type: number
-          description: Trae el numero de encuestas no terminas
-        finished:
-          type: number
-          description: Trael el numero de encuestas terminadas
+          format: uuid
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+        surveyResponseId:
+          type: string
+          format: uuid
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+        value:
+          oneOf:
+            - type: string
+            - type: number
+          example: 50
+        phraseId:
+          type: string
+          format: uuid
+          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
+        createdAt:
+          type: string
+          format: 'date-time'
+          example: '2024-02-10T22:15:06.311Z'
+        updatedAt:
+          type: string
+          format: 'date-time'
+          example: '2024-02-10T22:15:06.311Z'
     generalError:
       type: object
       properties:
         message:
           type: string
           description: Descripción del error
-    OptionPolinomial:
-      type: 'object'
-      properties:
-        name:
-          type: 'string'
-          example: 'Masculino'
-        quantity:
-          type: 'integer'
-          example: 0
-    UserData:
-      type: 'object'
-      properties:
-        id:
-          type: 'string'
-          format: 'uuid'
-          example: 'd49f4322-8d45-4101-b093-42219afb2afa'
-        os:
-          type: 'string'
-          example: 'windows'
-        country:
-          type: 'string'
-          example: 'Chile'
-        region:
-          type: 'string'
-          example: 'Metropolitana'
-        city:
-          type: 'string'
-          example: 'Santiago'
-        startDate:
-          type: 'string'
-          format: 'date-time'
-          example: '2024-02-10T22:15:06.311Z'
-        finishedSocialForm:
-          type: 'boolean'
-          example: false
-        duration:
-          type: 'integer'
-          example: 0
-        finishDate:
-          type: 'string'
-          format: 'date-time'
-          example: null
-    SurveyResponseItem:
-      type: 'object'
-      properties:
-        id:
-          type: 'string'
-          format: 'uuid'
-          example: '9ec3bdaf-fa47-4ecf-8ef3-442cac9c09d6'
-        surveyResponseId:
-          type: 'string'
-          format: 'uuid'
-          example: 'f212f998-d154-4632-983b-7e7073d5ab6b'
-        polynomialOptionId:
-          type: 'string'
-          format: 'uuid'
-          example: '73c5164d-aabf-4038-83d9-2c732480eccf'
-        updatedAt:
-          type: 'string'
-          format: 'date-time'
-          example: '2024-02-11T18:50:49.964Z'
-        createdAt:
-          type: 'string'
-          format: 'date-time'
-          example: '2024-02-11T18:50:49.964Z'
 paths:
-  /api/surveyresponse/metrics:
-    get:
-      summary: Me trae el numero de encuestas terminadas y no terminadas
-      tags:
-        - SurveyResponse
-      responses:
-        '200':
-          description: Me trae un objeto con las encuestas terminadas y no terminadas
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/metrics'
-        '500':
-          description: Error general del servidor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/generalError'
-  /api/surveyresponse/groupby/{polynomialId}:
-    parameters:
-      - name: polynomialId
-        in: path
-        required: true
-        type: string
-        description: El id del opcion de polinomio
-    get:
-      summary: Trae la cantidad de respuestas de opciones de polinomio, del id de polinomio pasado
-      tags:
-        - SurveyResponse
-      responses:
-        '200':
-          description: Me trae cantidad de respuestas de las opciones de polinomio
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/responses/OptionPolinomial'
-        '500':
-          description: Error general del servidor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/generalError'
-  /api/surveyresponse:
+  /api/results/opinion:
     post:
-      summary: Crea una respuesta para el usuario
+      summary: Crea una respuesta guardando la seleccion del usuario en el formulario de opinion
       tags:
-        - SurveyResponse
+        - Results
       requestBody:
         required: true
-        description: Datos requeridos para crear una respuesta profile
+        description: Este es el esquema requerido para crear una respuesta del usuario en el formulario de opinion
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createProfile'
+              $ref: '#/components/schemas/CreateResultOpinion'
       responses:
-        '200':
-          description: Me muestra el objeto de profile creado
+        '201':
+          description: Creacion de respuesta exitosa
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/UserData'
+                $ref: '#/components/responses/responseResult'
         '500':
           description: Error general del servidor
           content:
             application/json:
               schema:
                 $ref: '#/components/responses/generalError'
-    put:
-      summary: Crea profile de la respuesta del usuario
+  /api/results/subjetive:
+    post:
+      summary: Crea una respuesta guardando la seleccion del usuario en el formulario subjetivo
       tags:
-        - SurveyResponse
+        - Results
       requestBody:
         required: true
-        description: Datos requeridos para crear una respuesta profile
+        description: Este es el esquema requerido para crear una respuesta del usuario en el formulario subjetivo
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/responseUpdated'
+              $ref: '#/components/schemas/CreateResultSubjetive'
       responses:
-        '200':
-          description: Me muestra el objeto de profile creado
+        '201':
+          description: Creacion de respuesta exitosa
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/responses/SurveyResponseItem'
+                $ref: '#/components/responses/responseResult'
         '500':
           description: Error general del servidor
           content:

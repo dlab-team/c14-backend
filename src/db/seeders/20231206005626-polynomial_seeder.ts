@@ -30,15 +30,15 @@ module.exports = {
 
     const dataQuestions: string[] = [
       '¿Con quién te identificas?',
-      '¿Con qué Género te identificas?',
-      '¿En qué Región resides?',
-      'En qué rango de ingresos te clasificas?',
-      '¿Perteneces a un pueblo indígena?',
-      '¿Con qué credo te identificas?',
-      '¿Cual es tu estado actual?',
-      '¿En qué grupo laboral te clasificas?',
-      '¿A que grupo etario perteneces?',
-      '¿Cual es tu orientación sexual?',
+      '¿Cuál es tu género?',
+      '¿En qué región vives?',
+      '¿Con qué tipo de persona te sientes más identificado?',
+      '¿Te consideras perteneciente a algún pueblo originario o indígena?',
+      '¿Perteneces o te sientes cercano a alguna religión o iglesia?',
+      '¿Con cuál de las siguientes condiciones te sientes más identificado?',
+      '¿Con qué tipo de persona te sientes más identificado?',
+      '¿En qué tramo de edad estás?',
+      '¿Cómo describirías tu orientación sexual?',
     ]
     const polynomials = data.map((polynomialName, index) => {
       const newPolynomial = {

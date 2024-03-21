@@ -4,6 +4,8 @@ import { PhrasesAttributes } from './db/models/phrases';
 import { SurveyResponseAttributes } from './db/models/survey_response';
 import { SurveyResponseProfileAttributes } from './db/models/survey_response_profile';
 import { SurveyResultAttributes } from './db/models/survey_result';
+import { ResultOpinionCreate } from './db/models/resultOpinion';
+import { SubjectiveResultCreate } from './db/models/subjectiveResult';
 
 //tipos de JWT
 export interface Payload {
@@ -53,7 +55,32 @@ export interface IdsSocials {
 
 //survey
 export interface SurveyResponseCharacter
-  extends Pick<SurveyResponseAttributes, 'id' | 'finishedSocialForm'> {
+  extends Pick<
+    SurveyResponseAttributes,
+    'id' | 'finishedSocialForm' | 'politicalAvg' | 'socialAvg'
+  > {
   polinomialOptionsId: string[];
 }
+
+export interface ResponseAllData {
+  character: SurveyResponseCharacter;
+  responseOpinion: ResultOpinionCreate[];
+  responseSubjetive: SubjectiveResultCreate[];
+}
 export interface SurveyProfileCreate extends Omit<SurveyResponseProfileAttributes, 'id'> {}
+
+//result
+export interface ResultOpinionAttributes {
+  id: string;
+  surveyResponseId: string;
+  value: string;
+  phraseId: string;
+}
+
+export interface SubjectiveResultAttributes {
+  id: string;
+  surveyResponseId: string;
+  value: number;
+  phraseId: string;
+  perception: number
+}

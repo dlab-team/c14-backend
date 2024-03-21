@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { SurveyResponseAttributes } from '@/db/models/survey_response';
 import surveyResponseService from '@/services/survey_response.service';
-import { SurveyResponseCharacter } from '@/types';
+import { ResponseAllData } from '@/types';
 
 const createResponse = async (req: Request, res: Response, next: NextFunction) => {
   const surveyResponse: SurveyResponseAttributes = req.body;
@@ -35,7 +35,7 @@ const getMetrics = async (req: Request, res: Response, next: NextFunction) => {
 
 const finishResponse = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data: SurveyResponseCharacter = req.body;
+    const data: ResponseAllData = req.body;
     const character = await surveyResponseService.responseCharater(data);
     res.status(201).json(character);
   } catch (error) {
@@ -50,17 +50,17 @@ const getGroupedResponsesByYear = async (req: Request, res: Response, next: Next
   } catch (error) {
     next(error);
   }
-}
+};
 
-  const getGroupedResponseForAYear = async (req: Request, res: Response, next: NextFunction) => {
-    const { year } = req.params;
-    try {
-      const responses = await surveyResponseService.getGroupedResponseForAYear(year);
-      res.status(200).json(responses);
-    } catch (error) {
-      next(error);
-    }
+const getGroupedResponseForAYear = async (req: Request, res: Response, next: NextFunction) => {
+  const { year } = req.params;
+  try {
+    const responses = await surveyResponseService.getGroupedResponseForAYear(year);
+    res.status(200).json(responses);
+  } catch (error) {
+    next(error);
   }
+};
 
 export default {
   createResponse,
@@ -68,5 +68,5 @@ export default {
   getMetrics,
   finishResponse,
   getGroupedResponsesByYear,
-  getGroupedResponseForAYear
+  getGroupedResponseForAYear,
 };
